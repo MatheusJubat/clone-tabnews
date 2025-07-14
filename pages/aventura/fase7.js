@@ -510,6 +510,16 @@ const scoreValue = {
   fontWeight: "bold",
 };
 
+// ESTA É A CONSTANTE QUE ESTAVA FALTANDO:
+const gameQuestionContainer = {
+  textAlign: "center",
+  padding: "20px",
+  backgroundColor: "rgba(255, 255, 255, 0.05)",
+  borderRadius: "15px",
+  border: "2px solid #ff69b4",
+  margin: "20px 0",
+};
+
 const livesContainer = {
   textAlign: "center",
   marginBottom: "15px",
