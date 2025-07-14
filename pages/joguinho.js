@@ -75,9 +75,18 @@ export default function Joguinho() {
           </div>
         </>
       ) : (
-        <>
+        <div style={{ textAlign: "center" }}>
           <h1>Eu sabia!!! 🥰</h1>
-          <p>Então vem ver uma surpresa…</p>
+          <p>Olha ele comemorando por você ter clicado em "Sim" 🐾</p>
+          <img
+            src="https://media.tenor.com/Ws6Dm1ZW_vMAAAAi/cat-love.gif"
+            alt="Gato comemorando"
+            style={{
+              width: "250px",
+              margin: "20px auto",
+              borderRadius: "12px",
+            }}
+          />
           <a
             href="/galeria"
             style={{
@@ -88,11 +97,12 @@ export default function Joguinho() {
               color: "white",
               borderRadius: "12px",
               textDecoration: "none",
+              display: "inline-block",
             }}
           >
-            Ver Surpresa
+            Ver Surpresa ❤️
           </a>
-        </>
+        </div>
       )}
     </div>
   );

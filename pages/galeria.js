@@ -17,21 +17,37 @@ export default function Galeria() {
   }, []);
 
   const fotos = [
+    // {
+    //   src: "https://via.placeholder.com/600x400?text=Viagem+1",
+    //   legenda: "Nossa primeira viagem 💖",
+    // },
+    // {
+    //   src: "https://via.placeholder.com/600x400?text=Pizza+Night",
+    //   legenda: "A pizza que queimou e a gente riu 😂",
+    // },
+    // {
+    //   src: "https://via.placeholder.com/600x400?text=Aniversario",
+    //   legenda: "Teu aniversário com brigadeiro torto 🎂",
+    // },
+    // {
+    //   src: "https://via.placeholder.com/600x400?text=Nos",
+    //   legenda: "Só nós dois sendo bobos juntos 🫶",
+    // },
     {
-      src: "https://via.placeholder.com/600x400?text=Viagem+1",
-      legenda: "Nossa primeira viagem 💖",
+      src: "https://i.pinimg.com/originals/42/94/43/4294431c408a1d95f389c3a35dfca64f.jpg",
+      legenda: "Ela tentando apertar o NÃO 😼",
     },
     {
-      src: "https://via.placeholder.com/600x400?text=Pizza+Night",
-      legenda: "A pizza que queimou e a gente riu 😂",
+      src: "https://i.pinimg.com/originals/cd/b6/65/cdb6651b48db4fd3f2823dc8ee9c85cb.jpg",
+      legenda: "O amor observando de longe 🐱",
     },
     {
-      src: "https://via.placeholder.com/600x400?text=Aniversario",
-      legenda: "Teu aniversário com brigadeiro torto 🎂",
+      src: "https://media.tenor.com/KbQ5U8H8d4UAAAAC/cat-flower.gif",
+      legenda: "Esse sou eu: o gato romântico com flor 🌹",
     },
     {
-      src: "https://via.placeholder.com/600x400?text=Nos",
-      legenda: "Só nós dois sendo bobos juntos 🫶",
+      src: "https://media.tenor.com/2roX3uxz_68AAAAC/cat-computer.gif",
+      legenda: "Montando esse site todo só pra você 🖥️💘",
     },
   ];
 
