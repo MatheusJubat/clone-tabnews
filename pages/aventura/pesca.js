@@ -35,15 +35,31 @@ export default function Pesca() {
   return (
     <div
       style={{
-        background: "linear-gradient(#a0e3f0, #f0fdfd)",
+        background:
+          "url('https://cutewallpaper.org/21/stardew-valley-background/Download-Stardew-Valley-Wallpaper-Gallery.jpg') no-repeat center center fixed",
+        backgroundSize: "cover",
         height: "100vh",
         fontFamily: "'Press Start 2P', cursive",
         textAlign: "center",
         paddingTop: "40px",
+        color: "#fff",
+        border: "10px solid #000",
+        boxSizing: "border-box",
       }}
     >
-      <h2>🎣 Fase 2.5: Pesca do Amor</h2>
-      <p>Fique atenta e clique quando o coração estiver no centro da barra!</p>
+      <h2
+        style={{
+          fontSize: "22px",
+          marginBottom: "10px",
+          textShadow: "2px 2px 8px #000",
+        }}
+      >
+        🎣 Fase 2.5: Pesca do Amor
+      </h2>
+      <p style={{ textShadow: "1px 1px 5px #000" }}>
+        Fique atenta e clique quando o peixinho estiver no centro da barra
+        encantada!
+      </p>
 
       <div
         style={{
@@ -53,7 +69,7 @@ export default function Pesca() {
           backgroundColor: "#8ed0f2",
           margin: "40px auto",
           borderRadius: "10px",
-          border: "4px solid #333",
+          border: "4px solid #fff",
         }}
       >
         <div
@@ -80,7 +96,7 @@ export default function Pesca() {
             zIndex: 2,
           }}
         >
-          🐟
+          🐠
         </div>
       </div>
 
@@ -96,12 +112,19 @@ export default function Pesca() {
             borderRadius: "10px",
             fontSize: "16px",
             cursor: "pointer",
+            boxShadow: "2px 2px 8px rgba(0,0,0,0.5)",
           }}
         >
           Lançar vara 🎣
         </button>
       ) : (
-        <div style={{ fontSize: "18px", marginTop: "20px" }}>
+        <div
+          style={{
+            fontSize: "18px",
+            marginTop: "20px",
+            textShadow: "1px 1px 5px #000",
+          }}
+        >
           Você pescou o coração dele! 💘
         </div>
       )}
