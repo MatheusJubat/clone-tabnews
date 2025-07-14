@@ -1,0 +1,458 @@
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+export default function FaseStevenUniverse() {
+  const router = useRouter();
+  const [etapaAtual, setEtapaAtual] = useState(0);
+  const [gemaEscolhida, setGemaEscolhida] = useState(null);
+  const [fusionCompleta, setFusionCompleta] = useState(false);
+  const [partituras, setPartituras] = useState([]);
+  const [musicaCompleta, setMusicaCompleta] = useState(false);
+  const [cristaisColetados, setCristaisColetados] = useState(0);
+
+  const gemas = [
+    { nome: 'Ametista', cor: '#9966CC', emoji: '💜', personalidade: 'Divertida e espontânea' },
+    { nome: 'Pérola', cor: '#FFE4E1', emoji: '🤍', personalidade: 'Organizada e carinhosa' },
+    { nome: 'Garnet', cor: '#DC143C', emoji: '❤️', personalidade: 'Sábia e protetora' },
+    { nome: 'Quartzo Rosa', cor: '#FF69B4', emoji: '💖', personalidade: 'Amorosa e compreensiva' }
+  ];
+
+  const notasMusica = ['🎵', '🎶', '🎼', '🎹', '🎺', '🎻'];
+
+  useEffect(() => {
+    // Animação das estrelas
+    const interval = setInterval(() => {
+      const star = document.createElement('div');
+      star.innerHTML = '⭐';
+      star.style.position = 'absolute';
+      star.style.left = Math.random() * window.innerWidth + 'px';
+      star.style.top = '0px';
+      star.style.fontSize = '20px';
+      star.style.pointerEvents = 'none';
+      star.style.animation = 'fallingStar 3s linear forwards';
+      document.body.appendChild(star);
+      
+      setTimeout(() => {
+        if (star.parentNode) {
+          star.parentNode.removeChild(star);
+        }
+      }, 3000);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const escolherGema = (gema) => {
+    setGemaEscolhida(gema);
+    setTimeout(() => {
+      setEtapaAtual(1);
+    }, 1500);
+  };
+
+  const tocarNota = (nota) => {
+    setPartituras([...partituras, nota]);
+    if (partituras.length >= 5) {
+      setMusicaCompleta(true);
+      setTimeout(() => {
+        setEtapaAtual(2);
+      }, 2000);
+    }
+  };
+
+  const coletarCristal = () => {
+    setCristaisColetados(cristaisColetados + 1);
+    if (cristaisColetados >= 2) {
+      setFusionCompleta(true);
+      setTimeout(() => {
+        router.push("/aventura/himym");
+      }, 3000);
+    }
+  };
+
+  const avancar = () => {
+    router.push("/aventura/himym");
+  };
+
+  return (
+    <div style={containerStyle}>
+      {/* Templo das Gemas background */}
+      <div style={templeBackground}>
+        <div style={templeShape}></div>
+      </div>
+
+      <div style={contentContainer}>
+        {etapaAtual === 0 && (
+          <div style={sectionContainer}>
+            <h1 style={titleStyle}>
+              💎 O TEMPLO DAS GEMAS DO AMOR 💎
+            </h1>
+            <p style={subtitleStyle}>
+              Para descobrir o segredo do amor verdadeiro, você deve escolher uma Gema que represente seu coração...
+            </p>
+            
+            <div style={gemasContainer}>
+              {gemas.map((gema, index) => (
+                <div
+                  key={index}
+                  style={{
+                    ...gemaCard,
+                    backgroundColor: gema.cor,
+                    transform: gemaEscolhida === gema ? 'scale(1.2) rotate(360deg)' : 'scale(1)',
+                    boxShadow: gemaEscolhida === gema ? `0 0 30px ${gema.cor}` : `0 0 15px ${gema.cor}`
+                  }}
+                  onClick={() => escolherGema(gema)}
+                >
+                  <div style={gemaEmoji}>{gema.emoji}</div>
+                  <h3 style={gemaNome}>{gema.nome}</h3>
+                  <p style={gemaPersonalidade}>{gema.personalidade}</p>
+                </div>
+              ))}
+            </div>
+            
+            {gemaEscolhida && (
+              <div style={fusionMessage}>
+                <h2>✨ Fusão iniciada com {gemaEscolhida.nome}! ✨</h2>
+                <p>Preparando para a próxima etapa...</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {etapaAtual === 1 && (
+          <div style={sectionContainer}>
+            <h1 style={titleStyle}>
+              🎵 COMPOSE A CANÇÃO DO AMOR 🎵
+            </h1>
+            <p style={subtitleStyle}>
+              Como Steven, você deve criar uma melodia que toque o coração! Clique nas notas para compor:
+            </p>
+            
+            <div style={musicContainer}>
+              <div style={partituraDisplay}>
+                {partituras.map((nota, index) => (
+                  <span key={index} style={notaStyle}>{nota}</span>
+                ))}
+              </div>
+              
+              <div style={notasContainer}>
+                {notasMusica.map((nota, index) => (
+                  <button
+                    key={index}
+                    style={notaButton}
+                    onClick={() => tocarNota(nota)}
+                  >
+                    {nota}
+                  </button>
+                ))}
+              </div>
+              
+              <p style={progressStyle}>
+                Notas tocadas: {partituras.length}/6
+              </p>
+            </div>
+            
+            {musicaCompleta && (
+              <div style={successMessage}>
+                <h2>🌟 Melodia perfeita! A fusão está quase completa! 🌟</h2>
+              </div>
+            )}
+          </div>
+        )}
+
+        {etapaAtual === 2 && (
+          <div style={sectionContainer}>
+            <h1 style={titleStyle}>
+              💖 COLETA DOS CRISTAIS DO AMOR 💖
+            </h1>
+            <p style={subtitleStyle}>
+              Colete os cristais especiais para completar a fusão do amor verdadeiro!
+            </p>
+            
+            <div style={cristaisContainer}>
+              <div
+                style={cristalButton}
+                onClick={coletarCristal}
+              >
+                💎 Cristal da Confiança
+              </div>
+              <div
+                style={cristalButton}
+                onClick={coletarCristal}
+              >
+                💎 Cristal da Felicidade
+              </div>
+              <div
+                style={cristalButton}
+                onClick={coletarCristal}
+              >
+                💎 Cristal da Cumplicidade
+              </div>
+            </div>
+            
+            <p style={progressStyle}>
+              Cristais coletados: {cristaisColetados}/3
+            </p>
+            
+            {fusionCompleta && (
+              <div style={finalFusion}>
+                <h1 style={fusionCompleteStyle}>
+                  ✨💖 FUSÃO COMPLETA! 💖✨
+                </h1>
+                <div style={fusionGem}>
+                  💎✨💖✨💎
+                </div>
+                <p style={fusionDescription}>
+                  Vocês dois se tornaram uma fusão perfeita de amor, confiança e felicidade!
+                  Como Garnet disse: "O amor é a resposta!"
+                </p>
+                <button
+                  onClick={avancar}
+                  style={nextButton}
+                >
+                  Continuar a jornada 🌟
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <style jsx global>{`
+        @keyframes fallingStar {
+          to {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes gemGlow {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+const containerStyle = {
+  minHeight: '100vh',
+  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  position: 'relative',
+  overflow: 'hidden'
+};
+
+const templeBackground = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  opacity: 0.1
+};
+
+const templeShape = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '300px',
+  height: '300px',
+  background: 'conic-gradient(from 0deg, #ff69b4, #9966cc, #00bfff, #ff1493)',
+  borderRadius: '50%',
+  animation: 'gemGlow 3s ease-in-out infinite'
+};
+
+const contentContainer = {
+  position: 'relative',
+  zIndex: 1,
+  padding: '20px',
+  minHeight: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+};
+
+const sectionContainer = {
+  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+  borderRadius: '20px',
+  padding: '40px',
+  maxWidth: '800px',
+  textAlign: 'center',
+  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+  border: '3px solid #ff69b4'
+};
+
+const titleStyle = {
+  fontSize: '32px',
+  marginBottom: '20px',
+  background: 'linear-gradient(45deg, #ff69b4, #9966cc)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  fontWeight: 'bold'
+};
+
+const subtitleStyle = {
+  fontSize: '18px',
+  marginBottom: '30px',
+  color: '#555',
+  lineHeight: '1.6'
+};
+
+const gemasContainer = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap: '20px',
+  marginBottom: '30px'
+};
+
+const gemaCard = {
+  padding: '20px',
+  borderRadius: '15px',
+  cursor: 'pointer',
+  transition: 'all 0.5s ease',
+  border: '3px solid white',
+  color: 'white',
+  fontWeight: 'bold'
+};
+
+const gemaEmoji = {
+  fontSize: '3rem',
+  marginBottom: '10px'
+};
+
+const gemaNome = {
+  margin: '10px 0',
+  fontSize: '20px'
+};
+
+const gemaPersonalidade = {
+  fontSize: '14px',
+  opacity: 0.9
+};
+
+const fusionMessage = {
+  padding: '20px',
+  backgroundColor: '#ffe4e1',
+  borderRadius: '10px',
+  border: '2px solid #ff69b4'
+};
+
+const musicContainer = {
+  backgroundColor: '#f8f9fa',
+  padding: '30px',
+  borderRadius: '15px',
+  border: '2px solid #9966cc'
+};
+
+const partituraDisplay = {
+  minHeight: '80px',
+  backgroundColor: 'white',
+  borderRadius: '10px',
+  padding: '20px',
+  marginBottom: '20px',
+  border: '2px dashed #9966cc',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexWrap: 'wrap',
+  gap: '10px'
+};
+
+const notaStyle = {
+  fontSize: '2rem',
+  margin: '0 5px'
+};
+
+const notasContainer = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '15px',
+  justifyContent: 'center',
+  marginBottom: '20px'
+};
+
+const notaButton = {
+  fontSize: '2rem',
+  padding: '15px 20px',
+  backgroundColor: '#9966cc',
+  color: 'white',
+  border: 'none',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+};
+
+const progressStyle = {
+  fontSize: '16px',
+  color: '#666',
+  fontWeight: 'bold'
+};
+
+const successMessage = {
+  padding: '20px',
+  backgroundColor: '#e7f3ff',
+  borderRadius: '10px',
+  border: '2px solid #00bfff',
+  marginTop: '20px'
+};
+
+const cristaisContainer = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '20px',
+  marginBottom: '30px'
+};
+
+const cristalButton = {
+  padding: '20px',
+  fontSize: '20px',
+  backgroundColor: 'linear-gradient(45deg, #ff1493, #9966cc)',
+  background: 'linear-gradient(45deg, #ff1493, #9966cc)',
+  color: 'white',
+  border: 'none',
+  borderRadius: '15px',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  fontWeight: 'bold',
+  boxShadow: '0 6px 12px rgba(255, 20, 147, 0.3)'
+};
+
+const finalFusion = {
+  textAlign: 'center',
+  padding: '30px'
+};
+
+const fusionCompleteStyle = {
+  fontSize: '36px',
+  background: 'linear-gradient(45deg, #ff69b4, #9966cc, #00bfff)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  marginBottom: '20px'
+};
+
+const fusionGem = {
+  fontSize: '4rem',
+  margin: '20px 0',
+  animation: 'gemGlow 2s ease-in-out infinite'
+};
+
+const fusionDescription = {
+  fontSize: '18px',
+  color: '#555',
+  marginBottom: '30px',
+  lineHeight: '1.6'
+};
+
+const nextButton = {
+  padding: '15px 30px',
+  fontSize: '20px',
+  backgroundColor: '#ff69b4',
+  color: 'white',
+  border: 'none',
+  borderRadius: '25px',
+  cursor: 'pointer',
+  fontWeight: 'bold',
+  transition: 'all 0.3s ease',
+  boxShadow: '0 6px 12px rgba(255, 105, 180, 0.4)'
+};

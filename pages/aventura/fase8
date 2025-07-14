@@ -1,0 +1,607 @@
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+export default function FaseHIMYM() {
+  const router = useRouter();
+  const [jogoAtivo, setJogoAtivo] = useState('menu');
+  const [pontuacao, setPontuacao] = useState(0);
+  const [respostasCorretas, setRespostasCorretas] = useState(0);
+  const [perguntaAtual, setPerguntaAtual] = useState(0);
+  const [playbook, setPlaybook] = useState([]);
+  const [tempoRestante, setTempoRestante] = useState(30);
+  const [jogoCompleto, setJogoCompleto] = useState(false);
+
+  const perguntas = [
+    {
+      pergunta: "Se vocês estivessem no MacLaren's, qual seria o drink perfeito para compartilhar?",
+      opcoes: [
+        "Dois Robin Scherbatsky (com sombrinha) 🍹",
+        "Um Red Dragon pra dividir ❤️",
+        "Cerveja gelada porque somos simples assim 🍺",
+        "Qualquer coisa, desde que seja juntos 💕"
+      ],
+      correta: 3
+    },
+    {
+      pergunta: "Qual seria a jogada do 'Playbook do Amor' dele para conquistar você?",
+      opcoes: [
+        "A 'Cat Lady' - aparecer com 5 gatinhos 🐱",
+        "A 'Nerd Girl' - falar sobre tecnologia 💻", 
+        "A 'Best Friend' - ser seu melhor amigo primeiro 👫",
+        "A 'True Love' - ser genuíno e verdadeiro 💖"
+      ],
+      correta: 3
+    },
+    {
+      pergunta: "Se ele fizesse uma 'Robin Sparkles' para você, qual seria o tema?",
+      opcoes: [
+        "🎵 'Let's go to the mall... do amor!' 🎵",
+        "🎵 'Sandcastles in the Sand... do coração' 🎵",
+        "🎵 'Two Cats in Love' 🎵",
+        "🎵 'PS: I Love You' 🎵"
+      ],
+      correta: 2
+    }
+  ];
+
+  const barneyPlays = [
+    "💼 The Programmer - Impressionar com códigos",
+    "🐱 The Cat Whisperer - Aparecer com gatinhos",
+    "🎮 The Gamer Girl - Falar sobre jogos",
+    "💻 The Tech Support - Resolver todos os problemas do PC",
+    "❤️ The Genuine Guy - Ser autêntico (LEGENDARY!)"
+  ];
+
+  useEffect(() => {
+    let timer;
+    if (jogoAtivo === 'tempo' && tempoRestante > 0) {
+      timer = setTimeout(() => {
+        setTempoRestante(tempoRestante - 1);
+      }, 1000);
+    } else if (tempoRestante === 0 && jogoAtivo === 'tempo') {
+      setJogoCompleto(true);
+    }
+    return () => clearTimeout(timer);
+  }, [tempoRestante, jogoAtivo]);
+
+  const responder = (opcao) => {
+    if (opcao === perguntas[perguntaAtual].correta) {
+      setRespostasCorretas(respostasCorretas + 1);
+      setPontuacao(pontuacao + 100);
+    }
+    
+    if (perguntaAtual < perguntas.length - 1) {
+      setPerguntaAtual(perguntaAtual + 1);
+    } else {
+      setJogoAtivo('playbook');
+    }
+  };
+
+  const adicionarPlay = (play) => {
+    setPlaybook([...playbook, play]);
+    setPontuacao(pontuacao + 50);
+    if (playbook.length >= 2) {
+      setJogoAtivo('tempo');
+    }
+  };
+
+  const finalizarJogo = () => {
+    setJogoCompleto(true);
+  };
+
+  const avancar = () => {
+    router.push("/aventura/final-game");
+  };
+
+  return (
+    <div style={pubStyle}>
+      {/* Background do MacLaren's */}
+      <div style={backgroundOverlay}></div>
+      
+      <div style={contentContainer}>
+        {jogoAtivo === 'menu' && (
+          <div style={menuContainer}>
+            <h1 style={titleStyle}>
+              🍺 MacLaren's Pub 🍺
+            </h1>
+            <div style={logoContainer}>
+              <div style={pubLogo}>🍻</div>
+            </div>
+            <p style={subtitleStyle}>
+              "Kids, esta é a história de como eu pedi sua mãe em casamento..."
+            </p>
+            <div style={friendsContainer}>
+              <div style={friend}>👨‍💼 Ted</div>
+              <div style={friend}>👩‍💼 Robin</div>
+              <div style={friend}>👨‍🎸 Marshall</div>
+              <div style={friend}>👩‍🎨 Lily</div>
+              <div style={friend}>👔 Barney</div>
+            </div>
+            <button
+              onClick={() => setJogoAtivo('perguntas')}
+              style={startButton}
+            >
+              LEGENDARY! Começar 🎯
+            </button>
+          </div>
+        )}
+
+        {jogoAtivo === 'perguntas' && (
+          <div style={gameContainer}>
+            <h2 style={questionTitle}>
+              📺 Quiz da Turma 📺
+            </h2>
+            <div style={scoreDisplay}>
+              Pontuação: {pontuacao} | Pergunta {perguntaAtual + 1}/{perguntas.length}
+            </div>
+            
+            <div style={questionContainer}>
+              <h3 style={questionText}>
+                {perguntas[perguntaAtual].pergunta}
+              </h3>
+              
+              <div style={optionsContainer}>
+                {perguntas[perguntaAtual].opcoes.map((opcao, index) => (
+                  <button
+                    key={index}
+                    onClick={() => responder(index)}
+                    style={optionButton}
+                  >
+                    {opcao}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {jogoAtivo === 'playbook' && (
+          <div style={playbookContainer}>
+            <h2 style={playbookTitle}>
+              📚 O PLAYBOOK DO AMOR 📚
+            </h2>
+            <p style={playbookSubtitle}>
+              Barney está te ajudando! Escolha as jogadas para o seu "Playbook":
+            </p>
+            
+            <div style={playsContainer}>
+              {barneyPlays.map((play, index) => (
+                <div
+                  key={index}
+                  style={{
+                    ...playCard,
+                    backgroundColor: playbook.includes(play) ? '#ffd700' : '#fff'
+                  }}
+                  onClick={() => !playbook.includes(play) && adicionarPlay(play)}
+                >
+                  {play}
+                </div>
+              ))}
+            </div>
+            
+            <div style={selectedPlays}>
+              <h4>Jogadas Selecionadas:</h4>
+              {playbook.map((play, index) => (
+                <div key={index} style={selectedPlay}>{play}</div>
+              ))}
+            </div>
+            
+            {playbook.length >= 3 && (
+              <button
+                onClick={() => setJogoAtivo('tempo')}
+                style={continueButton}
+              >
+                SUIT UP! Continuar 👔
+              </button>
+            )}
+          </div>
+        )}
+
+        {jogoAtivo === 'tempo' && !jogoCompleto && (
+          <div style={timeGameContainer}>
+            <h2 style={timeTitle}>
+              ⏰ ÚLTIMA CHAMADA! ⏰
+            </h2>
+            <p style={timeSubtitle}>
+              Marshall e Lily estão ajudando com o tempo! Você tem {tempoRestante} segundos para decidir...
+            </p>
+            
+            <div style={clockContainer}>
+              <div style={clockFace}>
+                <div style={clockHand}>{tempoRestante}</div>
+              </div>
+            </div>
+            
+            <div style={finalQuestion}>
+              <h3>Se tivesse que escolher UMA coisa que mais ama nele, seria:</h3>
+              <div style={finalOptions}>
+                <button onClick={finalizarJogo} style={finalOption}>
+                  ❤️ O jeito que me faz rir
+                </button>
+                <button onClick={finalizarJogo} style={finalOption}>
+                  🤗 Como me sinto segura com ele
+                </button>
+                <button onClick={finalizarJogo} style={finalOption}>
+                  ✨ Como ele me faz querer ser melhor
+                </button>
+                <button onClick={finalizarJogo} style={finalOption}>
+                  💕 Tudo isso e muito mais
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {jogoCompleto && (
+          <div style={endGameContainer}>
+            <h1 style={legendaryTitle}>
+              🎉 LEGENDARY! 🎉
+            </h1>
+            <div style={finalScore}>
+              Pontuação Final: {pontuacao}
+            </div>
+            <div style={barneyApproval}>
+              <div style={barneyEmoji}>👔</div>
+              <p style={barneyQuote}>
+                "Barney Stinson aprova! Essa história será... LEGENDARY!"
+              </p>
+            </div>
+            <div style={storyEnd}>
+              <p style={tedVoice}>
+                "E foi assim, crianças, que descobri que o verdadeiro amor não precisa de um playbook... 
+                só precisa ser verdadeiro."
+              </p>
+            </div>
+            <button
+              onClick={avancar}
+              style={nextAdventureButton}
+            >
+              Continuar a história 📖
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const pubStyle = {
+  minHeight: '100vh',
+  backgroundImage: 'linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%239C92AC" fill-opacity="0.1" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
+  backgroundColor: '#2C1810',
+  color: '#FFFFFF',
+  fontFamily: '"Comic Sans MS", cursive',
+  position: 'relative'
+};
+
+const backgroundOverlay = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: 'radial-gradient(circle at center, rgba(139,69,19,0.3) 0%, rgba(0,0,0,0.8) 100%)'
+};
+
+const contentContainer = {
+  position: 'relative',
+  zIndex: 1,
+  padding: '20px',
+  minHeight: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+};
+
+const menuContainer = {
+  textAlign: 'center',
+  backgroundColor: 'rgba(139, 69, 19, 0.9)',
+  padding: '40px',
+  borderRadius: '20px',
+  border: '3px solid #DAA520',
+  maxWidth: '600px'
+};
+
+const titleStyle = {
+  fontSize: '36px',
+  color: '#DAA520',
+  marginBottom: '20px',
+  textShadow: '2px 2px 4px rgba(0,0,0,0.7)'
+};
+
+const logoContainer = {
+  margin: '20px 0'
+};
+
+const pubLogo = {
+  fontSize: '4rem',
+  margin: '10px 0'
+};
+
+const subtitleStyle = {
+  fontSize: '18px',
+  fontStyle: 'italic',
+  marginBottom: '30px',
+  color: '#F0E68C'
+};
+
+const friendsContainer = {
+  display: 'flex',
+  justifyContent: 'center',
+  gap: '15px',
+  marginBottom: '30px',
+  flexWrap: 'wrap'
+};
+
+const friend = {
+  padding: '10px 15px',
+  backgroundColor: '#4169E1',
+  borderRadius: '20px',
+  fontSize: '14px',
+  fontWeight: 'bold'
+};
+
+const startButton = {
+  padding: '15px 30px',
+  fontSize: '20px',
+  backgroundColor: '#FF4500',
+  color: '#FFFFFF',
+  border: 'none',
+  borderRadius: '25px',
+  cursor: 'pointer',
+  fontWeight: 'bold',
+  transition: 'all 0.3s ease',
+  textTransform: 'uppercase'
+};
+
+const gameContainer = {
+  backgroundColor: 'rgba(25, 25, 112, 0.9)',
+  padding: '30px',
+  borderRadius: '15px',
+  maxWidth: '700px',
+  border: '2px solid #DAA520'
+};
+
+const questionTitle = {
+  color: '#DAA520',
+  textAlign: 'center',
+  fontSize: '24px',
+  marginBottom: '20px'
+};
+
+const scoreDisplay = {
+  textAlign: 'center',
+  backgroundColor: '#000',
+  color: '#00FF00',
+  padding: '10px',
+  borderRadius: '5px',
+  marginBottom: '20px',
+  fontFamily: 'monospace'
+};
+
+const questionContainer = {
+  textAlign: 'center'
+};
+
+const questionText = {
+  fontSize: '20px',
+  marginBottom: '25px',
+  lineHeight: '1.4'
+};
+
+const optionsContainer = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '15px'
+};
+
+const optionButton = {
+  padding: '15px 20px',
+  fontSize: '16px',
+  backgroundColor: '#4169E1',
+  color: '#FFFFFF',
+  border: '2px solid #DAA520',
+  borderRadius: '10px',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  textAlign: 'left'
+};
+
+const playbookContainer = {
+  backgroundColor: 'rgba(25, 25, 112, 0.9)',
+  padding: '30px',
+  borderRadius: '15px',
+  maxWidth: '800px',
+  border: '2px solid #DAA520'
+};
+
+const playbookTitle = {
+  color: '#DAA520',
+  textAlign: 'center',
+  fontSize: '28px',
+  marginBottom: '15px'
+};
+
+const playbookSubtitle = {
+  textAlign: 'center',
+  marginBottom: '25px',
+  fontSize: '16px'
+};
+
+const playsContainer = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+  gap: '15px',
+  marginBottom: '25px'
+};
+
+const playCard = {
+  padding: '15px',
+  backgroundColor: '#FFFFFF',
+  color: '#000',
+  borderRadius: '10px',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  textAlign: 'center',
+  fontWeight: 'bold',
+  border: '2px solid #DAA520'
+};
+
+const selectedPlays = {
+  backgroundColor: 'rgba(255,255,255,0.1)',
+  padding: '15px',
+  borderRadius: '10px',
+  marginBottom: '20px'
+};
+
+const selectedPlay = {
+  backgroundColor: '#32CD32',
+  color: '#000',
+  padding: '8px 12px',
+  borderRadius: '15px',
+  margin: '5px',
+  display: 'inline-block',
+  fontSize: '14px'
+};
+
+const continueButton = {
+  display: 'block',
+  margin: '0 auto',
+  padding: '15px 30px',
+  fontSize: '18px',
+  backgroundColor: '#FF4500',
+  color: '#FFFFFF',
+  border: 'none',
+  borderRadius: '25px',
+  cursor: 'pointer',
+  fontWeight: 'bold'
+};
+
+const timeGameContainer = {
+  backgroundColor: 'rgba(220, 20, 60, 0.9)',
+  padding: '30px',
+  borderRadius: '15px',
+  maxWidth: '600px',
+  textAlign: 'center',
+  border: '2px solid #DAA520'
+};
+
+const timeTitle = {
+  color: '#FFFFFF',
+  fontSize: '28px',
+  marginBottom: '15px'
+};
+
+const timeSubtitle = {
+  marginBottom: '25px',
+  fontSize: '16px'
+};
+
+const clockContainer = {
+  display: 'flex',
+  justifyContent: 'center',
+  marginBottom: '25px'
+};
+
+const clockFace = {
+  width: '100px',
+  height: '100px',
+  borderRadius: '50%',
+  backgroundColor: '#FFFFFF',
+  color: '#000',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  border: '4px solid #DAA520'
+};
+
+const clockHand = {
+  fontSize: '24px',
+  fontWeight: 'bold'
+};
+
+const finalQuestion = {
+  marginTop: '20px'
+};
+
+const finalOptions = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+  marginTop: '15px'
+};
+
+const finalOption = {
+  padding: '12px 20px',
+  backgroundColor: '#FFFFFF',
+  color: '#000',
+  border: '2px solid #DAA520',
+  borderRadius: '10px',
+  cursor: 'pointer',
+  fontSize: '16px',
+  fontWeight: 'bold'
+};
+
+const endGameContainer = {
+  backgroundColor: 'rgba(255, 215, 0, 0.9)',
+  color: '#000',
+  padding: '40px',
+  borderRadius: '20px',
+  textAlign: 'center',
+  maxWidth: '600px',
+  border: '3px solid #FF4500'
+};
+
+const legendaryTitle = {
+  fontSize: '36px',
+  marginBottom: '20px',
+  color: '#FF4500'
+};
+
+const finalScore = {
+  fontSize: '24px',
+  marginBottom: '25px',
+  fontWeight: 'bold'
+};
+
+const barneyApproval = {
+  backgroundColor: 'rgba(0,0,0,0.1)',
+  padding: '20px',
+  borderRadius: '15px',
+  marginBottom: '25px'
+};
+
+const barneyEmoji = {
+  fontSize: '3rem',
+  marginBottom: '10px'
+};
+
+const barneyQuote = {
+  fontSize: '18px',
+  fontStyle: 'italic',
+  fontWeight: 'bold'
+};
+
+const storyEnd = {
+  backgroundColor: 'rgba(25, 25, 112, 0.3)',
+  padding: '20px',
+  borderRadius: '15px',
+  marginBottom: '25px'
+};
+
+const tedVoice = {
+  fontSize: '16px',
+  fontStyle: 'italic',
+  lineHeight: '1.5'
+};
+
+const nextAdventureButton = {
+  padding: '15px 30px',
+  fontSize: '20px',
+  backgroundColor: '#FF4500',
+  color: '#FFFFFF',
+  border: 'none',
+  borderRadius: '25px',
+  cursor: 'pointer',
+  fontWeight: 'bold'
+};
