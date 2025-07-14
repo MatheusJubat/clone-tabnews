@@ -54,21 +54,21 @@ export default function Fase8MacLarensPub() {
   ];
 
   const barneyPlays = [
-    "💻 The Code Master - impressionar com skills de programação",
-    "🐱 The Cat Whisperer - conquistar através dos gatinhos",
-    "🎮 The Player Two - ser o parceiro perfeito nos jogos",
-    "☕ The Coffee Connection - momentos especiais no café da manhã",
-    "❤️ The Genuine Guy - ser autêntico e verdadeiro (LEGENDARY!)",
+    "💻 O Mestre do Código - impressionar com skills de programação",
+    "🐱 O Encantador de Gatos - conquistar através dos gatinhos",
+    "🎮 O Player Dois - ser o parceiro perfeito nos jogos",
+    "☕ A Conexão Café - momentos especiais no café da manhã",
+    "❤️ O Cara Genuíno - ser autêntico e verdadeiro (LENDÁRIO!)",
   ];
 
   useEffect(() => {
     // Clientes do pub (personagens HIMYM com gatos)
     const customers = [
-      { id: 1, emoji: "👨‍💼🐱", x: 10, y: 80, name: "Ted Cat", mood: "📚" },
-      { id: 2, emoji: "👩‍💼🐱", x: 85, y: 75, name: "Robin Cat", mood: "📺" },
-      { id: 3, emoji: "👨‍⚖️🐱", x: 15, y: 25, name: "Marshall Cat", mood: "🥪" },
-      { id: 4, emoji: "👩‍🎨🐱", x: 80, y: 30, name: "Lily Cat", mood: "🎨" },
-      { id: 5, emoji: "👔🐱", x: 50, y: 85, name: "Barney Cat", mood: "👔" },
+      { id: 1, emoji: "👨‍💼🐱", x: 10, y: 80, name: "Ted Gato", mood: "📚" },
+      { id: 2, emoji: "👩‍💼🐱", x: 85, y: 75, name: "Robin Gata", mood: "📺" },
+      { id: 3, emoji: "👨‍⚖️🐱", x: 15, y: 25, name: "Marshall Gato", mood: "🥪" },
+      { id: 4, emoji: "👩‍🎨🐱", x: 80, y: 30, name: "Lily Gata", mood: "🎨" },
+      { id: 5, emoji: "👔🐱", x: 50, y: 85, name: "Barney Gato", mood: "👔" },
     ];
     setPubCustomers(customers);
   }, []);
@@ -143,13 +143,13 @@ export default function Fase8MacLarensPub() {
           <div style={entradaContainer}>
             <div style={pubSign}>
               <h1 style={signTitle}>🍺 MacLaren's Pub 🍺</h1>
-              <div style={signSubtitle}>EST. 2005 - Where Stories Begin</div>
+              <div style={signSubtitle}>EST. 2005 - Onde Histórias Começam</div>
             </div>
 
             <div style={tedIntro}>
               <div style={tedAvatar}>👨‍💼📖</div>
               <div style={tedSpeech}>
-                "Kids, chegamos à parte mais importante da história...
+                "Crianças, chegamos à parte mais importante da história...
                 <br />
                 Sentem-se, vou contar como descobri que o amor verdadeiro não é
                 sobre encontrar a pessoa perfeita..."
@@ -162,27 +162,27 @@ export default function Fase8MacLarensPub() {
                 <div style={friend}>
                   <div style={friendAvatar}>👨‍💼</div>
                   <div style={friendName}>Ted</div>
-                  <div style={friendRole}>The Storyteller</div>
+                  <div style={friendRole}>O Contador de Histórias</div>
                 </div>
                 <div style={friend}>
                   <div style={friendAvatar}>👩‍💼</div>
                   <div style={friendName}>Robin</div>
-                  <div style={friendRole}>The Reporter</div>
+                  <div style={friendRole}>A Repórter</div>
                 </div>
                 <div style={friend}>
                   <div style={friendAvatar}>👨‍⚖️</div>
                   <div style={friendName}>Marshall</div>
-                  <div style={friendRole}>The Gentle Giant</div>
+                  <div style={friendRole}>O Gigante Gentil</div>
                 </div>
                 <div style={friend}>
                   <div style={friendAvatar}>👩‍🎨</div>
                   <div style={friendName}>Lily</div>
-                  <div style={friendRole}>The Heart</div>
+                  <div style={friendRole}>O Coração</div>
                 </div>
                 <div style={friend}>
                   <div style={friendAvatar}>👔</div>
                   <div style={friendName}>Barney</div>
-                  <div style={friendRole}>The Legend</div>
+                  <div style={friendRole}>A Lenda</div>
                 </div>
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function Fase8MacLarensPub() {
               onClick={() => setJogoAtivo("perguntas")}
               style={startButton}
             >
-              🎯 "Suit Up!" - Começar História Final
+              🎯 "Vista o Terno!" - Começar História Final
             </button>
           </div>
         )}
@@ -200,7 +200,7 @@ export default function Fase8MacLarensPub() {
           <div style={gameContainer}>
             <h2 style={questionTitle}>📺 O Quiz Final da Turma 📺</h2>
             <div style={scoreDisplay}>
-              Pontuação: {pontuacao} | Ted's Story: {perguntaAtual + 1}/
+              Pontuação: {pontuacao} | História do Ted: {perguntaAtual + 1}/
               {perguntas.length}
             </div>
 
@@ -247,16 +247,15 @@ export default function Fase8MacLarensPub() {
 
         {jogoAtivo === "playbook" && (
           <div style={playbookContainer}>
-            <h2 style={playbookTitle}>📚 O PLAYBOOK FINAL DO BARNEY 📚</h2>
+            <h2 style={playbookTitle}>📚 O MANUAL FINAL DO BARNEY 📚</h2>
             <p style={playbookSubtitle}>
-              "Wait for it... O Barney preparou as jogadas LEGENDÁRIAS para
-              vocês!"
+              "Espera aí... O Barney preparou as jogadas LENDÁRIAS para vocês!"
             </p>
 
             <div style={barneyIntro}>
               <div style={barneyAvatar}>👔⭐</div>
               <div style={barneySpeech}>
-                "Legen-- wait for it... DARY! Escolham as jogadas que definem o
+                "Lendá-- espera aí... ÁRIO! Escolham as jogadas que definem o
                 relacionamento perfeito!"
               </div>
             </div>
@@ -295,7 +294,7 @@ export default function Fase8MacLarensPub() {
                 onClick={() => setJogoAtivo("countdown")}
                 style={continueButton}
               >
-                👔 "SUIT UP!" - Última Chamada
+                👔 "VISTA O TERNO!" - Última Chamada
               </button>
             )}
           </div>
@@ -319,7 +318,7 @@ export default function Fase8MacLarensPub() {
             <div style={clockContainer}>
               <div style={clockFace}>
                 <div style={clockNumbers}>{tempoRestante}</div>
-                <div style={clockLabel}>SECONDS</div>
+                <div style={clockLabel}>SEGUNDOS</div>
               </div>
             </div>
 
@@ -330,16 +329,16 @@ export default function Fase8MacLarensPub() {
               </h3>
               <div style={finalOptions}>
                 <button onClick={finalizarJogo} style={finalOption}>
-                  🏠 HOME - ele é meu lar
+                  🏠 LAR - ele é meu lar
                 </button>
                 <button onClick={finalizarJogo} style={finalOption}>
-                  🌟 DESTINY - nosso destino
+                  🌟 DESTINO - nosso destino
                 </button>
                 <button onClick={finalizarJogo} style={finalOption}>
-                  ♾️ INFINITY - amor infinito
+                  ♾️ INFINITO - amor infinito
                 </button>
                 <button onClick={finalizarJogo} style={finalOption}>
-                  💖 EVERYTHING - ele é tudo
+                  💖 TUDO - ele é tudo
                 </button>
               </div>
             </div>
@@ -348,7 +347,7 @@ export default function Fase8MacLarensPub() {
 
         {jogoCompleto && (
           <div style={endGameContainer}>
-            <h1 style={legendaryTitle}>🎉 LEGEN-- WAIT FOR IT... DARY! 🎉</h1>
+            <h1 style={legendaryTitle}>🎉 LENDÁ-- ESPERA AÍ... ÁRIO! 🎉</h1>
 
             <div style={finalScore}>
               Pontuação Final da História: {pontuacao}
@@ -360,7 +359,7 @@ export default function Fase8MacLarensPub() {
                 <div style={approval}>
                   <div style={approvalAvatar}>👨‍💼</div>
                   <div style={approvalQuote}>
-                    "Classic! Uma história linda!" - Ted
+                    "Clássico! Uma história linda!" - Ted
                   </div>
                 </div>
                 <div style={approval}>
@@ -372,7 +371,7 @@ export default function Fase8MacLarensPub() {
                 <div style={approval}>
                   <div style={approvalAvatar}>👨‍⚖️</div>
                   <div style={approvalQuote}>
-                    "Lawyered! Caso ganho!" - Marshall
+                    "Advogado! Caso ganho!" - Marshall
                   </div>
                 </div>
                 <div style={approval}>
@@ -383,7 +382,7 @@ export default function Fase8MacLarensPub() {
                 </div>
                 <div style={approval}>
                   <div style={approvalAvatar}>👔</div>
-                  <div style={approvalQuote}>"LEGENDARY!" - Barney</div>
+                  <div style={approvalQuote}>"LENDÁRIO!" - Barney</div>
                 </div>
               </div>
             </div>
@@ -399,7 +398,7 @@ export default function Fase8MacLarensPub() {
                 melhor.
                 <br />
                 <br />E essa é a história de como vocês dois se tornaram...
-                LEGENDARY!"
+                LENDÁRIOS!"
               </p>
             </div>
 
@@ -480,6 +479,7 @@ export default function Fase8MacLarensPub() {
   );
 }
 
+// Mantenho todos os estilos iguais ao original, apenas mudando os textos
 const pubStyle = {
   minHeight: "100vh",
   backgroundImage:

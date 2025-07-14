@@ -12,34 +12,35 @@ export default function Fase5AnimeCafe() {
 
   const animeQuestions = [
     {
-      pergunta: "Qual anime descreve melhor o relacionamento de vocês?",
+      pergunta: "Se vocês fossem um casal de anime, qual seria a vibe?",
       opcoes: [
-        "🌸 Kimi no Na wa - Conectados pelo destino",
-        "💖 Toradora - Amor que cresce aos poucos",
-        "✨ Your Name - Dois corações, uma alma",
-        "🎭 Kaguya-sama - Guerra de amor fofa",
+        "💖 Naruto e Hinata - amor que cresceu devagar e com muito carinho",
+        "🌸 Maomao e Jinshi - ela focada, ele apaixonado (Diário da Apotecária)",
+        "⚔️ Como Tanjiro protegendo Nezuko - sempre um pelo outro (Demon Slayer)",
+        "💎 Steven e Connie - crescendo juntos e se descobrindo (Steven Universe)",
       ],
-      resposta: "Todos representam nossa história única! 💕",
+      resposta: "Cada amor tem sua magia única, igual vocês dois! 💕",
     },
     {
-      pergunta: "Se vocês fossem protagonistas de anime, qual seria o plot?",
+      pergunta: "Qual seria o poder/habilidade especial do casal de vocês?",
       opcoes: [
-        "🎮 Slice of Life - Momentos simples e especiais",
-        "💻 Romance de programador e sua musa",
-        "🐱 Cat Café - Donos de café temático de gatos",
-        "🌟 Isekai - Aventura em mundos mágicos juntos",
+        "🔥 Técnica de Respiração do Amor Eterno (Demon Slayer)",
+        "💪 Shadow Monarch + Healing - ele protege, você cura (Solo Leveling)",
+        "👁️ Sharingan do Coração - ler os sentimentos um do outro (Naruto)",
+        "🧪 Poção da Felicidade Infinita (Diário da Apotecária)",
       ],
-      resposta: "Nossa história seria o anime mais fofo do mundo! 😻",
+      resposta: "O verdadeiro poder é o amor que vocês construíram juntos! ⭐",
     },
     {
-      pergunta: "Qual power-up do amor vocês já desbloquearam?",
+      pergunta:
+        "Se fossem para o mundo de Attack on Titan, qual seria a missão de vocês?",
       opcoes: [
-        "💝 Telepathy Level: Entender sem falar",
-        "🎯 Comfort Zone: Ser você mesmo 100%",
-        "🏠 Home Base: Lugar seguro um no outro",
-        "♾️ Infinite Lives: Amor que não acaba nunca",
+        "🏰 Proteger a humanidade juntos nas muralhas",
+        "🕊️ Encontrar um lugar pacífico longe dos titãs",
+        "💝 Ser a esperança e alegria em tempos sombrios",
+        "🗺️ Explorar o mundo lá fora de mãos dadas",
       ],
-      resposta: "Todos os power-ups estão no nível máximo! ⭐",
+      resposta: "Em qualquer mundo, vocês seriam a luz um do outro! 🌟",
     },
   ];
 
@@ -58,39 +59,39 @@ export default function Fase5AnimeCafe() {
     }
     setSakuraPetals(petals);
 
-    // Clientes do café (gatos anime)
+    // Clientes do café (personagens dos animes que ela gosta)
     const customers = [
       {
         id: 1,
-        emoji: "🐱‍👤",
+        emoji: "🍜🐱",
         x: 10,
         y: 75,
-        name: "Ninja Cat-kun",
-        mood: "😊",
+        name: "Naruto Neko",
+        mood: "🍥",
       },
       {
         id: 2,
-        emoji: "🐱‍🚀",
+        emoji: "🧪🐱",
         x: 85,
         y: 70,
-        name: "Pilot Cat-chan",
-        mood: "😸",
+        name: "Maomao Cat",
+        mood: "💊",
       },
       {
         id: 3,
-        emoji: "🐱‍💻",
+        emoji: "⚔️🐱",
         x: 15,
         y: 25,
-        name: "Otaku Cat-san",
-        mood: "🤓",
+        name: "Tanjiro Cat",
+        mood: "🌊",
       },
       {
         id: 4,
-        emoji: "🐱‍🎤",
+        emoji: "💎🐱",
         x: 80,
         y: 30,
-        name: "Idol Cat-sama",
-        mood: "🎵",
+        name: "Steven Cat",
+        mood: "🛡️",
       },
     ];
     setCafeCustomers(customers);
@@ -158,21 +159,20 @@ export default function Fase5AnimeCafe() {
         <div style={cafeContainer}>
           {/* Placa do Café */}
           <div style={cafeSign}>
-            <h1 style={signTitle}>🌸 Anime Café Neko 🌸</h1>
-            <div style={signSubtitle}>
-              "Onde o amor floresce como sakura" ✨
-            </div>
+            <h1 style={signTitle}>🌸 Café Otaku dos Gatinhos 🌸</h1>
+            <div style={signSubtitle}>"Onde animes e amor se encontram" ✨</div>
           </div>
 
           {/* Entrada do café */}
           {etapaAtual === 0 && (
             <div style={welcomeContainer}>
               <div style={welcomeMessage}>
-                <h2 style={welcomeTitle}>いらっしゃいませ！ (Irasshaimase!)</h2>
+                <h2 style={welcomeTitle}>いらっしゃいませ！ (Bem-vinda!)</h2>
                 <p style={welcomeText}>
-                  Bem-vinda ao café mais kawaii da galáxia! 🐾
+                  Bem-vinda ao café mais kawaii do universo otaku! 🐾
                   <br />
-                  Nossos gatinhos maids têm perguntas especiais para você!
+                  Nossos gatinhos maids têm perguntas especiais sobre seus
+                  animes favoritos!
                 </p>
                 <div style={loadingCats}>
                   <span style={loadingCat1}>😸</span>
@@ -268,7 +268,7 @@ export default function Fase5AnimeCafe() {
           {etapaAtual === 5 && (
             <div style={finalContainer}>
               <div style={finalCard}>
-                <h2 style={finalTitle}>🏆 Certificado Kawaii Obtido! 🏆</h2>
+                <h2 style={finalTitle}>🏆 Certificado Otaku Obtido! 🏆</h2>
 
                 <div style={certificateContainer}>
                   <div style={certificate}>
@@ -285,10 +285,26 @@ export default function Fase5AnimeCafe() {
                         <br />
                         💖 Power of Love Ativado
                         <br />
-                        🎯 Anime Knowledge: Expert
+                        🎯 Anime Knowledge: Expert nos seus favoritos
                         <br />
                         🐱 Cat Friendship: Legendary
                       </p>
+                    </div>
+
+                    <div style={animeReferences}>
+                      <h4 style={referencesTitle}>
+                        🎌 Seus Animes do Coração 🎌
+                      </h4>
+                      <div style={animeGrid}>
+                        <div style={animeItem}>🍜 Naruto</div>
+                        <div style={animeItem}>🧪 Diário da Apotecária</div>
+                        <div style={animeItem}>⚔️ Demon Slayer</div>
+                        <div style={animeItem}>💎 Steven Universe</div>
+                        <div style={animeItem}>👁️ Jujutsu Kaisen</div>
+                        <div style={animeItem}>🏰 Attack on Titan</div>
+                        <div style={animeItem}>💪 Solo Leveling</div>
+                        <div style={animeItem}>🧙‍♂️ Senhor dos Anéis</div>
+                      </div>
                     </div>
 
                     <div style={certificateFooter}>
@@ -421,11 +437,24 @@ export default function Fase5AnimeCafe() {
               0 0 60px rgba(255, 215, 0, 0.8);
           }
         }
+
+        @keyframes animeGlow {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.8;
+          }
+          50% {
+            transform: scale(1.05);
+            opacity: 1;
+          }
+        }
       `}</style>
     </div>
   );
 }
 
+// Todos os estilos permanecem iguais, apenas adicionando alguns novos
 const containerStyle = {
   minHeight: "100vh",
   width: "100vw",
@@ -750,6 +779,38 @@ const certificateText = {
   color: "#2C3E50",
   fontSize: "14px",
   lineHeight: "1.8",
+};
+
+// Novo: seção de animes favoritos
+const animeReferences = {
+  backgroundColor: "rgba(255, 105, 180, 0.1)",
+  borderRadius: "10px",
+  padding: "15px",
+  marginBottom: "15px",
+};
+
+const referencesTitle = {
+  color: "#FF1493",
+  fontSize: "1.1rem",
+  marginBottom: "10px",
+  textAlign: "center",
+};
+
+const animeGrid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+  gap: "8px",
+};
+
+const animeItem = {
+  backgroundColor: "rgba(255, 255, 255, 0.8)",
+  padding: "5px 8px",
+  borderRadius: "10px",
+  fontSize: "11px",
+  color: "#FF1493",
+  fontWeight: "bold",
+  textAlign: "center",
+  animation: "animeGlow 3s ease-in-out infinite",
 };
 
 const certificateFooter = {

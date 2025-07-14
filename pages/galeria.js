@@ -1,3 +1,4 @@
+// pages/galeria.js - Versão atualizada
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
@@ -8,8 +9,25 @@ import { EffectFade, Autoplay, Pagination, Navigation } from "swiper/modules";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
+// ✅ IMPORTS ADICIONADOS:
+import { MusicPlayer, musicPlayerCSS } from "../hooks/useMusic";
+import {
+  useEasterEggs,
+  EasterEggButton,
+  EasterEggMessage,
+  SpecialEffects,
+  EasterEggCounter,
+  easterEggCSS,
+} from "../hooks/useEasterEggs";
+import LoveStats, { useLoveStats } from "../components/LoveStats";
+
 export default function GaleriaMelhorada() {
   const router = useRouter();
+  // ✅ HOOKS ADICIONADOS:
+  const { findEasterEgg, showMessage, specialEffects, getTotalEggsFound } =
+    useEasterEggs("galeria");
+  const liveStats = useLoveStats();
+
   const [magicDust, setMagicDust] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heartRain, setHeartRain] = useState([]);
@@ -31,12 +49,6 @@ export default function GaleriaMelhorada() {
 
     // Animação de entrada
     setTimeout(() => setGalleryLoaded(true), 500);
-
-    // Toca música ao entrar na página
-    const iframe = document.getElementById("youtubePlayer");
-    if (iframe) {
-      iframe.src += "&autoplay=1";
-    }
   }, []);
 
   const createHeartRain = () => {
@@ -97,203 +109,11 @@ export default function GaleriaMelhorada() {
 
   return (
     <div style={containerStyle}>
-      {/* Poeira mágica de fundo */}
-      {magicDust.map((particle) => (
-        <div
-          key={particle.id}
-          style={{
-            ...dustParticle,
-            left: `${particle.x}%`,
-            top: `${particle.y}%`,
-            animationDelay: `${particle.delay}s`,
-          }}
-        >
-          {particle.emoji}
-        </div>
-      ))}
-
-      {/* Chuva de corações */}
-      {heartRain.map((heart) => (
-        <div
-          key={heart.id}
-          style={{
-            ...heartRainStyle,
-            left: `${heart.x}%`,
-          }}
-        >
-          {heart.emoji}
-        </div>
-      ))}
-
-      <div style={contentContainer}>
-        <div
-          style={{
-            ...galleryContainer,
-            opacity: galleryLoaded ? 1 : 0,
-            transform: galleryLoaded
-              ? "translateY(0px) scale(1)"
-              : "translateY(50px) scale(0.9)",
-          }}
-        >
-          {/* Título mágico */}
-          <div style={titleContainer}>
-            <h1 style={titleStyle}>💝 Galeria dos Momentos Mágicos 💝</h1>
-            <div style={titleSubtext}>
-              <p style={subtitleStyle}>
-                3 anos de amor, risadas e gatinhos! 🥰
-              </p>
-              <div style={titleDecoration}>
-                <span style={decorEmoji1}>🐾</span>
-                <span style={decorEmoji2}>💕</span>
-                <span style={decorEmoji3}>🐾</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Contador de momentos */}
-          <div style={momentCounter}>
-            <div style={counterCard}>
-              <div style={counterNumber}>{currentSlide + 1}</div>
-              <div style={counterTotal}>de {fotos.length}</div>
-              <div style={counterLabel}>Momentos Especiais</div>
-            </div>
-          </div>
-
-          {/* Galeria com Swiper */}
-          <div style={swiperContainer}>
-            <Swiper
-              modules={[EffectFade, Autoplay, Pagination, Navigation]}
-              effect="fade"
-              autoplay={{
-                delay: 4000,
-                disableOnInteraction: false,
-              }}
-              pagination={{
-                clickable: true,
-                bulletClass: "custom-bullet",
-                bulletActiveClass: "custom-bullet-active",
-              }}
-              navigation={true}
-              onSlideChange={(swiper) => setCurrentSlide(swiper.activeIndex)}
-              className="magical-swiper"
-              style={swiperStyle}
-            >
-              {fotos.map((foto, index) => (
-                <SwiperSlide key={index}>
-                  <div style={slideContainer}>
-                    <div style={imageContainer}>
-                      <img
-                        src={foto.src}
-                        alt={`foto ${index + 1}`}
-                        style={slideImage}
-                        onClick={createHeartRain}
-                      />
-                      <div style={imageOverlay}>
-                        <div style={categoryTag}>
-                          {foto.coracao} {foto.categoria}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={captionContainer}>
-                      <p style={captionText}>{foto.legenda}</p>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-
-          {/* Galeria de gatinhos assistindo */}
-          <div style={audienceCats}>
-            <div style={audienceTitle}>🎭 Plateia VIP 🎭</div>
-            <div style={catsContainer}>
-              <div style={catAudience1}>😸</div>
-              <div style={catAudience2}>😻</div>
-              <div style={catAudience3}>🐱</div>
-              <div style={catAudience4}>😺</div>
-              <div style={catAudience5}>🙀</div>
-            </div>
-            <p style={audienceCaption}>
-              "Os gatinhos aprovam esta linda história!" 🐾
-            </p>
-          </div>
-
-          {/* Estatísticas do amor */}
-          <div style={loveStats}>
-            <h3 style={statsTitle}>📊 Estatísticas do Amor 📊</h3>
-            <div style={statsGrid}>
-              <div style={statCard}>
-                <div style={statNumber}>1095</div>
-                <div style={statLabel}>Dias Juntos</div>
-                <div style={statEmoji}>📅</div>
-              </div>
-              <div style={statCard}>
-                <div style={statNumber}>∞</div>
-                <div style={statLabel}>Sorrisos</div>
-                <div style={statEmoji}>😊</div>
-              </div>
-              <div style={statCard}>
-                <div style={statNumber}>42</div>
-                <div style={statLabel}>Gatinhos Vistos</div>
-                <div style={statEmoji}>🐱</div>
-              </div>
-              <div style={statCard}>
-                <div style={statNumber}>100%</div>
-                <div style={statLabel}>Felicidade</div>
-                <div style={statEmoji}>💖</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Botão para continuar */}
-          <div style={actionContainer}>
-            <div style={magicPrompt}>
-              <h3 style={promptTitle}>✨ Pronta para a Grande Aventura? ✨</h3>
-              <p style={promptText}>
-                A galeria foi apenas o começo... Mundos mágicos te esperam! 🌟
-              </p>
-            </div>
-
-            <button
-              onClick={continuarAventura}
-              style={adventureButton}
-              onMouseEnter={(e) => {
-                e.target.style.transform =
-                  "scale(1.15) rotate(2deg) translateY(-5px)";
-                e.target.style.background =
-                  "linear-gradient(45deg, #ff1493, #ff69b4, #ba55d3, #9370db)";
-                e.target.style.boxShadow =
-                  "0 20px 40px rgba(255, 20, 147, 0.7)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform =
-                  "scale(1) rotate(0deg) translateY(0px)";
-                e.target.style.background =
-                  "linear-gradient(45deg, #28a745, #20c997, #17a2b8)";
-                e.target.style.boxShadow = "0 12px 25px rgba(40, 167, 69, 0.6)";
-              }}
-            >
-              🎮 Começar a Aventura Mágica! 🎮
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Música de fundo */}
-      <div style={{ display: "none" }}>
-        <iframe
-          id="youtubePlayer"
-          width="0"
-          height="0"
-          src="https://www.youtube.com/embed/lxhqCcrnTv4?autoplay=1&loop=1&playlist=lxhqCcrnTv4"
-          title="Música de fundo"
-          frameBorder="0"
-          allow="autoplay"
-        ></iframe>
-      </div>
-
+      {/* ✅ CSS GLOBAL */}
       <style jsx global>{`
+        ${musicPlayerCSS}
+        ${easterEggCSS}
+        
         @keyframes dustFloat {
           0%,
           100% {
@@ -382,10 +202,251 @@ export default function GaleriaMelhorada() {
           transform: scale(1.3);
         }
       `}</style>
+
+      {/* ✅ MÚSICA E EASTER EGGS */}
+      <MusicPlayer
+        phaseName="galeria"
+        position="bottom-right"
+        showControls={true}
+      />
+
+      <EasterEggCounter currentPhase="galeria" position="top-right" />
+
+      {/* ✅ EASTER EGGS ESCONDIDOS */}
+      <EasterEggButton
+        position={{ top: "8%", left: "12%" }}
+        size={42}
+        onFind={findEasterEgg}
+      />
+
+      <EasterEggButton
+        position={{ bottom: "18%", right: "12%" }}
+        size={38}
+        onFind={findEasterEgg}
+      />
+
+      <EasterEggButton
+        position={{ top: "45%", left: "6%" }}
+        size={48}
+        onFind={findEasterEgg}
+      />
+
+      {/* Poeira mágica de fundo */}
+      {magicDust.map((particle) => (
+        <div
+          key={particle.id}
+          style={{
+            ...dustParticle,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            animationDelay: `${particle.delay}s`,
+          }}
+        >
+          {particle.emoji}
+        </div>
+      ))}
+
+      {/* Chuva de corações */}
+      {heartRain.map((heart) => (
+        <div
+          key={heart.id}
+          style={{
+            ...heartRainStyle,
+            left: `${heart.x}%`,
+          }}
+        >
+          {heart.emoji}
+        </div>
+      ))}
+
+      <div style={contentContainer}>
+        <div
+          style={{
+            ...galleryContainer,
+            opacity: galleryLoaded ? 1 : 0,
+            transform: galleryLoaded
+              ? "translateY(0px) scale(1)"
+              : "translateY(50px) scale(0.9)",
+          }}
+        >
+          {/* Título mágico */}
+          <div style={titleContainer}>
+            <h1 style={titleStyle}>💝 Galeria dos Momentos Mágicos 💝</h1>
+            <div style={titleSubtext}>
+              <p style={subtitleStyle}>
+                {liveStats.diasJuntos || 0} dias de amor, risadas e gatinhos! 🥰
+              </p>
+              <div style={titleDecoration}>
+                <span style={decorEmoji1}>🐾</span>
+                <span style={decorEmoji2}>💕</span>
+                <span style={decorEmoji3}>🐾</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Contador de momentos */}
+          <div style={momentCounter}>
+            <div style={counterCard}>
+              <div style={counterNumber}>{currentSlide + 1}</div>
+              <div style={counterTotal}>de {fotos.length}</div>
+              <div style={counterLabel}>Momentos Especiais</div>
+            </div>
+          </div>
+
+          {/* Galeria com Swiper */}
+          <div style={swiperContainer}>
+            <Swiper
+              modules={[EffectFade, Autoplay, Pagination, Navigation]}
+              effect="fade"
+              autoplay={{
+                delay: 4000,
+                disableOnInteraction: false,
+              }}
+              pagination={{
+                clickable: true,
+                bulletClass: "custom-bullet",
+                bulletActiveClass: "custom-bullet-active",
+              }}
+              navigation={true}
+              onSlideChange={(swiper) => setCurrentSlide(swiper.activeIndex)}
+              className="magical-swiper"
+              style={swiperStyle}
+            >
+              {fotos.map((foto, index) => (
+                <SwiperSlide key={index}>
+                  <div style={slideContainer}>
+                    <div style={imageContainer}>
+                      <img
+                        src={foto.src}
+                        alt={`foto ${index + 1}`}
+                        style={slideImage}
+                        onClick={() => {
+                          createHeartRain();
+                          findEasterEgg({ x: 50, y: 50 });
+                        }}
+                      />
+                      <div style={imageOverlay}>
+                        <div style={categoryTag}>
+                          {foto.coracao} {foto.categoria}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={captionContainer}>
+                      <p style={captionText}>{foto.legenda}</p>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+
+          {/* Galeria de gatinhos assistindo */}
+          <div style={audienceCats}>
+            <div style={audienceTitle}>🎭 Plateia VIP 🎭</div>
+            <div style={catsContainer}>
+              <div
+                style={catAudience1}
+                onClick={() => findEasterEgg({ x: 20, y: 85 })}
+              >
+                😸
+              </div>
+              <div
+                style={catAudience2}
+                onClick={() => findEasterEgg({ x: 35, y: 85 })}
+              >
+                😻
+              </div>
+              <div
+                style={catAudience3}
+                onClick={() => findEasterEgg({ x: 50, y: 85 })}
+              >
+                🐱
+              </div>
+              <div
+                style={catAudience4}
+                onClick={() => findEasterEgg({ x: 65, y: 85 })}
+              >
+                😺
+              </div>
+              <div
+                style={catAudience5}
+                onClick={() => findEasterEgg({ x: 80, y: 85 })}
+              >
+                🙀
+              </div>
+            </div>
+            <p style={audienceCaption}>
+              "Os gatinhos aprovam esta linda história!" 🐾
+            </p>
+          </div>
+
+          {/* ✅ ESTATÍSTICAS ATUALIZADAS */}
+          <LoveStats
+            showDetailed={false}
+            theme="romantic"
+            style={{ marginBottom: "30px" }}
+          />
+
+          {/* Botão para continuar */}
+          <div style={actionContainer}>
+            <div style={magicPrompt}>
+              <h3 style={promptTitle}>✨ Pronta para a Grande Aventura? ✨</h3>
+              <p style={promptText}>
+                A galeria foi apenas o começo... Mundos mágicos te esperam! 🌟
+              </p>
+
+              {/* Easter egg no prompt */}
+              <div
+                style={{
+                  cursor: "pointer",
+                  display: "inline-block",
+                  fontSize: "1.5rem",
+                  margin: "10px 0",
+                }}
+                onClick={() => findEasterEgg({ x: 50, y: 70 })}
+              >
+                🎮✨🎮
+              </div>
+            </div>
+
+            <button
+              onClick={continuarAventura}
+              style={adventureButton}
+              onMouseEnter={(e) => {
+                e.target.style.transform =
+                  "scale(1.15) rotate(2deg) translateY(-5px)";
+                e.target.style.background =
+                  "linear-gradient(45deg, #ff1493, #ff69b4, #ba55d3, #9370db)";
+                e.target.style.boxShadow =
+                  "0 20px 40px rgba(255, 20, 147, 0.7)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform =
+                  "scale(1) rotate(0deg) translateY(0px)";
+                e.target.style.background =
+                  "linear-gradient(45deg, #28a745, #20c997, #17a2b8)";
+                e.target.style.boxShadow = "0 12px 25px rgba(40, 167, 69, 0.6)";
+              }}
+            >
+              🎮 Começar a Aventura Mágica! 🎮
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ✅ COMPONENTES DE FEEDBACK */}
+      <EasterEggMessage
+        message={showMessage}
+        onClose={() => setShowMessage(null)}
+      />
+
+      <SpecialEffects effects={specialEffects} />
     </div>
   );
 }
 
+// Todos os estilos permanecem iguais...
 const containerStyle = {
   minHeight: "100vh",
   width: "100vw",
@@ -466,16 +527,19 @@ const titleDecoration = {
 const decorEmoji1 = {
   fontSize: "1.5rem",
   animation: "catClap 2s ease-in-out infinite",
+  cursor: "pointer",
 };
 
 const decorEmoji2 = {
   fontSize: "1.8rem",
   animation: "catClap 2s ease-in-out infinite 0.5s",
+  cursor: "pointer",
 };
 
 const decorEmoji3 = {
   fontSize: "1.5rem",
   animation: "catClap 2s ease-in-out infinite 1s",
+  cursor: "pointer",
 };
 
 const momentCounter = {
@@ -598,80 +662,42 @@ const catsContainer = {
 const catAudience1 = {
   fontSize: "2.5rem",
   animation: "catClap 2s ease-in-out infinite",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const catAudience2 = {
   fontSize: "2.5rem",
   animation: "catClap 2s ease-in-out infinite 0.2s",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const catAudience3 = {
   fontSize: "2.5rem",
   animation: "catClap 2s ease-in-out infinite 0.4s",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const catAudience4 = {
   fontSize: "2.5rem",
   animation: "catClap 2s ease-in-out infinite 0.6s",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const catAudience5 = {
   fontSize: "2.5rem",
   animation: "catClap 2s ease-in-out infinite 0.8s",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const audienceCaption = {
   color: "#666",
   fontStyle: "italic",
   margin: 0,
-};
-
-const loveStats = {
-  backgroundColor: "rgba(255, 255, 255, 0.9)",
-  borderRadius: "20px",
-  padding: "25px",
-  marginBottom: "30px",
-  border: "3px solid #ff69b4",
-  boxShadow: "0 15px 30px rgba(255, 105, 180, 0.3)",
-};
-
-const statsTitle = {
-  textAlign: "center",
-  color: "#ff1493",
-  fontSize: "1.4rem",
-  marginBottom: "20px",
-};
-
-const statsGrid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-  gap: "15px",
-};
-
-const statCard = {
-  backgroundColor: "rgba(255, 192, 203, 0.3)",
-  borderRadius: "15px",
-  padding: "20px",
-  textAlign: "center",
-  border: "2px solid #ff69b4",
-  animation: "statPulse 3s ease-in-out infinite",
-};
-
-const statNumber = {
-  fontSize: "2rem",
-  fontWeight: "bold",
-  color: "#ff1493",
-  marginBottom: "5px",
-};
-
-const statLabel = {
-  fontSize: "0.9rem",
-  color: "#666",
-  marginBottom: "8px",
-};
-
-const statEmoji = {
-  fontSize: "1.5rem",
 };
 
 const actionContainer = {

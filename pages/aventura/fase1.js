@@ -1,12 +1,28 @@
+// pages/aventura/fase1.js - Versão completa com música e easter eggs
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import TransitionComponent from "../../components/TransitionComponent";
+import { useTransition } from "../../hooks/useTransition";
+import { MusicPlayer, musicPlayerCSS } from "../../hooks/useMusic";
+import {
+  useEasterEggs,
+  EasterEggButton,
+  EasterEggMessage,
+  SpecialEffects,
+  EasterEggCounter,
+  easterEggCSS,
+} from "../../hooks/useEasterEggs";
 
 export default function Fase1Melhorada() {
-  const router = useRouter();
+  const { isTransitioning, transitionData, startTransition } = useTransition();
+  const { findEasterEgg, showMessage, specialEffects, getTotalEggsFound } =
+    useEasterEggs("fase1");
+
   const [resposta, setResposta] = useState(null);
   const [magicParticles, setMagicParticles] = useState([]);
   const [bookOpen, setBookOpen] = useState(false);
   const [catVisible, setCatVisible] = useState(false);
+  const [showEasterEggDebug, setShowEasterEggDebug] = useState(false);
 
   useEffect(() => {
     // Criar partículas mágicas
@@ -22,17 +38,174 @@ export default function Fase1Melhorada() {
     }
     setMagicParticles(particles);
 
-    // Animação de entrada
+    // Animações de entrada
     setTimeout(() => setBookOpen(true), 500);
     setTimeout(() => setCatVisible(true), 1500);
-  }, []);
 
-  const avancar = () => {
-    router.push("/aventura/fase2");
+    // Debug mode - pressione 'D' para ver easter eggs
+    const handleKeyPress = (e) => {
+      if (e.key.toLowerCase() === "d") {
+        setShowEasterEggDebug(!showEasterEggDebug);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [showEasterEggDebug]);
+
+  const avancar = async () => {
+    await startTransition(
+      "fase1",
+      "fase2",
+      "Maomao está preparando poções especiais no laboratório...",
+      1000,
+    );
   };
+
+  // Se estiver em transição, mostrar componente de transição
+  if (isTransitioning && transitionData) {
+    return (
+      <TransitionComponent
+        fromPhase={transitionData.fromPhase}
+        toPhase={transitionData.toPhase}
+        message={transitionData.message}
+        onComplete={transitionData.onComplete}
+      />
+    );
+  }
 
   return (
     <div style={containerStyle}>
+      {/* CSS para animações */}
+      <style jsx global>{`
+        ${musicPlayerCSS}
+        ${easterEggCSS}
+        
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0px) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-15px) rotate(180deg);
+          }
+        }
+
+        @keyframes bookOpen {
+          from {
+            transform: rotateY(-90deg) scale(0.8);
+            opacity: 0;
+          }
+          to {
+            transform: rotateY(0deg) scale(1);
+            opacity: 1;
+          }
+        }
+
+        @keyframes sparkle {
+          0%,
+          100% {
+            opacity: 0;
+            transform: scale(0) rotate(0deg);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1) rotate(180deg);
+          }
+        }
+
+        @keyframes catBounce {
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes runeGlow {
+          0%,
+          100% {
+            transform: rotate(0deg) scale(1);
+            filter: hue-rotate(0deg);
+          }
+          50% {
+            transform: rotate(180deg) scale(1.2);
+            filter: hue-rotate(180deg);
+          }
+        }
+
+        @keyframes moonGlow {
+          0%,
+          100% {
+            opacity: 0.7;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.1);
+          }
+        }
+      `}</style>
+
+      {/* Player de Música */}
+      <MusicPlayer
+        phaseName="fase1"
+        position="bottom-right"
+        showControls={true}
+      />
+
+      {/* Contador de Easter Eggs */}
+      <EasterEggCounter currentPhase="fase1" position="top-right" />
+
+      {/* Easter Eggs Escondidos */}
+      <EasterEggButton
+        position={{ top: "5%", left: "10%" }}
+        size={40}
+        onFind={findEasterEgg}
+        debug={showEasterEggDebug}
+      />
+
+      <EasterEggButton
+        position={{ bottom: "15%", right: "8%" }}
+        size={35}
+        onFind={findEasterEgg}
+        debug={showEasterEggDebug}
+      />
+
+      <EasterEggButton
+        position={{ top: "40%", left: "5%" }}
+        size={50}
+        onFind={findEasterEgg}
+        shape="square"
+        debug={showEasterEggDebug}
+      />
+
+      <EasterEggButton
+        position={{ top: "60%", right: "15%" }}
+        size={30}
+        onFind={findEasterEgg}
+        debug={showEasterEggDebug}
+      />
+
+      {/* Easter Egg no gato mágico */}
+      {catVisible && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "10%",
+            left: "10%",
+            zIndex: 10,
+            cursor: "pointer",
+          }}
+          onClick={() => findEasterEgg({ x: 10, y: 90 })}
+        >
+          <div style={catWizardStyle}>🐱‍👤</div>
+          <div style={catSpeechBubble}>Miau mágico! 💜</div>
+        </div>
+      )}
+
       {/* Partículas mágicas flutuantes */}
       {magicParticles.map((particle) => (
         <div
@@ -48,16 +221,10 @@ export default function Fase1Melhorada() {
         </div>
       ))}
 
-      {/* Lua mágica no fundo */}
-      <div style={moonStyle}>🌙</div>
-
-      {/* Gato mágico observando */}
-      {catVisible && (
-        <div style={magicCatStyle}>
-          <div style={catWizardStyle}>🐱‍👤</div>
-          <div style={catSpeechBubble}>Miau mágico! 💜</div>
-        </div>
-      )}
+      {/* Lua mágica no fundo - também um easter egg */}
+      <div style={moonStyle} onClick={() => findEasterEgg({ x: 85, y: 15 })}>
+        🌙
+      </div>
 
       <div style={contentContainer}>
         <div
@@ -189,78 +356,42 @@ export default function Fase1Melhorada() {
         </div>
       </div>
 
-      <style jsx global>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-15px) rotate(180deg);
-          }
-        }
+      {/* Mensagem de Easter Egg */}
+      <EasterEggMessage
+        message={showMessage}
+        onClose={() => setShowMessage(null)}
+      />
 
-        @keyframes bookOpen {
-          from {
-            transform: rotateY(-90deg) scale(0.8);
-            opacity: 0;
-          }
-          to {
-            transform: rotateY(0deg) scale(1);
-            opacity: 1;
-          }
-        }
+      {/* Efeitos Especiais */}
+      <SpecialEffects effects={specialEffects} />
 
-        @keyframes sparkle {
-          0%,
-          100% {
-            opacity: 0;
-            transform: scale(0) rotate(0deg);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1) rotate(180deg);
-          }
-        }
-
-        @keyframes catBounce {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        @keyframes runeGlow {
-          0%,
-          100% {
-            transform: rotate(0deg) scale(1);
-            filter: hue-rotate(0deg);
-          }
-          50% {
-            transform: rotate(180deg) scale(1.2);
-            filter: hue-rotate(180deg);
-          }
-        }
-
-        @keyframes moonGlow {
-          0%,
-          100% {
-            opacity: 0.7;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.1);
-          }
-        }
-      `}</style>
+      {/* Debug info */}
+      {showEasterEggDebug && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "10px",
+            transform: "translateY(-50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            color: "white",
+            padding: "15px",
+            borderRadius: "10px",
+            fontSize: "12px",
+            zIndex: 2000,
+          }}
+        >
+          <div>🐛 Debug Mode Ativo</div>
+          <div>Easter Eggs: {getTotalEggsFound()}</div>
+          <div>Pressione 'D' para esconder</div>
+          <div>Áreas em vermelho são clicáveis</div>
+        </div>
+      )}
     </div>
   );
 }
 
+// Todos os estilos originais permanecem iguais...
 const containerStyle = {
   minHeight: "100vh",
   width: "100vw",
@@ -292,18 +423,14 @@ const moonStyle = {
   opacity: 0.7,
   animation: "moonGlow 4s ease-in-out infinite",
   zIndex: 1,
-};
-
-const magicCatStyle = {
-  position: "absolute",
-  bottom: "10%",
-  left: "10%",
-  zIndex: 10,
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const catWizardStyle = {
   fontSize: "3rem",
   animation: "catBounce 2s ease-in-out infinite",
+  transition: "all 0.3s ease",
 };
 
 const catSpeechBubble = {
