@@ -174,7 +174,7 @@ export default function Fase7Gatos8Bit() {
         </div>
 
         {!gameOver ? (
-          <div style={questionContainer}>
+          <div style={gameQuestionContainer}>
             {/* Vida do jogador */}
             <div style={livesContainer}>
               <span style={livesLabel}>LIVES:</span>
