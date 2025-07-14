@@ -87,7 +87,7 @@ export default function Galeria() {
       </div>
 
       <a
-        href="/pedido"
+        href="/aventura/fase1"
         style={{
           marginTop: "40px",
           display: "inline-block",

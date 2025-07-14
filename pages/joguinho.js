@@ -100,7 +100,7 @@ export default function Joguinho() {
               display: "inline-block",
             }}
           >
-            Ver Surpresa ❤️
+            Ver Galeria 🐱✨
           </a>
         </div>
       )}
