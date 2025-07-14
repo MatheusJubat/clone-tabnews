@@ -7,7 +7,7 @@ export default function Fase4() {
   const [resposta, setResposta] = useState(null);
 
   const avancar = () => {
-    router.push("/aventura/fase6");
+    router.push("/aventura/fase5");
   };
 
   useEffect(() => {

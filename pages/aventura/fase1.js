@@ -1,3 +1,4 @@
+// pages/aventura/fase1.js
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -12,30 +13,29 @@ export default function Fase1() {
   return (
     <div
       style={{
-        backgroundColor: "#fdf1f8",
+        backgroundImage: "linear-gradient(to bottom, #3e1f47, #1c0c24)",
+        color: "#fbeaff",
         minHeight: "100vh",
-        padding: "30px",
-        fontFamily: "'Segoe UI', sans-serif",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
+        padding: "40px 20px",
         textAlign: "center",
+        fontFamily: "'Uncial Antiqua', cursive",
       }}
     >
-      <img
-        src="https://i.pinimg.com/originals/1a/b1/c0/1ab1c0c957e03d8bb89aa2fc13fc2264.png"
-        alt="Mascote RPG"
-        style={{ width: "200px", marginBottom: "20px" }}
-      />
-      <h2>⚔️ Missão do Coração: Fase 1</h2>
-      <p style={{ maxWidth: "500px", marginTop: "20px" }}>
-        Você foi invocada para uma missão importante! Mas antes, uma pergunta de
-        extrema relevância mágica:
+      <h1 style={{ fontSize: "30px", marginBottom: "20px" }}>
+        📜 Fase 1: O Grimório Secreto
+      </h1>
+      <p style={{ maxWidth: "600px" }}>
+        Você foi invocada para uma missão sagrada do coração... Mas antes, o
+        grimório exige uma resposta sincera:
       </p>
 
-      <h3 style={{ marginTop: "30px" }}>
-        Você ainda amaria seu namorado se ele fosse uma minhoca?
-      </h3>
+      <h2 style={{ marginTop: "30px", fontSize: "22px" }}>
+        Você ainda amaria seu namorado se ele fosse uma... minhoca? 🪱
+      </h2>
 
       {!resposta ? (
         <div
@@ -44,25 +44,29 @@ export default function Fase1() {
             display: "flex",
             flexDirection: "column",
             gap: "15px",
+            maxWidth: "500px",
           }}
         >
-          <button onClick={() => setResposta("claro")} style={btnEstilo}>
-            Claro! Até faria uma toquinha pra ele na terra 🌱
+          <button onClick={() => setResposta("claro")} style={btnGrimorio}>
+            Claro! Faria até um mini ninho de folhas pra ele 🌿
           </button>
-          <button onClick={() => setResposta("depende")} style={btnEstilo}>
-            Depende... ele ainda falaria comigo? 🤔
+          <button onClick={() => setResposta("depende")} style={btnGrimorio}>
+            Depende... ele ainda rolaria iniciativa? 🎲
           </button>
-          <button onClick={() => setResposta("nao")} style={btnEstilo}>
-            Só se ele rolasse 20 no carisma 🎲
+          <button onClick={() => setResposta("nao")} style={btnGrimorio}>
+            Só se ele fosse uma minhoca mágica 💫
           </button>
         </div>
       ) : (
         <div style={{ marginTop: "40px" }}>
           <p style={{ fontSize: "18px" }}>
-            Resposta registrada com sucesso no grimório 🧙‍♀️
+            🪄 A resposta foi gravada nas páginas do grimório.
           </p>
-          <button onClick={avancar} style={{ ...btnEstilo, marginTop: "20px" }}>
-            Avançar para a próxima fase 🚪
+          <button
+            onClick={avancar}
+            style={{ ...btnGrimorio, backgroundColor: "#8f3e9d" }}
+          >
+            Prosseguir para o próximo capítulo 📖
           </button>
         </div>
       )}
@@ -70,14 +74,13 @@ export default function Fase1() {
   );
 }
 
-const btnEstilo = {
-  padding: "12px 20px",
+const btnGrimorio = {
+  padding: "14px 20px",
   fontSize: "16px",
-  backgroundColor: "#ff8ab0",
-  border: "none",
+  backgroundColor: "#5e2b73",
+  border: "2px solid #d5aaff",
   borderRadius: "10px",
   cursor: "pointer",
-  color: "white",
-  width: "100%",
-  maxWidth: "400px",
+  color: "#fbeaff",
+  transition: "0.3s",
 };
