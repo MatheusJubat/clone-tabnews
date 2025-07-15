@@ -1,346 +1,302 @@
-// pages/aventura/fase3.js - Castelo Encantado Estilo Ghibli
+// pages/aventura/fase3.js - Castelo Ambulante do Howl Melhorado
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
-export default function Fase3Ghibli() {
+export default function Fase3HowlCastle() {
   const router = useRouter();
   const [resposta, setResposta] = useState(null);
-  const [magicSpirits, setMagicSpirits] = useState([]);
-  const [castleVisible, setCastleVisible] = useState(false);
-  const [libraryOpen, setLibraryOpen] = useState(false);
-  const [forestCats, setForestCats] = useState([]);
+  const [calciferFeliz, setCalciferFeliz] = useState(false);
+  const [magicPortals, setMagicPortals] = useState([]);
+  const [castleMoving, setCastleMoving] = useState(false);
+  const [howlVanity, setHowlVanity] = useState(0);
 
   useEffect(() => {
-    // Espíritos mágicos flutuando (estilo Ghibli)
-    const spirits = [];
-    for (let i = 0; i < 15; i++) {
-      spirits.push({
+    // Criar portais mágicos flutuando
+    const portals = [];
+    for (let i = 0; i < 8; i++) {
+      portals.push({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        delay: Math.random() * 5,
-        emoji: ["🌸", "🍃", "✨", "🦋", "🌙"][Math.floor(Math.random() * 5)],
-        speed: 3 + Math.random() * 4,
+        color: ["💚", "💙", "💜", "🧡"][Math.floor(Math.random() * 4)],
+        delay: Math.random() * 3,
       });
     }
-    setMagicSpirits(spirits);
+    setMagicPortals(portals);
 
-    // Gatos da floresta encantada
-    const cats = [
-      { id: 1, emoji: "🐱🌸", x: 8, y: 80, name: "Totoro Cat" },
-      { id: 2, emoji: "🦋🐱", x: 90, y: 75, name: "Butterfly Cat" },
-      { id: 3, emoji: "🌙🐱", x: 12, y: 20, name: "Moon Cat" },
-      { id: 4, emoji: "🍃🐱", x: 85, y: 25, name: "Wind Cat" },
-    ];
-    setForestCats(cats);
-
-    // Animações sequenciais
-    setTimeout(() => setCastleVisible(true), 600);
-    setTimeout(() => setLibraryOpen(true), 1200);
+    // Calcifer animado
+    setTimeout(() => setCastleMoving(true), 1000);
   }, []);
 
-  const avancar = () => {
-    router.push("/aventura/fase4");
+  const responder = (opcao) => {
+    setResposta(opcao);
+    setCalciferFeliz(true);
+
+    if (opcao === "flores") {
+      setHowlVanity(3); // Howl fica dramático
+    }
+
+    setTimeout(() => {
+      router.push("/aventura/fase4");
+    }, 3000);
   };
 
   return (
     <div style={containerStyle}>
-      {/* Fundo degradê estilo Ghibli */}
-      <div style={ghibliBackground}></div>
-
-      {/* Espíritos mágicos flutuando */}
-      {magicSpirits.map((spirit) => (
-        <div
-          key={spirit.id}
-          style={{
-            ...spiritStyle,
-            left: `${spirit.x}%`,
-            top: `${spirit.y}%`,
-            animationDelay: `${spirit.delay}s`,
-            animationDuration: `${spirit.speed}s`,
-          }}
-        >
-          {spirit.emoji}
-        </div>
-      ))}
-
-      {/* Gatos da floresta */}
-      {forestCats.map((cat) => (
-        <div
-          key={cat.id}
-          style={{
-            ...forestCatStyle,
-            left: `${cat.x}%`,
-            top: `${cat.y}%`,
-          }}
-        >
-          <div style={catCharacter}>{cat.emoji}</div>
-          <div style={catNameTag}>{cat.name}</div>
-        </div>
-      ))}
-
-      {/* Elementos decorativos da floresta */}
-      <div style={forestElements}>
-        <div style={tree1}>🌳</div>
-        <div style={tree2}>🌲</div>
-        <div style={flower1}>🌺</div>
-        <div style={flower2}>🌻</div>
-        <div style={mushroom}>🍄</div>
+      {/* Fundo do Castelo Ambulante */}
+      <div style={castleBackground}>
+        <div style={castleBody}></div>
+        <div style={castleLegs}>🦵🦵🦵🦵</div>
       </div>
 
-      <div style={contentContainer}>
+      {/* Portais mágicos */}
+      {magicPortals.map((portal) => (
         <div
+          key={portal.id}
           style={{
-            ...castleContainer,
-            transform: castleVisible
-              ? "scale(1) rotateY(0deg)"
-              : "scale(0.8) rotateY(-20deg)",
-            opacity: castleVisible ? 1 : 0,
+            ...portalStyle,
+            left: `${portal.x}%`,
+            top: `${portal.y}%`,
+            animationDelay: `${portal.delay}s`,
           }}
         >
-          {/* Castelo no Céu inspirado */}
-          <div style={castleHeader}>
-            <div style={castleTowers}>
-              <div style={tower1}>🏰</div>
-              <div style={tower2}>🗼</div>
-              <div style={tower3}>🏯</div>
-            </div>
-            <div style={castleFlag}>🚩</div>
-          </div>
+          {portal.color}
+        </div>
+      ))}
 
-          <div style={castleMain}>
-            <h1 style={titleStyle}>🌸 Castelo no Céu dos Gatinhos 🌸</h1>
-
-            <div style={enchantedStory}>
-              <div style={storyScroll}>
-                <p style={ghibliText}>
-                  Em uma floresta encantada, onde os espíritos da natureza
-                  dançam entre as árvores,
-                  <br />
-                  ergue-se um castelo mágico guardado por gatos especiais...
-                  <br />
-                  Eles sussurram uma pergunta que ecoa pelas nuvens há
-                  séculos...
-                </p>
-              </div>
-            </div>
-
-            {/* Biblioteca mágica */}
+      <div style={contentContainer}>
+        <div style={castleInterior}>
+          {/* Calcifer animado */}
+          <div style={calciferContainer}>
             <div
               style={{
-                ...libraryContainer,
-                maxHeight: libraryOpen ? "500px" : "0px",
-                opacity: libraryOpen ? 1 : 0,
+                ...calciferStyle,
+                animation: calciferFeliz
+                  ? "calciferHappy 2s ease-in-out infinite"
+                  : "calciferNormal 3s ease-in-out infinite",
               }}
             >
-              <h2 style={libraryTitle}>📚 Biblioteca das Memórias 📚</h2>
-
-              <div style={magicalBooks}>
-                {["📖", "📜", "📚", "📋", "📓"].map((book, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      ...bookItem,
-                      animationDelay: `${index * 0.3}s`,
-                    }}
-                  >
-                    {book}
-                  </div>
-                ))}
-              </div>
-
-              <div style={questionScroll}>
-                <h3 style={ancientQuestion}>💌 A Pergunta dos Espíritos 💌</h3>
-                <p style={questionText}>
-                  Se você encontrasse uma carta de amor dele escondida em um
-                  livro antigo, uma carta que ele escreveu mas nunca teve
-                  coragem de entregar...
-                  <br />O que seu coração mandaria você fazer?
-                </p>
-
-                <div style={heartSpirit}>💕</div>
-              </div>
-
-              {!resposta ? (
-                <div style={optionsContainer}>
-                  <button
-                    onClick={() => setResposta("guardar")}
-                    style={{ ...ghibliButton, backgroundColor: "#81C784" }}
-                    onMouseEnter={(e) => {
-                      e.target.style.transform = "scale(1.1) translateY(-5px)";
-                      e.target.style.boxShadow =
-                        "0 15px 30px rgba(129, 199, 132, 0.6)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform = "scale(1) translateY(0px)";
-                      e.target.style.boxShadow =
-                        "0 8px 20px rgba(129, 199, 132, 0.4)";
-                    }}
-                  >
-                    🌸 Guardaria como um tesouro precioso 🌸
-                  </button>
-
-                  <button
-                    onClick={() => setResposta("responder")}
-                    style={{ ...ghibliButton, backgroundColor: "#FFB74D" }}
-                    onMouseEnter={(e) => {
-                      e.target.style.transform = "scale(1.1) translateY(-5px)";
-                      e.target.style.boxShadow =
-                        "0 15px 30px rgba(255, 183, 77, 0.6)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform = "scale(1) translateY(0px)";
-                      e.target.style.boxShadow =
-                        "0 8px 20px rgba(255, 183, 77, 0.4)";
-                    }}
-                  >
-                    💌 Escreveria uma resposta ainda mais bonita 💌
-                  </button>
-
-                  <button
-                    onClick={() => setResposta("emocionar")}
-                    style={{ ...ghibliButton, backgroundColor: "#F06292" }}
-                    onMouseEnter={(e) => {
-                      e.target.style.transform = "scale(1.1) translateY(-5px)";
-                      e.target.style.boxShadow =
-                        "0 15px 30px rgba(240, 98, 146, 0.6)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform = "scale(1) translateY(0px)";
-                      e.target.style.boxShadow =
-                        "0 8px 20px rgba(240, 98, 146, 0.4)";
-                    }}
-                  >
-                    😭 Choraria de emoção no topo da torre mais alta 😭
-                  </button>
-                </div>
-              ) : (
-                <div style={responseContainer}>
-                  <div style={ghibliResponse}>
-                    <div style={spiritCelebration}>
-                      <div style={celebratingSpirits}>
-                        <span style={celebratingSpirit1}>🌸</span>
-                        <span style={celebratingSpirit2}>💕</span>
-                        <span style={celebratingSpirit3}>🦋</span>
-                      </div>
-
-                      <h3 style={responseTitle}>
-                        ✨ Os Espíritos da Floresta Aprovam! ✨
-                      </h3>
-
-                      <p style={responseText}>
-                        O castelo inteiro brilha com a pureza da sua resposta...
-                        <br />
-                        As flores desabrocham, os pássaros cantam,
-                        <br />e o vento sussurra palavras de aprovação!
-                      </p>
-
-                      <div style={natureBlessing}>
-                        <div style={blessingElements}>🌸🦋🌙✨🍃</div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={avancar}
-                      style={enchantedButton}
-                      onMouseEnter={(e) => {
-                        e.target.style.transform = "scale(1.15) rotate(2deg)";
-                        e.target.style.background =
-                          "linear-gradient(45deg, #81C784, #FFB74D, #F06292)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.transform = "scale(1) rotate(0deg)";
-                        e.target.style.background =
-                          "linear-gradient(45deg, #66BB6A, #42A5F5, #AB47BC)";
-                      }}
-                    >
-                      🌸 Voar para a Próxima Aventura 🌸
-                    </button>
-                  </div>
-                </div>
-              )}
+              🔥
+            </div>
+            <div style={calciferSpeech}>
+              {calciferFeliz
+                ? "Que resposta mágica! O castelo aprova! 🔥✨"
+                : "Olá! Sou Calcifer! O que faz seu coração queimar de amor?"}
             </div>
           </div>
+
+          <h1 style={titleStyle}>🏰 O Castelo Ambulante do Amor 🏰</h1>
+
+          <div style={storyContainer}>
+            <p style={storyText}>
+              Dentro do mágico Castelo Ambulante, Calcifer guarda os segredos
+              dos corações apaixonados.
+              <br />
+              Howl está no banheiro arrumando o cabelo (como sempre), então
+              Calcifer tem uma pergunta especial...
+            </p>
+          </div>
+
+          {/* Howl dramático */}
+          {howlVanity > 0 && (
+            <div style={howlContainer}>
+              <div style={howlAvatar}>💁‍♂️✨</div>
+              <div style={howlDrama}>
+                {howlVanity === 3
+                  ? "MEU CABELO! As flores vão estragar meu penteado perfeito! 😱💅"
+                  : ""}
+              </div>
+            </div>
+          )}
+
+          <div style={questionContainer}>
+            <h2 style={questionStyle}>
+              🌸 Se você pudesse dar uma flor mágica para a Millena, qual seria?
+              🌸
+            </h2>
+          </div>
+
+          {!resposta ? (
+            <div style={optionsContainer}>
+              <button
+                onClick={() => responder("rosas")}
+                style={{ ...magicButton, backgroundColor: "#ff6b9d" }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1) rotate(2deg)";
+                  e.target.style.boxShadow =
+                    "0 15px 30px rgba(255, 107, 157, 0.6)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1) rotate(0deg)";
+                  e.target.style.boxShadow =
+                    "0 8px 20px rgba(255, 107, 157, 0.4)";
+                }}
+              >
+                🌹 Rosas vermelhas que nunca murcham
+              </button>
+
+              <button
+                onClick={() => responder("girassol")}
+                style={{ ...magicButton, backgroundColor: "#ffd93d" }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1) rotate(-2deg)";
+                  e.target.style.boxShadow =
+                    "0 15px 30px rgba(255, 217, 61, 0.6)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1) rotate(0deg)";
+                  e.target.style.boxShadow =
+                    "0 8px 20px rgba(255, 217, 61, 0.4)";
+                }}
+              >
+                🌻 Girassol que sempre olha pra ela
+              </button>
+
+              <button
+                onClick={() => responder("flores")}
+                style={{ ...magicButton, backgroundColor: "#6bcf7f" }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1) rotate(2deg)";
+                  e.target.style.boxShadow =
+                    "0 15px 30px rgba(107, 207, 127, 0.6)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1) rotate(0deg)";
+                  e.target.style.boxShadow =
+                    "0 8px 20px rgba(107, 207, 127, 0.4)";
+                }}
+              >
+                🌺 Um jardim inteiro só pra ela
+              </button>
+
+              <button
+                onClick={() => responder("borboletas")}
+                style={{ ...magicButton, backgroundColor: "#a8e6cf" }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1) rotate(-2deg)";
+                  e.target.style.boxShadow =
+                    "0 15px 30px rgba(168, 230, 207, 0.6)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1) rotate(0deg)";
+                  e.target.style.boxShadow =
+                    "0 8px 20px rgba(168, 230, 207, 0.4)";
+                }}
+              >
+                🦋 Flores que atraem borboletas (ela vai surtar! 😈)
+              </button>
+            </div>
+          ) : (
+            <div style={responseContainer}>
+              <div style={magicResponse}>
+                <div style={celebrationFire}>
+                  <span style={fireEffect1}>🔥</span>
+                  <span style={fireEffect2}>✨</span>
+                  <span style={fireEffect3}>🔥</span>
+                </div>
+
+                <h3 style={responseTitle}>
+                  🔥 Calcifer aprova sua escolha! 🔥
+                </h3>
+
+                <p style={responseText}>
+                  {resposta === "borboletas"
+                    ? "HAHAHA! Você conhece bem ela! Borboletas são o kryptonite da Millena! 😂🦋"
+                    : resposta === "flores"
+                      ? "Um jardim inteiro! Que romântico! Howl está com ciúmes da sua criatividade! 💐"
+                      : "Que escolha linda! O castelo inteiro brilha com essa resposta! ✨"}
+                </p>
+
+                {resposta === "borboletas" && (
+                  <div style={butterflyJoke}>
+                    <div style={butterflySwarm}>🦋🦋🦋</div>
+                    <p style={jokeText}>*Millena correndo do buquê* 😱💨</p>
+                  </div>
+                )}
+
+                <div style={castleApproval}>
+                  <div style={approvalElements}>🏰✨🔥💕🌸</div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       <style jsx global>{`
-        @keyframes spiritFloat {
+        @keyframes calciferNormal {
+          0%,
+          100% {
+            transform: scale(1) rotate(-5deg);
+          }
+          50% {
+            transform: scale(1.2) rotate(5deg);
+          }
+        }
+
+        @keyframes calciferHappy {
+          0%,
+          100% {
+            transform: scale(1) rotate(0deg);
+          }
+          25% {
+            transform: scale(1.4) rotate(-10deg);
+          }
+          50% {
+            transform: scale(1.6) rotate(10deg);
+          }
+          75% {
+            transform: scale(1.3) rotate(-5deg);
+          }
+        }
+
+        @keyframes portalFloat {
           0%,
           100% {
             transform: translateY(0px) rotate(0deg) scale(1);
             opacity: 0.7;
           }
           50% {
-            transform: translateY(-40px) rotate(180deg) scale(1.2);
+            transform: translateY(-30px) rotate(180deg) scale(1.3);
             opacity: 1;
           }
         }
 
-        @keyframes ghibliEntrance {
-          from {
-            transform: scale(0.8) rotateY(-20deg);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1) rotateY(0deg);
-            opacity: 1;
-          }
-        }
-
-        @keyframes forestSway {
+        @keyframes castleWalk {
           0%,
           100% {
-            transform: rotate(-3deg) scale(1);
+            transform: translateX(0px);
           }
           50% {
-            transform: rotate(3deg) scale(1.05);
+            transform: translateX(10px);
           }
         }
 
-        @keyframes bookGlow {
-          0%,
-          100% {
-            transform: scale(1) rotateY(0deg);
-            filter: brightness(1);
-          }
-          50% {
-            transform: scale(1.1) rotateY(15deg);
-            filter: brightness(1.2);
-          }
-        }
-
-        @keyframes heartSpirit {
-          0%,
-          100% {
-            transform: scale(1);
-            filter: hue-rotate(0deg);
-          }
-          50% {
-            transform: scale(1.3);
-            filter: hue-rotate(60deg);
-          }
-        }
-
-        @keyframes natureBless {
-          0%,
-          100% {
-            opacity: 0.8;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.2);
-          }
-        }
-
-        @keyframes windSway {
+        @keyframes butterflyFly {
           0%,
           100% {
             transform: translateX(0px) rotate(0deg);
           }
+          25% {
+            transform: translateX(20px) rotate(90deg);
+          }
           50% {
-            transform: translateX(10px) rotate(5deg);
+            transform: translateX(-10px) rotate(180deg);
+          }
+          75% {
+            transform: translateX(15px) rotate(270deg);
+          }
+        }
+
+        @keyframes fireEffect {
+          0%,
+          100% {
+            transform: scale(1) rotate(0deg);
+            filter: hue-rotate(0deg);
+          }
+          50% {
+            transform: scale(1.3) rotate(180deg);
+            filter: hue-rotate(60deg);
           }
         }
       `}</style>
@@ -351,102 +307,43 @@ export default function Fase3Ghibli() {
 const containerStyle = {
   minHeight: "100vh",
   width: "100vw",
+  background:
+    "linear-gradient(to bottom, #87CEEB 0%, #98FB98 30%, #F0E68C 70%, #DDA0DD 100%)",
   position: "relative",
   overflow: "hidden",
   fontFamily: '"Georgia", serif',
-  color: "#2E7D32",
+  color: "#2F4F4F",
 };
 
-const ghibliBackground = {
+const castleBackground = {
   position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  background:
-    "linear-gradient(to bottom, #87CEEB 0%, #98FB98 30%, #90EE90 70%, #228B22 100%)",
-  zIndex: 0,
-};
-
-const spiritStyle = {
-  position: "absolute",
-  fontSize: "1.5rem",
-  animation: "spiritFloat infinite ease-in-out",
-  pointerEvents: "none",
-  zIndex: 1,
-};
-
-const forestCatStyle = {
-  position: "absolute",
-  textAlign: "center",
-  zIndex: 10,
-};
-
-const catCharacter = {
-  fontSize: "2rem",
-  animation: "forestSway 4s ease-in-out infinite",
-  cursor: "pointer",
-  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
-};
-
-const catNameTag = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  color: "#2E7D32",
-  padding: "4px 8px",
-  borderRadius: "10px",
-  fontSize: "9px",
-  fontWeight: "bold",
-  marginTop: "5px",
-  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-  border: "1px solid #81C784",
-};
-
-const forestElements = {
-  position: "absolute",
-  width: "100%",
-  height: "100%",
-  pointerEvents: "none",
-  zIndex: 1,
-};
-
-const tree1 = {
-  position: "absolute",
-  left: "5%",
-  bottom: "0%",
+  top: "10%",
+  right: "5%",
   fontSize: "4rem",
-  animation: "windSway 6s ease-in-out infinite",
+  opacity: 0.3,
+  animation: "castleWalk 8s ease-in-out infinite",
 };
 
-const tree2 = {
-  position: "absolute",
-  right: "8%",
-  bottom: "0%",
-  fontSize: "3.5rem",
-  animation: "windSway 6s ease-in-out infinite 2s",
+const castleBody = {
+  width: "100px",
+  height: "150px",
+  backgroundColor: "#8B4513",
+  borderRadius: "10px 10px 0 0",
+  position: "relative",
 };
 
-const flower1 = {
-  position: "absolute",
-  left: "20%",
-  bottom: "5%",
+const castleLegs = {
   fontSize: "2rem",
-  animation: "forestSway 4s ease-in-out infinite",
+  textAlign: "center",
+  animation: "castleWalk 2s ease-in-out infinite",
 };
 
-const flower2 = {
+const portalStyle = {
   position: "absolute",
-  right: "25%",
-  bottom: "8%",
-  fontSize: "1.8rem",
-  animation: "forestSway 4s ease-in-out infinite 1s",
-};
-
-const mushroom = {
-  position: "absolute",
-  left: "15%",
-  bottom: "2%",
-  fontSize: "1.5rem",
-  animation: "forestSway 5s ease-in-out infinite 3s",
+  fontSize: "2rem",
+  animation: "portalFloat 5s ease-in-out infinite",
+  pointerEvents: "none",
+  zIndex: 1,
 };
 
 const contentContainer = {
@@ -459,145 +356,98 @@ const contentContainer = {
   justifyContent: "center",
 };
 
-const castleContainer = {
-  transition: "all 2s cubic-bezier(0.4, 0, 0.2, 1)",
-  transformStyle: "preserve-3d",
-  maxWidth: "800px",
-  width: "100%",
-};
-
-const castleHeader = {
-  textAlign: "center",
-  marginBottom: "20px",
-  position: "relative",
-};
-
-const castleTowers = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "30px",
-  marginBottom: "10px",
-};
-
-const tower1 = {
-  fontSize: "3rem",
-  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
-  animation: "forestSway 6s ease-in-out infinite",
-};
-
-const tower2 = {
-  fontSize: "3.5rem",
-  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
-  animation: "forestSway 6s ease-in-out infinite 1s",
-};
-
-const tower3 = {
-  fontSize: "3rem",
-  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
-  animation: "forestSway 6s ease-in-out infinite 2s",
-};
-
-const castleFlag = {
-  fontSize: "1.5rem",
-  animation: "windSway 3s ease-in-out infinite",
-};
-
-const castleMain = {
+const castleInterior = {
   backgroundColor: "rgba(255, 255, 255, 0.95)",
   borderRadius: "25px",
-  padding: "35px",
-  border: "4px solid #81C784",
-  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)",
+  padding: "40px",
+  maxWidth: "800px",
+  border: "4px solid #DAA520",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
   backdropFilter: "blur(10px)",
 };
 
-const titleStyle = {
-  fontSize: "2.2rem",
+const calciferContainer = {
   textAlign: "center",
-  background: "linear-gradient(45deg, #2E7D32, #66BB6A, #4CAF50)",
+  marginBottom: "30px",
+  backgroundColor: "rgba(255, 140, 0, 0.2)",
+  borderRadius: "20px",
+  padding: "20px",
+  border: "3px solid #FF8C00",
+};
+
+const calciferStyle = {
+  fontSize: "4rem",
+  marginBottom: "15px",
+  cursor: "pointer",
+};
+
+const calciferSpeech = {
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
+  color: "#FF4500",
+  padding: "15px",
+  borderRadius: "15px",
+  fontSize: "16px",
+  fontWeight: "bold",
+  fontStyle: "italic",
+};
+
+const titleStyle = {
+  fontSize: "2.5rem",
+  textAlign: "center",
+  background: "linear-gradient(45deg, #DAA520, #FF8C00, #CD853F)",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
   fontWeight: "bold",
   marginBottom: "25px",
 };
 
-const enchantedStory = {
-  textAlign: "center",
-  marginBottom: "25px",
-};
-
-const storyScroll = {
-  backgroundColor: "#F1F8E9",
-  border: "3px solid #81C784",
+const storyContainer = {
+  backgroundColor: "#F5F5DC",
   borderRadius: "15px",
   padding: "20px",
-  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+  marginBottom: "25px",
+  border: "2px solid #DAA520",
 };
 
-const ghibliText = {
+const storyText = {
   fontSize: "16px",
-  lineHeight: "1.7",
-  color: "#2E7D32",
-  fontStyle: "italic",
-  fontWeight: "500",
-};
-
-const libraryContainer = {
-  overflow: "hidden",
-  transition: "all 1.5s ease-in-out",
-  backgroundColor: "rgba(129, 199, 132, 0.1)",
-  borderRadius: "20px",
-  padding: "20px",
-  border: "2px solid #66BB6A",
-};
-
-const libraryTitle = {
-  textAlign: "center",
-  color: "#2E7D32",
-  fontSize: "1.5rem",
-  marginBottom: "20px",
-};
-
-const magicalBooks = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "15px",
-  marginBottom: "25px",
-};
-
-const bookItem = {
-  fontSize: "2rem",
-  animation: "bookGlow 3s ease-in-out infinite",
-  cursor: "pointer",
-  transition: "all 0.3s ease",
-};
-
-const questionScroll = {
-  backgroundColor: "rgba(255, 255, 255, 0.9)",
-  borderRadius: "15px",
-  padding: "25px",
-  marginBottom: "25px",
-  border: "3px solid #FFB74D",
-  textAlign: "center",
-};
-
-const ancientQuestion = {
-  color: "#FF8F00",
-  fontSize: "1.3rem",
-  marginBottom: "15px",
-};
-
-const questionText = {
-  fontSize: "1.1rem",
-  color: "#2E7D32",
   lineHeight: "1.6",
-  marginBottom: "15px",
-  fontWeight: "500",
+  color: "#2F4F4F",
+  textAlign: "center",
+  fontStyle: "italic",
 };
 
-const heartSpirit = {
-  fontSize: "2rem",
-  animation: "heartSpirit 2s ease-in-out infinite",
+const howlContainer = {
+  backgroundColor: "rgba(147, 112, 219, 0.2)",
+  borderRadius: "15px",
+  padding: "20px",
+  marginBottom: "20px",
+  border: "2px solid #9370DB",
+  textAlign: "center",
+};
+
+const howlAvatar = {
+  fontSize: "3rem",
+  marginBottom: "10px",
+};
+
+const howlDrama = {
+  color: "#9370DB",
+  fontSize: "16px",
+  fontWeight: "bold",
+  fontStyle: "italic",
+};
+
+const questionContainer = {
+  textAlign: "center",
+  marginBottom: "30px",
+};
+
+const questionStyle = {
+  fontSize: "1.8rem",
+  color: "#2F4F4F",
+  marginBottom: "15px",
+  fontWeight: "bold",
 };
 
 const optionsContainer = {
@@ -607,13 +457,13 @@ const optionsContainer = {
   marginBottom: "20px",
 };
 
-const ghibliButton = {
+const magicButton = {
   padding: "18px 25px",
-  fontSize: "1rem",
-  border: "3px solid #FFF",
+  fontSize: "16px",
+  border: "3px solid #fff",
   borderRadius: "20px",
   cursor: "pointer",
-  color: "#FFF",
+  color: "#fff",
   fontWeight: "bold",
   transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
   boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
@@ -624,72 +474,75 @@ const responseContainer = {
   textAlign: "center",
 };
 
-const ghibliResponse = {
-  backgroundColor: "rgba(129, 199, 132, 0.1)",
+const magicResponse = {
+  backgroundColor: "rgba(255, 140, 0, 0.1)",
   borderRadius: "20px",
   padding: "30px",
-  border: "3px solid #81C784",
+  border: "3px solid #FF8C00",
 };
 
-const spiritCelebration = {
-  marginBottom: "25px",
-};
-
-const celebratingSpirits = {
+const celebrationFire = {
   display: "flex",
   justifyContent: "center",
-  gap: "25px",
+  gap: "20px",
   marginBottom: "20px",
 };
 
-const celebratingSpirit1 = {
+const fireEffect1 = {
   fontSize: "2.5rem",
-  animation: "spiritFloat 2s ease-in-out infinite",
+  animation: "fireEffect 2s ease-in-out infinite",
 };
 
-const celebratingSpirit2 = {
-  fontSize: "2.5rem",
-  animation: "heartSpirit 2s ease-in-out infinite",
+const fireEffect2 = {
+  fontSize: "2rem",
+  animation: "fireEffect 2s ease-in-out infinite 0.5s",
 };
 
-const celebratingSpirit3 = {
+const fireEffect3 = {
   fontSize: "2.5rem",
-  animation: "spiritFloat 2s ease-in-out infinite 1s",
+  animation: "fireEffect 2s ease-in-out infinite 1s",
 };
 
 const responseTitle = {
-  color: "#2E7D32",
+  color: "#FF4500",
   fontSize: "1.5rem",
   marginBottom: "15px",
 };
 
 const responseText = {
-  fontSize: "1.1rem",
-  color: "#388E3C",
+  fontSize: "16px",
+  color: "#2F4F4F",
   lineHeight: "1.6",
   marginBottom: "20px",
 };
 
-const natureBlessing = {
+const butterflyJoke = {
+  backgroundColor: "rgba(173, 216, 230, 0.3)",
+  borderRadius: "15px",
+  padding: "15px",
+  marginBottom: "15px",
+  border: "2px dashed #87CEEB",
+};
+
+const butterflySwarm = {
+  fontSize: "1.5rem",
+  animation: "butterflyFly 3s ease-in-out infinite",
+  marginBottom: "10px",
+};
+
+const jokeText = {
+  color: "#4682B4",
+  fontSize: "14px",
+  fontWeight: "bold",
+  fontStyle: "italic",
+};
+
+const castleApproval = {
   textAlign: "center",
 };
 
-const blessingElements = {
+const approvalElements = {
   fontSize: "2rem",
-  animation: "natureBless 3s ease-in-out infinite",
+  animation: "fireEffect 3s ease-in-out infinite",
   letterSpacing: "0.3em",
-};
-
-const enchantedButton = {
-  padding: "20px 40px",
-  fontSize: "1.2rem",
-  background: "linear-gradient(45deg, #66BB6A, #42A5F5, #AB47BC)",
-  color: "#fff",
-  border: "none",
-  borderRadius: "25px",
-  cursor: "pointer",
-  fontWeight: "bold",
-  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-  boxShadow: "0 12px 25px rgba(102, 187, 106, 0.5)",
-  fontFamily: "inherit",
 };
