@@ -1,8 +1,8 @@
-// pages/aventura/fase1.js - Versão completa com música e easter eggs
+// pages/aventura/fase1.js - Versão corrigida
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import TransitionComponent from "../../components/TransitionComponent";
-import { useTransition } from "../../hooks/useTransition";
+import { useTransition, getTransitionMessage } from "../../hooks/useTransition";
 import { MusicPlayer, musicPlayerCSS } from "../../hooks/useMusic";
 import {
   useEasterEggs,
@@ -15,8 +15,13 @@ import {
 
 export default function Fase1Melhorada() {
   const { isTransitioning, transitionData, startTransition } = useTransition();
-  const { findEasterEgg, showMessage, specialEffects, getTotalEggsFound } =
-    useEasterEggs("fase1");
+  const {
+    findEasterEgg,
+    showMessage,
+    setShowMessage,
+    specialEffects,
+    getTotalEggsFound,
+  } = useEasterEggs("fase1");
 
   const [resposta, setResposta] = useState(null);
   const [magicParticles, setMagicParticles] = useState([]);
@@ -54,12 +59,8 @@ export default function Fase1Melhorada() {
   }, [showEasterEggDebug]);
 
   const avancar = async () => {
-    await startTransition(
-      "fase1",
-      "fase2",
-      "Maomao está preparando poções especiais no laboratório...",
-      1000,
-    );
+    const message = getTransitionMessage("fase1", "fase2");
+    await startTransition("fase1", "fase2", message, 1000);
   };
 
   // Se estiver em transição, mostrar componente de transição
@@ -391,7 +392,7 @@ export default function Fase1Melhorada() {
   );
 }
 
-// Todos os estilos originais permanecem iguais...
+// Estilos do componente
 const containerStyle = {
   minHeight: "100vh",
   width: "100vw",
