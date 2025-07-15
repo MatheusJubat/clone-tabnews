@@ -1,120 +1,116 @@
-import { useRouter } from "next/router";
+// pages/aventura/fase5.js - Cinema & Séries Românticas
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
-export default function Fase5AnimeCafe() {
+export default function Fase5Cinema() {
   const router = useRouter();
   const [etapaAtual, setEtapaAtual] = useState(0);
   const [pontos, setPontos] = useState(0);
-  const [anime, setAnime] = useState(null);
-  const [sakuraPetals, setSakuraPetals] = useState([]);
-  const [cafeCustomers, setCafeCustomers] = useState([]);
-  const [menuAberto, setMenuAberto] = useState(false);
+  const [perguntaAtual, setPerguntaAtual] = useState(0);
+  const [respostaCorreta, setRespostaCorreta] = useState(false);
+  const [filmParticles, setFilmParticles] = useState([]);
+  const [cinemaLights, setCinemaLights] = useState([]);
 
-  const animeQuestions = [
+  const perguntasFilmes = [
     {
-      pergunta: "Se vocês fossem um casal de anime, qual seria a vibe?",
-      opcoes: [
-        "💖 Naruto e Hinata - amor que cresceu devagar e com muito carinho",
-        "🌸 Maomao e Jinshi - ela focada, ele apaixonado (Diário da Apotecária)",
-        "⚔️ Como Tanjiro protegendo Nezuko - sempre um pelo outro (Demon Slayer)",
-        "💎 Steven e Connie - crescendo juntos e se descobrindo (Steven Universe)",
-      ],
-      resposta: "Cada amor tem sua magia única, igual vocês dois! 💕",
-    },
-    {
-      pergunta: "Qual seria o poder/habilidade especial do casal de vocês?",
-      opcoes: [
-        "🔥 Técnica de Respiração do Amor Eterno (Demon Slayer)",
-        "💪 Shadow Monarch + Healing - ele protege, você cura (Solo Leveling)",
-        "👁️ Sharingan do Coração - ler os sentimentos um do outro (Naruto)",
-        "🧪 Poção da Felicidade Infinita (Diário da Apotecária)",
-      ],
-      resposta: "O verdadeiro poder é o amor que vocês construíram juntos! ⭐",
-    },
-    {
+      tipo: "múltipla_escolha",
       pergunta:
-        "Se fossem para o mundo de Attack on Titan, qual seria a missão de vocês?",
+        "Se vocês fossem um casal de filme, qual seria o gênero da história?",
       opcoes: [
-        "🏰 Proteger a humanidade juntos nas muralhas",
-        "🕊️ Encontrar um lugar pacífico longe dos titãs",
-        "💝 Ser a esperança e alegria em tempos sombrios",
-        "🗺️ Explorar o mundo lá fora de mãos dadas",
+        "🎬 Comédia Romântica - risos e amor garantidos",
+        "🌟 Drama Épico - uma história inesquecível",
+        "🏠 Slice of Life - momentos reais e especiais",
+        "🎭 Musical - dançando pela vida juntos",
       ],
-      resposta: "Em qualquer mundo, vocês seriam a luz um do outro! 🌟",
+      feedback: "Toda história de amor tem seu próprio gênero especial! ❤️",
+    },
+    {
+      tipo: "certo_errado",
+      pergunta:
+        "Verdadeiro ou Falso: Vocês já maratonaram uma série inteira em um dia?",
+      opcoes: ["✅ Verdadeiro", "❌ Falso"],
+      respostaCorreta: 0, // Verdadeiro
+      feedback: {
+        correto: "Eu sabia! Vocês são o casal maratona perfeito! 📺💕",
+        errado:
+          "Hmm... tenho certeza que já passaram horas assistindo juntos! 😄",
+      },
+    },
+    {
+      tipo: "múltipla_escolha",
+      pergunta: "Qual seria o título do filme da história de vocês?",
+      opcoes: [
+        "💻 'Love.exe - Um Amor em Código'",
+        "🐱 'Dois Corações e Mil Gatinhos'",
+        "🌟 'A Programadora e seu Príncipe'",
+        "🏡 'Construindo o Nosso Para Sempre'",
+      ],
+      feedback:
+        "Qualquer título que seja, vai ser um sucesso de bilheteria! 🎬✨",
+    },
+    {
+      tipo: "certo_errado",
+      pergunta:
+        "Verdadeiro ou Falso: Ela já riu tanto com ele que chorou de rir?",
+      opcoes: ["✅ Verdadeiro", "❌ Falso"],
+      respostaCorreta: 0, // Verdadeiro
+      feedback: {
+        correto: "As melhores histórias de amor têm muitas risadas! 😂💕",
+        errado: "Tenho certeza que vocês já riram muito juntos! 😊",
+      },
     },
   ];
 
   useEffect(() => {
-    // Criar pétalas de sakura
-    const petals = [];
-    for (let i = 0; i < 25; i++) {
-      petals.push({
+    // Criar partículas de filme
+    const particles = [];
+    for (let i = 0; i < 20; i++) {
+      particles.push({
         id: i,
         x: Math.random() * 100,
-        y: -10,
-        delay: Math.random() * 5,
-        speed: 3 + Math.random() * 4,
-        emoji: ["🌸", "🌺", "🌷", "💮"][Math.floor(Math.random() * 4)],
+        y: Math.random() * 100,
+        emoji: ["🎬", "🎭", "🎪", "🌟", "💫", "🎨"][
+          Math.floor(Math.random() * 6)
+        ],
+        delay: Math.random() * 3,
       });
     }
-    setSakuraPetals(petals);
+    setFilmParticles(particles);
 
-    // Clientes do café (personagens dos animes que ela gosta)
-    const customers = [
-      {
-        id: 1,
-        emoji: "🍜🐱",
-        x: 10,
-        y: 75,
-        name: "Naruto Neko",
-        mood: "🍥",
-      },
-      {
-        id: 2,
-        emoji: "🧪🐱",
-        x: 85,
-        y: 70,
-        name: "Maomao Cat",
-        mood: "💊",
-      },
-      {
-        id: 3,
-        emoji: "⚔️🐱",
-        x: 15,
-        y: 25,
-        name: "Tanjiro Cat",
-        mood: "🌊",
-      },
-      {
-        id: 4,
-        emoji: "💎🐱",
-        x: 80,
-        y: 30,
-        name: "Steven Cat",
-        mood: "🛡️",
-      },
-    ];
-    setCafeCustomers(customers);
+    // Luzes do cinema
+    const lights = [];
+    for (let i = 0; i < 8; i++) {
+      lights.push({
+        id: i,
+        x: i * 12 + 10,
+        delay: i * 0.2,
+      });
+    }
+    setCinemaLights(lights);
 
-    // Sequência de abertura
     setTimeout(() => setEtapaAtual(1), 1000);
-    setTimeout(() => setMenuAberto(true), 2000);
   }, []);
 
-  const responderPergunta = (perguntaIndex, opcaoIndex) => {
-    setPontos(pontos + 100);
-    setAnime(animeQuestions[perguntaIndex]);
+  const responder = (opcaoIndex) => {
+    const pergunta = perguntasFilmes[perguntaAtual];
 
-    if (perguntaIndex < animeQuestions.length - 1) {
-      setTimeout(() => {
-        setEtapaAtual(perguntaIndex + 2);
-        setAnime(null);
-      }, 2500);
+    if (pergunta.tipo === "certo_errado") {
+      const correto = opcaoIndex === pergunta.respostaCorreta;
+      setRespostaCorreta(correto);
+      setPontos(pontos + (correto ? 100 : 50));
     } else {
-      setTimeout(() => {
-        setEtapaAtual(5); // Finalização
-      }, 2500);
+      setPontos(pontos + 75);
+      setRespostaCorreta(true);
     }
+
+    setTimeout(() => {
+      if (perguntaAtual < perguntasFilmes.length - 1) {
+        setPerguntaAtual(perguntaAtual + 1);
+        setRespostaCorreta(false);
+      } else {
+        setEtapaAtual(2); // Finalização
+      }
+    }, 2500);
   };
 
   const avancar = () => {
@@ -123,121 +119,74 @@ export default function Fase5AnimeCafe() {
 
   return (
     <div style={containerStyle}>
-      {/* Pétalas de sakura caindo */}
-      {sakuraPetals.map((petal) => (
+      {/* Partículas de cinema */}
+      {filmParticles.map((particle) => (
         <div
-          key={petal.id}
+          key={particle.id}
           style={{
-            ...petalStyle,
-            left: `${petal.x}%`,
-            top: `${petal.y}%`,
-            animationDelay: `${petal.delay}s`,
-            animationDuration: `${petal.speed}s`,
+            ...particleStyle,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            animationDelay: `${particle.delay}s`,
           }}
         >
-          {petal.emoji}
+          {particle.emoji}
         </div>
       ))}
 
-      {/* Clientes do café */}
-      {cafeCustomers.map((customer) => (
-        <div
-          key={customer.id}
-          style={{
-            ...customerStyle,
-            left: `${customer.x}%`,
-            top: `${customer.y}%`,
-          }}
-        >
-          <div style={customerChar}>{customer.emoji}</div>
-          <div style={customerMood}>{customer.mood}</div>
-          <div style={customerName}>{customer.name}</div>
-        </div>
-      ))}
+      {/* Luzes do cinema */}
+      <div style={cinemaLightsContainer}>
+        {cinemaLights.map((light) => (
+          <div
+            key={light.id}
+            style={{
+              ...cinemaLight,
+              left: `${light.x}%`,
+              animationDelay: `${light.delay}s`,
+            }}
+          />
+        ))}
+      </div>
 
       <div style={contentContainer}>
-        <div style={cafeContainer}>
-          {/* Placa do Café */}
-          <div style={cafeSign}>
-            <h1 style={signTitle}>🌸 Café Otaku dos Gatinhos 🌸</h1>
-            <div style={signSubtitle}>"Onde animes e amor se encontram" ✨</div>
+        {etapaAtual === 0 && (
+          <div style={loadingContainer}>
+            <div style={filmReel}>🎬</div>
+            <p style={loadingText}>Preparando a sessão de cinema...</p>
           </div>
+        )}
 
-          {/* Entrada do café */}
-          {etapaAtual === 0 && (
-            <div style={welcomeContainer}>
-              <div style={welcomeMessage}>
-                <h2 style={welcomeTitle}>いらっしゃいませ！ (Bem-vinda!)</h2>
-                <p style={welcomeText}>
-                  Bem-vinda ao café mais kawaii do universo otaku! 🐾
-                  <br />
-                  Nossos gatinhos maids têm perguntas especiais sobre seus
-                  animes favoritos!
-                </p>
-                <div style={loadingCats}>
-                  <span style={loadingCat1}>😸</span>
-                  <span style={loadingCat2}>🐱</span>
-                  <span style={loadingCat3}>😻</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Menu do café */}
-          {etapaAtual >= 1 && etapaAtual <= 3 && (
-            <div
-              style={{
-                ...menuContainer,
-                transform: menuAberto
-                  ? "scale(1) rotateY(0deg)"
-                  : "scale(0.8) rotateY(-90deg)",
-                opacity: menuAberto ? 1 : 0,
-              }}
-            >
-              <div style={menuHeader}>
-                <h2 style={menuTitle}>📋 Menu Kawaii das Perguntas 📋</h2>
-                <div style={scoreDisplay}>
-                  Pontos Moe: {pontos} ⭐ | Pergunta {etapaAtual}/3
-                </div>
+        {etapaAtual === 1 && (
+          <div style={cinemaContainer}>
+            <div style={screenContainer}>
+              <h1 style={cinemaTitle}>🎬 Cinema do Amor 🎬</h1>
+              <div style={subtitle}>
+                "Sessão especial para casais apaixonados"
               </div>
 
-              <div style={questionCard}>
-                <div style={questionHeader}>
-                  <div style={questionIcon}>🎌</div>
+              <div style={scoreBoard}>
+                <div>
+                  Pergunta: {perguntaAtual + 1}/{perguntasFilmes.length}
+                </div>
+                <div>Pontos: {pontos}</div>
+              </div>
+
+              <div style={questionContainer}>
+                <div style={questionCard}>
                   <h3 style={questionText}>
-                    {animeQuestions[etapaAtual - 1].pergunta}
+                    {perguntasFilmes[perguntaAtual].pergunta}
                   </h3>
-                </div>
 
-                {!anime ? (
                   <div style={optionsContainer}>
-                    {animeQuestions[etapaAtual - 1].opcoes.map(
+                    {perguntasFilmes[perguntaAtual].opcoes.map(
                       (opcao, index) => (
                         <button
                           key={index}
-                          onClick={() =>
-                            responderPergunta(etapaAtual - 1, index)
-                          }
+                          onClick={() => responder(index)}
                           style={{
-                            ...animeButton,
-                            backgroundColor: [
-                              "#FF69B4",
-                              "#87CEEB",
-                              "#98FB98",
-                              "#DDA0DD",
-                            ][index],
-                            animationDelay: `${index * 0.2}s`,
-                          }}
-                          onMouseEnter={(e) => {
-                            e.target.style.transform =
-                              "scale(1.05) rotate(2deg)";
-                            e.target.style.boxShadow =
-                              "0 10px 25px rgba(255, 105, 180, 0.6)";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.target.style.transform = "scale(1) rotate(0deg)";
-                            e.target.style.boxShadow =
-                              "0 6px 15px rgba(0, 0, 0, 0.3)";
+                            ...cinemaButton,
+                            backgroundColor:
+                              index % 2 === 0 ? "#e74c3c" : "#3498db",
                           }}
                         >
                           {opcao}
@@ -245,208 +194,113 @@ export default function Fase5AnimeCafe() {
                       ),
                     )}
                   </div>
-                ) : (
-                  <div style={responseContainer}>
-                    <div style={animeResponseCard}>
-                      <div style={responseIcon}>✨</div>
-                      <h4 style={responseTitle}>Resposta Kawaii!</h4>
-                      <p style={responseText}>{anime.resposta}</p>
-                      <div style={celebrationEmojis}>
-                        <span style={celebration1}>🎉</span>
-                        <span style={celebration2}>😸</span>
-                        <span style={celebration3}>💖</span>
-                        <span style={celebration4}>🌸</span>
+
+                  {respostaCorreta !== false && (
+                    <div style={feedbackContainer}>
+                      <div style={feedbackText}>
+                        {perguntasFilmes[perguntaAtual].tipo === "certo_errado"
+                          ? respostaCorreta
+                            ? perguntasFilmes[perguntaAtual].feedback.correto
+                            : perguntasFilmes[perguntaAtual].feedback.errado
+                          : perguntasFilmes[perguntaAtual].feedback}
                       </div>
+                      <div style={applause}>👏 👏 👏</div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Finalização */}
-          {etapaAtual === 5 && (
-            <div style={finalContainer}>
-              <div style={finalCard}>
-                <h2 style={finalTitle}>🏆 Certificado Otaku Obtido! 🏆</h2>
+        {etapaAtual === 2 && (
+          <div style={finalContainer}>
+            <div style={creditsContainer}>
+              <h2 style={creditsTitle}>🏆 Fim da Sessão! 🏆</h2>
 
-                <div style={certificateContainer}>
-                  <div style={certificate}>
-                    <div style={certificateHeader}>
-                      <h3 style={certificateName}>Certificado de Amor Anime</h3>
-                      <div style={certificateStamp}>🌸 OFICIAL 🌸</div>
-                    </div>
-
-                    <div style={certificateBody}>
-                      <p style={certificateText}>
-                        Este certificado declara que você possui:
-                        <br />
-                        ⭐ Nível Máximo de Kawaii
-                        <br />
-                        💖 Power of Love Ativado
-                        <br />
-                        🎯 Anime Knowledge: Expert nos seus favoritos
-                        <br />
-                        🐱 Cat Friendship: Legendary
-                      </p>
-                    </div>
-
-                    <div style={animeReferences}>
-                      <h4 style={referencesTitle}>
-                        🎌 Seus Animes do Coração 🎌
-                      </h4>
-                      <div style={animeGrid}>
-                        <div style={animeItem}>🍜 Naruto</div>
-                        <div style={animeItem}>🧪 Diário da Apotecária</div>
-                        <div style={animeItem}>⚔️ Demon Slayer</div>
-                        <div style={animeItem}>💎 Steven Universe</div>
-                        <div style={animeItem}>👁️ Jujutsu Kaisen</div>
-                        <div style={animeItem}>🏰 Attack on Titan</div>
-                        <div style={animeItem}>💪 Solo Leveling</div>
-                        <div style={animeItem}>🧙‍♂️ Senhor dos Anéis</div>
-                      </div>
-                    </div>
-
-                    <div style={certificateFooter}>
-                      <div style={signature}>
-                        Assinado por: Maid Cat Council 🐾
-                      </div>
-                      <div style={date}>
-                        Data: {new Date().toLocaleDateString("pt-BR")} 📅
-                      </div>
-                    </div>
-                  </div>
+              <div style={finalScore}>
+                <h3>Pontuação Final: {pontos}</h3>
+                <div style={rating}>
+                  {pontos >= 300 ? (
+                    <div>⭐⭐⭐⭐⭐ Casal 5 Estrelas!</div>
+                  ) : pontos >= 200 ? (
+                    <div>⭐⭐⭐⭐ Quase perfeitos!</div>
+                  ) : (
+                    <div>⭐⭐⭐ Muito bom!</div>
+                  )}
                 </div>
-
-                <div style={staffApproval}>
-                  <h4 style={staffTitle}>💼 Aprovação da Staff Neko 💼</h4>
-                  <div style={staffCats}>
-                    <div style={staffMember}>
-                      <div style={staffAvatar}>👑🐱</div>
-                      <div style={staffRole}>Head Maid</div>
-                      <div style={staffComment}>"Sugoi desu ne!" ⭐</div>
-                    </div>
-                    <div style={staffMember}>
-                      <div style={staffAvatar}>🎀🐱</div>
-                      <div style={staffRole}>Kawaii Expert</div>
-                      <div style={staffComment}>"Moe moe kyun!" 💕</div>
-                    </div>
-                    <div style={staffMember}>
-                      <div style={staffAvatar}>🌸🐱</div>
-                      <div style={staffRole}>Love Advisor</div>
-                      <div style={staffComment}>"Aishiteru yo!" 💖</div>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={avancar}
-                  style={nextButton}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = "scale(1.1) translateY(-5px)";
-                    e.target.style.background =
-                      "linear-gradient(45deg, #FF1493, #FF69B4, #FFB6C1, #FFC0CB)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = "scale(1) translateY(0px)";
-                    e.target.style.background =
-                      "linear-gradient(45deg, #FF69B4, #FF1493, #9370DB)";
-                  }}
-                >
-                  🚪 Próxima Dimensão Kawaii 🚪
-                </button>
               </div>
+
+              <div style={reviewContainer}>
+                <h4 style={reviewTitle}>📝 Crítica do Cinema</h4>
+                <p style={reviewText}>
+                  "Uma história de amor autêntica e envolvente. Com direito a
+                  risadas, cumplicidade e muito carinho. Recomendado para todos
+                  que acreditam no amor verdadeiro!"
+                </p>
+                <div style={reviewSignature}>
+                  ⭐⭐⭐⭐⭐ - Crítico dos Gatinhos
+                </div>
+              </div>
+
+              <button
+                onClick={avancar}
+                style={nextButton}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1)";
+                  e.target.style.background =
+                    "linear-gradient(45deg, #e74c3c, #3498db)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1)";
+                  e.target.style.background =
+                    "linear-gradient(45deg, #9b59b6, #e74c3c)";
+                }}
+              >
+                🎭 Próxima Atração 🎭
+              </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <style jsx global>{`
-        @keyframes sakuraFall {
+        @keyframes filmRoll {
           0% {
-            transform: translateY(-100px) rotate(0deg);
-            opacity: 1;
+            transform: rotate(0deg);
           }
           100% {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
+            transform: rotate(360deg);
           }
         }
 
-        @keyframes customerSway {
+        @keyframes cinemaFloat {
           0%,
           100% {
-            transform: scale(1) rotate(-3deg);
+            transform: translateY(0px) rotate(0deg);
           }
           50% {
-            transform: scale(1.1) rotate(3deg);
+            transform: translateY(-20px) rotate(10deg);
           }
         }
 
-        @keyframes kawaiiBounce {
+        @keyframes lightFlicker {
           0%,
           100% {
-            transform: translateY(0px) scale(1);
-          }
-          50% {
-            transform: translateY(-10px) scale(1.05);
-          }
-        }
-
-        @keyframes menuSlideIn {
-          from {
-            transform: scale(0.8) rotateY(-90deg);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1) rotateY(0deg);
-            opacity: 1;
-          }
-        }
-
-        @keyframes buttonFloat {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-5px);
-          }
-        }
-
-        @keyframes celebrationSpin {
-          0% {
-            transform: scale(1) rotate(0deg);
-          }
-          50% {
-            transform: scale(1.3) rotate(180deg);
-          }
-          100% {
-            transform: scale(1) rotate(360deg);
-          }
-        }
-
-        @keyframes certificateShine {
-          0%,
-          100% {
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-          }
-          50% {
-            box-shadow:
-              0 0 40px rgba(255, 215, 0, 1),
-              0 0 60px rgba(255, 215, 0, 0.8);
-          }
-        }
-
-        @keyframes animeGlow {
-          0%,
-          100% {
-            transform: scale(1);
             opacity: 0.8;
           }
           50% {
-            transform: scale(1.05);
             opacity: 1;
+          }
+        }
+
+        @keyframes screenGlow {
+          0%,
+          100% {
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.6);
+          }
+          50% {
+            box-shadow: 0 0 40px rgba(52, 152, 219, 0.8);
           }
         }
       `}</style>
@@ -454,54 +308,40 @@ export default function Fase5AnimeCafe() {
   );
 }
 
-// Todos os estilos permanecem iguais, apenas adicionando alguns novos
+// Estilos
 const containerStyle = {
   minHeight: "100vh",
-  width: "100vw",
-  background:
-    "linear-gradient(135deg, #FFE4E1 0%, #FFF0F5 25%, #F0F8FF 50%, #E6E6FA 75%, #F5F5DC 100%)",
-  backgroundImage:
-    'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ff69b4" fill-opacity="0.1" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
+  background: "linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%)",
   position: "relative",
   overflow: "hidden",
-  padding: 0,
-  margin: 0,
-  fontFamily: '"Noto Sans JP", "Comic Sans MS", cursive',
+  fontFamily: '"Georgia", serif',
+  color: "#fff",
 };
 
-const petalStyle = {
+const particleStyle = {
   position: "absolute",
-  fontSize: "1.2rem",
-  animation: "sakuraFall linear infinite",
+  fontSize: "1.5rem",
+  animation: "cinemaFloat 4s ease-in-out infinite",
   pointerEvents: "none",
   zIndex: 1,
 };
 
-const customerStyle = {
+const cinemaLightsContainer = {
   position: "absolute",
-  textAlign: "center",
-  zIndex: 5,
+  top: "5%",
+  width: "100%",
+  height: "20px",
+  zIndex: 1,
 };
 
-const customerChar = {
-  fontSize: "2rem",
-  animation: "customerSway 4s ease-in-out infinite",
-};
-
-const customerMood = {
-  fontSize: "1rem",
-  marginTop: "2px",
-};
-
-const customerName = {
-  backgroundColor: "rgba(255, 255, 255, 0.9)",
-  color: "#FF1493",
-  padding: "2px 6px",
-  borderRadius: "8px",
-  fontSize: "8px",
-  fontWeight: "bold",
-  marginTop: "3px",
-  border: "1px solid #FF69B4",
+const cinemaLight = {
+  position: "absolute",
+  width: "15px",
+  height: "15px",
+  backgroundColor: "#f39c12",
+  borderRadius: "50%",
+  animation: "lightFlicker 2s ease-in-out infinite",
+  boxShadow: "0 0 20px #f39c12",
 };
 
 const contentContainer = {
@@ -514,374 +354,180 @@ const contentContainer = {
   justifyContent: "center",
 };
 
-const cafeContainer = {
-  maxWidth: "800px",
-  width: "100%",
-};
-
-const cafeSign = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "25px",
-  padding: "25px",
+const loadingContainer = {
   textAlign: "center",
-  marginBottom: "25px",
-  border: "4px solid #FF69B4",
-  boxShadow: "0 15px 30px rgba(255, 105, 180, 0.4)",
-  backdropFilter: "blur(10px)",
 };
 
-const signTitle = {
-  fontSize: "2rem",
-  background: "linear-gradient(45deg, #FF69B4, #FF1493, #9370DB)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  fontWeight: "bold",
+const filmReel = {
+  fontSize: "4rem",
+  animation: "filmRoll 2s linear infinite",
+  marginBottom: "20px",
+};
+
+const loadingText = {
+  fontSize: "1.2rem",
+  color: "#ecf0f1",
+};
+
+const cinemaContainer = {
+  width: "100%",
+  maxWidth: "700px",
+};
+
+const screenContainer = {
+  backgroundColor: "rgba(0, 0, 0, 0.9)",
+  borderRadius: "20px",
+  padding: "40px",
+  border: "5px solid #34495e",
+  animation: "screenGlow 3s ease-in-out infinite",
+};
+
+const cinemaTitle = {
+  fontSize: "2.5rem",
+  textAlign: "center",
+  color: "#e74c3c",
   marginBottom: "10px",
+  textShadow: "2px 2px 4px rgba(0,0,0,0.7)",
 };
 
-const signSubtitle = {
-  fontSize: "1.1rem",
-  color: "#666",
+const subtitle = {
+  textAlign: "center",
+  color: "#bdc3c7",
+  marginBottom: "30px",
   fontStyle: "italic",
 };
 
-const welcomeContainer = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "20px",
-  padding: "30px",
-  textAlign: "center",
-  border: "3px solid #FF69B4",
-  boxShadow: "0 15px 30px rgba(255, 105, 180, 0.3)",
-};
-
-const welcomeMessage = {
-  color: "#2C3E50",
-};
-
-const welcomeTitle = {
-  fontSize: "1.8rem",
-  color: "#FF1493",
-  marginBottom: "15px",
-};
-
-const welcomeText = {
-  fontSize: "1.1rem",
-  lineHeight: "1.6",
-  marginBottom: "20px",
-};
-
-const loadingCats = {
+const scoreBoard = {
   display: "flex",
-  justifyContent: "center",
-  gap: "20px",
-};
-
-const loadingCat1 = {
-  fontSize: "2rem",
-  animation: "kawaiiBounce 1.5s ease-in-out infinite",
-};
-
-const loadingCat2 = {
-  fontSize: "2rem",
-  animation: "kawaiiBounce 1.5s ease-in-out infinite 0.5s",
-};
-
-const loadingCat3 = {
-  fontSize: "2rem",
-  animation: "kawaiiBounce 1.5s ease-in-out infinite 1s",
-};
-
-const menuContainer = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "20px",
-  padding: "25px",
-  border: "3px solid #FF69B4",
-  boxShadow: "0 20px 40px rgba(255, 105, 180, 0.4)",
-  backdropFilter: "blur(10px)",
-  transition: "all 1.5s cubic-bezier(0.4, 0, 0.2, 1)",
-};
-
-const menuHeader = {
-  textAlign: "center",
-  marginBottom: "20px",
-};
-
-const menuTitle = {
-  fontSize: "1.5rem",
-  color: "#FF1493",
-  marginBottom: "10px",
-};
-
-const scoreDisplay = {
-  backgroundColor: "rgba(255, 105, 180, 0.2)",
-  color: "#FF1493",
-  padding: "8px 15px",
-  borderRadius: "15px",
-  fontSize: "14px",
+  justifyContent: "space-between",
+  background: "rgba(52, 73, 94, 0.8)",
+  padding: "15px",
+  borderRadius: "10px",
+  marginBottom: "30px",
+  color: "#ecf0f1",
   fontWeight: "bold",
-  border: "2px solid #FF69B4",
+};
+
+const questionContainer = {
+  textAlign: "center",
 };
 
 const questionCard = {
-  backgroundColor: "rgba(255, 240, 245, 0.8)",
+  background: "rgba(44, 62, 80, 0.8)",
   borderRadius: "15px",
-  padding: "20px",
-  border: "2px solid #FFB6C1",
-};
-
-const questionHeader = {
-  display: "flex",
-  alignItems: "center",
-  marginBottom: "20px",
-};
-
-const questionIcon = {
-  fontSize: "2rem",
-  marginRight: "15px",
+  padding: "30px",
+  border: "2px solid #3498db",
 };
 
 const questionText = {
-  fontSize: "1.2rem",
-  color: "#2C3E50",
-  margin: 0,
-  flex: 1,
+  fontSize: "1.4rem",
+  color: "#ecf0f1",
+  marginBottom: "25px",
+  lineHeight: "1.6",
 };
 
 const optionsContainer = {
   display: "flex",
   flexDirection: "column",
-  gap: "12px",
-};
-
-const animeButton = {
-  padding: "15px 20px",
-  fontSize: "16px",
-  border: "3px solid #FFF",
-  borderRadius: "15px",
-  cursor: "pointer",
-  color: "#2C3E50",
-  fontWeight: "bold",
-  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  boxShadow: "0 6px 15px rgba(0, 0, 0, 0.3)",
-  fontFamily: "inherit",
-  animation: "buttonFloat 3s ease-in-out infinite",
-};
-
-const responseContainer = {
-  textAlign: "center",
-};
-
-const animeResponseCard = {
-  backgroundColor: "rgba(255, 182, 193, 0.3)",
-  borderRadius: "15px",
-  padding: "20px",
-  border: "2px solid #FF69B4",
-};
-
-const responseIcon = {
-  fontSize: "3rem",
-  marginBottom: "10px",
-};
-
-const responseTitle = {
-  color: "#FF1493",
-  fontSize: "1.3rem",
-  marginBottom: "10px",
-};
-
-const responseText = {
-  color: "#2C3E50",
-  fontSize: "1.1rem",
-  marginBottom: "15px",
-};
-
-const celebrationEmojis = {
-  display: "flex",
-  justifyContent: "center",
   gap: "15px",
+  marginBottom: "20px",
 };
 
-const celebration1 = {
-  fontSize: "2rem",
-  animation: "celebrationSpin 2s ease-in-out infinite",
+const cinemaButton = {
+  padding: "15px 20px",
+  fontSize: "1.1rem",
+  color: "#fff",
+  border: "none",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: "bold",
+  transition: "all 0.3s ease",
+  border: "2px solid transparent",
 };
 
-const celebration2 = {
-  fontSize: "2rem",
-  animation: "celebrationSpin 2s ease-in-out infinite 0.2s",
+const feedbackContainer = {
+  background: "rgba(39, 174, 96, 0.8)",
+  borderRadius: "10px",
+  padding: "20px",
+  marginTop: "20px",
 };
 
-const celebration3 = {
-  fontSize: "2rem",
-  animation: "celebrationSpin 2s ease-in-out infinite 0.4s",
+const feedbackText = {
+  fontSize: "1.1rem",
+  marginBottom: "10px",
+  color: "#fff",
 };
 
-const celebration4 = {
-  fontSize: "2rem",
-  animation: "celebrationSpin 2s ease-in-out infinite 0.6s",
+const applause = {
+  fontSize: "1.5rem",
 };
 
 const finalContainer = {
+  width: "100%",
+  maxWidth: "600px",
   textAlign: "center",
 };
 
-const finalCard = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "25px",
-  padding: "30px",
-  border: "4px solid #FFD700",
-  boxShadow: "0 25px 50px rgba(255, 215, 0, 0.4)",
-  backdropFilter: "blur(15px)",
+const creditsContainer = {
+  background: "rgba(0, 0, 0, 0.9)",
+  borderRadius: "20px",
+  padding: "40px",
+  border: "3px solid #e74c3c",
 };
 
-const finalTitle = {
+const creditsTitle = {
+  color: "#e74c3c",
   fontSize: "2rem",
-  background: "linear-gradient(45deg, #FFD700, #FFA500)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
   marginBottom: "25px",
 };
 
-const certificateContainer = {
-  marginBottom: "25px",
-};
-
-const certificate = {
-  backgroundColor: "#FFFACD",
-  border: "4px solid #FFD700",
-  borderRadius: "15px",
-  padding: "20px",
-  animation: "certificateShine 3s ease-in-out infinite",
-};
-
-const certificateHeader = {
-  textAlign: "center",
-  marginBottom: "15px",
-};
-
-const certificateName = {
-  color: "#B8860B",
-  fontSize: "1.4rem",
-  marginBottom: "8px",
-};
-
-const certificateStamp = {
-  color: "#FF1493",
-  fontSize: "1rem",
-  fontWeight: "bold",
-};
-
-const certificateBody = {
-  marginBottom: "15px",
-};
-
-const certificateText = {
-  color: "#2C3E50",
-  fontSize: "14px",
-  lineHeight: "1.8",
-};
-
-// Novo: seção de animes favoritos
-const animeReferences = {
-  backgroundColor: "rgba(255, 105, 180, 0.1)",
-  borderRadius: "10px",
-  padding: "15px",
-  marginBottom: "15px",
-};
-
-const referencesTitle = {
-  color: "#FF1493",
-  fontSize: "1.1rem",
-  marginBottom: "10px",
-  textAlign: "center",
-};
-
-const animeGrid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-  gap: "8px",
-};
-
-const animeItem = {
-  backgroundColor: "rgba(255, 255, 255, 0.8)",
-  padding: "5px 8px",
-  borderRadius: "10px",
-  fontSize: "11px",
-  color: "#FF1493",
-  fontWeight: "bold",
-  textAlign: "center",
-  animation: "animeGlow 3s ease-in-out infinite",
-};
-
-const certificateFooter = {
-  display: "flex",
-  justifyContent: "space-between",
-  fontSize: "12px",
-  color: "#666",
-};
-
-const signature = {
-  fontStyle: "italic",
-};
-
-const date = {
-  fontWeight: "bold",
-};
-
-const staffApproval = {
-  backgroundColor: "rgba(255, 105, 180, 0.1)",
+const finalScore = {
+  background: "rgba(52, 73, 94, 0.8)",
   borderRadius: "15px",
   padding: "20px",
   marginBottom: "25px",
-  border: "2px solid #FF69B4",
 };
 
-const staffTitle = {
-  color: "#FF1493",
-  fontSize: "1.2rem",
+const rating = {
+  fontSize: "1.3rem",
+  color: "#f39c12",
+  marginTop: "10px",
+};
+
+const reviewContainer = {
+  background: "rgba(44, 62, 80, 0.8)",
+  borderRadius: "15px",
+  padding: "25px",
+  marginBottom: "30px",
+  textAlign: "left",
+};
+
+const reviewTitle = {
+  color: "#3498db",
   marginBottom: "15px",
 };
 
-const staffCats = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "20px",
-  flexWrap: "wrap",
-};
-
-const staffMember = {
-  textAlign: "center",
-  minWidth: "120px",
-};
-
-const staffAvatar = {
-  fontSize: "2rem",
-  marginBottom: "5px",
-};
-
-const staffRole = {
-  fontSize: "12px",
-  color: "#666",
-  fontWeight: "bold",
-  marginBottom: "3px",
-};
-
-const staffComment = {
-  fontSize: "11px",
-  color: "#FF1493",
+const reviewText = {
+  lineHeight: "1.6",
+  marginBottom: "15px",
   fontStyle: "italic",
+};
+
+const reviewSignature = {
+  textAlign: "right",
+  color: "#f39c12",
+  fontWeight: "bold",
 };
 
 const nextButton = {
   padding: "18px 35px",
   fontSize: "1.2rem",
-  background: "linear-gradient(45deg, #FF69B4, #FF1493, #9370DB)",
-  color: "#FFF",
+  background: "linear-gradient(45deg, #9b59b6, #e74c3c)",
+  color: "#fff",
   border: "none",
   borderRadius: "25px",
   cursor: "pointer",
   fontWeight: "bold",
-  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-  boxShadow: "0 12px 25px rgba(255, 105, 180, 0.5)",
-  fontFamily: "inherit",
+  transition: "all 0.3s ease",
+  textTransform: "uppercase",
 };

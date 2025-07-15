@@ -1,46 +1,42 @@
+// pages/aventura/fase3.js - Castelo Encantado Estilo Ghibli
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
-export default function Fase3Melhorada() {
+export default function Fase3Ghibli() {
   const router = useRouter();
   const [resposta, setResposta] = useState(null);
-  const [magicDust, setMagicDust] = useState([]);
+  const [magicSpirits, setMagicSpirits] = useState([]);
   const [castleVisible, setCastleVisible] = useState(false);
   const [libraryOpen, setLibraryOpen] = useState(false);
-  const [royalCats, setRoyalCats] = useState([]);
+  const [forestCats, setForestCats] = useState([]);
 
   useEffect(() => {
-    // Criar poeira mágica
-    const dust = [];
-    for (let i = 0; i < 40; i++) {
-      dust.push({
+    // Espíritos mágicos flutuando (estilo Ghibli)
+    const spirits = [];
+    for (let i = 0; i < 15; i++) {
+      spirits.push({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
         delay: Math.random() * 5,
-        emoji: ["✨", "💫", "🌟", "⭐", "💎"][Math.floor(Math.random() * 5)],
+        emoji: ["🌸", "🍃", "✨", "🦋", "🌙"][Math.floor(Math.random() * 5)],
+        speed: 3 + Math.random() * 4,
       });
     }
-    setMagicDust(dust);
+    setMagicSpirits(spirits);
 
-    // Gatos reais do castelo
+    // Gatos da floresta encantada
     const cats = [
-      { id: 1, emoji: "👑🐱", x: 10, y: 80, name: "Rei Gatinho" },
-      { id: 2, emoji: "👸🐱", x: 85, y: 75, name: "Rainha Miadora" },
-      { id: 3, emoji: "🐱‍🏍", x: 15, y: 20, name: "Cavaleiro Miau" },
-      { id: 4, emoji: "🐱‍👤", x: 80, y: 25, name: "Mago Felino" },
+      { id: 1, emoji: "🐱🌸", x: 8, y: 80, name: "Totoro Cat" },
+      { id: 2, emoji: "🦋🐱", x: 90, y: 75, name: "Butterfly Cat" },
+      { id: 3, emoji: "🌙🐱", x: 12, y: 20, name: "Moon Cat" },
+      { id: 4, emoji: "🍃🐱", x: 85, y: 25, name: "Wind Cat" },
     ];
-    setRoyalCats(cats);
+    setForestCats(cats);
 
     // Animações sequenciais
     setTimeout(() => setCastleVisible(true), 600);
     setTimeout(() => setLibraryOpen(true), 1200);
-
-    // Música ambiente
-    const iframe = document.getElementById("casteloMusic");
-    if (iframe) {
-      iframe.src += "&autoplay=1";
-    }
   }, []);
 
   const avancar = () => {
@@ -49,30 +45,31 @@ export default function Fase3Melhorada() {
 
   return (
     <div style={containerStyle}>
-      {/* Fundo mágico com estrelas */}
-      <div style={backgroundOverlay}></div>
+      {/* Fundo degradê estilo Ghibli */}
+      <div style={ghibliBackground}></div>
 
-      {/* Poeira mágica flutuante */}
-      {magicDust.map((particle) => (
+      {/* Espíritos mágicos flutuando */}
+      {magicSpirits.map((spirit) => (
         <div
-          key={particle.id}
+          key={spirit.id}
           style={{
-            ...dustParticle,
-            left: `${particle.x}%`,
-            top: `${particle.y}%`,
-            animationDelay: `${particle.delay}s`,
+            ...spiritStyle,
+            left: `${spirit.x}%`,
+            top: `${spirit.y}%`,
+            animationDelay: `${spirit.delay}s`,
+            animationDuration: `${spirit.speed}s`,
           }}
         >
-          {particle.emoji}
+          {spirit.emoji}
         </div>
       ))}
 
-      {/* Gatos reais do castelo */}
-      {royalCats.map((cat) => (
+      {/* Gatos da floresta */}
+      {forestCats.map((cat) => (
         <div
           key={cat.id}
           style={{
-            ...royalCatStyle,
+            ...forestCatStyle,
             left: `${cat.x}%`,
             top: `${cat.y}%`,
           }}
@@ -81,6 +78,15 @@ export default function Fase3Melhorada() {
           <div style={catNameTag}>{cat.name}</div>
         </div>
       ))}
+
+      {/* Elementos decorativos da floresta */}
+      <div style={forestElements}>
+        <div style={tree1}>🌳</div>
+        <div style={tree2}>🌲</div>
+        <div style={flower1}>🌺</div>
+        <div style={flower2}>🌻</div>
+        <div style={mushroom}>🍄</div>
+      </div>
 
       <div style={contentContainer}>
         <div
@@ -92,43 +98,50 @@ export default function Fase3Melhorada() {
             opacity: castleVisible ? 1 : 0,
           }}
         >
-          {/* Torre do castelo */}
-          <div style={castleTower}>
-            <div style={towerTop}>🏰</div>
-            <div style={towerFlag}>🚩</div>
+          {/* Castelo no Céu inspirado */}
+          <div style={castleHeader}>
+            <div style={castleTowers}>
+              <div style={tower1}>🏰</div>
+              <div style={tower2}>🗼</div>
+              <div style={tower3}>🏯</div>
+            </div>
+            <div style={castleFlag}>🚩</div>
           </div>
 
           <div style={castleMain}>
-            <h1 style={titleStyle}>🏰 O Castelo Encantado dos Gatinhos 🏰</h1>
+            <h1 style={titleStyle}>🌸 Castelo no Céu dos Gatinhos 🌸</h1>
 
-            <div style={castleStory}>
+            <div style={enchantedStory}>
               <div style={storyScroll}>
-                <p style={mysticalText}>
-                  As antigas pedras do castelo sussurram segredos milenares...
+                <p style={ghibliText}>
+                  Em uma floresta encantada, onde os espíritos da natureza
+                  dançam entre as árvores,
                   <br />
-                  Os gatos reais guardam uma pergunta sagrada que ecoa pelas
-                  torres desde tempos imemoriais...
+                  ergue-se um castelo mágico guardado por gatos especiais...
+                  <br />
+                  Eles sussurram uma pergunta que ecoa pelas nuvens há
+                  séculos...
                 </p>
               </div>
             </div>
 
-            {/* Biblioteca secreta */}
+            {/* Biblioteca mágica */}
             <div
               style={{
                 ...libraryContainer,
-                maxHeight: libraryOpen ? "400px" : "0px",
+                maxHeight: libraryOpen ? "500px" : "0px",
                 opacity: libraryOpen ? 1 : 0,
               }}
             >
-              <h2 style={libraryTitle}>📚 Biblioteca Secreta Real 📚</h2>
+              <h2 style={libraryTitle}>📚 Biblioteca das Memórias 📚</h2>
 
-              <div style={booksContainer}>
-                {["📖", "📜", "📚", "📋", "📄"].map((book, index) => (
+              <div style={magicalBooks}>
+                {["📖", "📜", "📚", "📋", "📓"].map((book, index) => (
                   <div
                     key={index}
                     style={{
                       ...bookItem,
-                      animationDelay: `${index * 0.2}s`,
+                      animationDelay: `${index * 0.3}s`,
                     }}
                   >
                     {book}
@@ -137,109 +150,111 @@ export default function Fase3Melhorada() {
               </div>
 
               <div style={questionScroll}>
-                <h3 style={ancientQuestion}>💌 A Pergunta Ancestral 💌</h3>
+                <h3 style={ancientQuestion}>💌 A Pergunta dos Espíritos 💌</h3>
                 <p style={questionText}>
-                  Se você encontrasse uma carta de amor escondida na biblioteca
-                  secreta, assinada por ele... o que seu coração mandaria você
-                  fazer?
+                  Se você encontrasse uma carta de amor dele escondida em um
+                  livro antigo, uma carta que ele escreveu mas nunca teve
+                  coragem de entregar...
+                  <br />O que seu coração mandaria você fazer?
                 </p>
 
-                <div style={heartGlow}>💖</div>
+                <div style={heartSpirit}>💕</div>
               </div>
 
               {!resposta ? (
                 <div style={optionsContainer}>
                   <button
                     onClick={() => setResposta("guardar")}
-                    style={{ ...enchantedButton, backgroundColor: "#9B59B6" }}
+                    style={{ ...ghibliButton, backgroundColor: "#81C784" }}
                     onMouseEnter={(e) => {
                       e.target.style.transform = "scale(1.1) translateY(-5px)";
                       e.target.style.boxShadow =
-                        "0 15px 30px rgba(155, 89, 182, 0.6)";
+                        "0 15px 30px rgba(129, 199, 132, 0.6)";
                     }}
                     onMouseLeave={(e) => {
                       e.target.style.transform = "scale(1) translateY(0px)";
                       e.target.style.boxShadow =
-                        "0 8px 20px rgba(155, 89, 182, 0.4)";
+                        "0 8px 20px rgba(129, 199, 132, 0.4)";
                     }}
                   >
-                    ✨ Guardaria como um tesouro encantado ✨
+                    🌸 Guardaria como um tesouro precioso 🌸
                   </button>
 
                   <button
                     onClick={() => setResposta("responder")}
-                    style={{ ...enchantedButton, backgroundColor: "#E74C3C" }}
+                    style={{ ...ghibliButton, backgroundColor: "#FFB74D" }}
                     onMouseEnter={(e) => {
                       e.target.style.transform = "scale(1.1) translateY(-5px)";
                       e.target.style.boxShadow =
-                        "0 15px 30px rgba(231, 76, 60, 0.6)";
+                        "0 15px 30px rgba(255, 183, 77, 0.6)";
                     }}
                     onMouseLeave={(e) => {
                       e.target.style.transform = "scale(1) translateY(0px)";
                       e.target.style.boxShadow =
-                        "0 8px 20px rgba(231, 76, 60, 0.4)";
+                        "0 8px 20px rgba(255, 183, 77, 0.4)";
                     }}
                   >
-                    💌 Escreveria uma resposta apaixonada 💌
+                    💌 Escreveria uma resposta ainda mais bonita 💌
                   </button>
 
                   <button
-                    onClick={() => setResposta("chorar")}
-                    style={{ ...enchantedButton, backgroundColor: "#3498DB" }}
+                    onClick={() => setResposta("emocionar")}
+                    style={{ ...ghibliButton, backgroundColor: "#F06292" }}
                     onMouseEnter={(e) => {
                       e.target.style.transform = "scale(1.1) translateY(-5px)";
                       e.target.style.boxShadow =
-                        "0 15px 30px rgba(52, 152, 219, 0.6)";
+                        "0 15px 30px rgba(240, 98, 146, 0.6)";
                     }}
                     onMouseLeave={(e) => {
                       e.target.style.transform = "scale(1) translateY(0px)";
                       e.target.style.boxShadow =
-                        "0 8px 20px rgba(52, 152, 219, 0.4)";
+                        "0 8px 20px rgba(240, 98, 146, 0.4)";
                     }}
                   >
-                    😭 Choraria de amor na torre mais alta 😭
+                    😭 Choraria de emoção no topo da torre mais alta 😭
                   </button>
                 </div>
               ) : (
                 <div style={responseContainer}>
-                  <div style={magicResponse}>
-                    <div style={celebrationContainer}>
-                      <div style={royalCelebration}>
-                        <span style={celebratingCat1}>👑😸</span>
-                        <span style={celebratingCat2}>💖</span>
-                        <span style={celebratingCat3}>👸😻</span>
+                  <div style={ghibliResponse}>
+                    <div style={spiritCelebration}>
+                      <div style={celebratingSpirits}>
+                        <span style={celebratingSpirit1}>🌸</span>
+                        <span style={celebratingSpirit2}>💕</span>
+                        <span style={celebratingSpirit3}>🦋</span>
                       </div>
 
                       <h3 style={responseTitle}>
-                        ✨ Os Gatos Reais Aprovam! ✨
+                        ✨ Os Espíritos da Floresta Aprovam! ✨
                       </h3>
 
                       <p style={responseText}>
-                        O castelo reconhece a pureza da sua resposta...
+                        O castelo inteiro brilha com a pureza da sua resposta...
                         <br />
-                        As torres ecoam com aprovação real!
+                        As flores desabrocham, os pássaros cantam,
+                        <br />e o vento sussurra palavras de aprovação!
                       </p>
 
-                      <div style={castleBlessing}>
-                        <div style={blessingRunes}>🌟💫✨💎🌟</div>
+                      <div style={natureBlessing}>
+                        <div style={blessingElements}>🌸🦋🌙✨🍃</div>
                       </div>
                     </div>
 
                     <button
                       onClick={avancar}
-                      style={royalButton}
+                      style={enchantedButton}
                       onMouseEnter={(e) => {
                         e.target.style.transform = "scale(1.15) rotate(2deg)";
                         e.target.style.background =
-                          "linear-gradient(45deg, #FFD700, #FFA500, #FF6347)";
+                          "linear-gradient(45deg, #81C784, #FFB74D, #F06292)";
                       }}
                       onMouseLeave={(e) => {
                         e.target.style.transform = "scale(1) rotate(0deg)";
                         e.target.style.background =
-                          "linear-gradient(45deg, #a29bfe, #6c5ce7, #9b59b6)";
+                          "linear-gradient(45deg, #66BB6A, #42A5F5, #AB47BC)";
                       }}
                     >
-                      🏰 Avançar pelo Portão Real 🏰
+                      🌸 Voar para a Próxima Aventura 🌸
                     </button>
                   </div>
                 </div>
@@ -249,33 +264,20 @@ export default function Fase3Melhorada() {
         </div>
       </div>
 
-      {/* Música ambiente */}
-      <div style={{ display: "none" }}>
-        <iframe
-          id="casteloMusic"
-          width="0"
-          height="0"
-          src="https://www.youtube.com/embed/ygyZLO9qzI8?autoplay=1&loop=1&playlist=ygyZLO9qzI8"
-          title="Tema Castelo Encantado"
-          frameBorder="0"
-          allow="autoplay"
-        ></iframe>
-      </div>
-
       <style jsx global>{`
-        @keyframes sparkleFloat {
+        @keyframes spiritFloat {
           0%,
           100% {
             transform: translateY(0px) rotate(0deg) scale(1);
-            opacity: 0.6;
+            opacity: 0.7;
           }
           50% {
-            transform: translateY(-30px) rotate(180deg) scale(1.2);
+            transform: translateY(-40px) rotate(180deg) scale(1.2);
             opacity: 1;
           }
         }
 
-        @keyframes castleEntrance {
+        @keyframes ghibliEntrance {
           from {
             transform: scale(0.8) rotateY(-20deg);
             opacity: 0;
@@ -286,27 +288,29 @@ export default function Fase3Melhorada() {
           }
         }
 
-        @keyframes royalWave {
+        @keyframes forestSway {
           0%,
           100% {
-            transform: rotate(-10deg) scale(1);
+            transform: rotate(-3deg) scale(1);
           }
           50% {
-            transform: rotate(10deg) scale(1.1);
+            transform: rotate(3deg) scale(1.05);
           }
         }
 
-        @keyframes bookShimmer {
+        @keyframes bookGlow {
           0%,
           100% {
             transform: scale(1) rotateY(0deg);
+            filter: brightness(1);
           }
           50% {
-            transform: scale(1.1) rotateY(20deg);
+            transform: scale(1.1) rotateY(15deg);
+            filter: brightness(1.2);
           }
         }
 
-        @keyframes heartPulse {
+        @keyframes heartSpirit {
           0%,
           100% {
             transform: scale(1);
@@ -314,21 +318,11 @@ export default function Fase3Melhorada() {
           }
           50% {
             transform: scale(1.3);
-            filter: hue-rotate(180deg);
+            filter: hue-rotate(60deg);
           }
         }
 
-        @keyframes towerFlag {
-          0%,
-          100% {
-            transform: rotate(-5deg);
-          }
-          50% {
-            transform: rotate(5deg);
-          }
-        }
-
-        @keyframes runesGlow {
+        @keyframes natureBless {
           0%,
           100% {
             opacity: 0.8;
@@ -339,6 +333,16 @@ export default function Fase3Melhorada() {
             transform: scale(1.2);
           }
         }
+
+        @keyframes windSway {
+          0%,
+          100% {
+            transform: translateX(0px) rotate(0deg);
+          }
+          50% {
+            transform: translateX(10px) rotate(5deg);
+          }
+        }
       `}</style>
     </div>
   );
@@ -347,133 +351,193 @@ export default function Fase3Melhorada() {
 const containerStyle = {
   minHeight: "100vh",
   width: "100vw",
-  backgroundImage:
-    'url("https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1600&q=80")',
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  backgroundAttachment: "fixed",
-  color: "#fffef9",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontFamily: '"Cinzel Decorative", cursive',
   position: "relative",
   overflow: "hidden",
-  padding: 0,
-  margin: 0,
+  fontFamily: '"Georgia", serif',
+  color: "#2E7D32",
 };
 
-const backgroundOverlay = {
+const ghibliBackground = {
   position: "absolute",
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  background: "linear-gradient(rgba(75, 0, 130, 0.3), rgba(25, 25, 112, 0.4))",
+  background:
+    "linear-gradient(to bottom, #87CEEB 0%, #98FB98 30%, #90EE90 70%, #228B22 100%)",
   zIndex: 0,
 };
 
-const dustParticle = {
+const spiritStyle = {
   position: "absolute",
-  fontSize: "18px",
-  animation: "sparkleFloat 5s ease-in-out infinite",
+  fontSize: "1.5rem",
+  animation: "spiritFloat infinite ease-in-out",
   pointerEvents: "none",
   zIndex: 1,
 };
 
-const royalCatStyle = {
+const forestCatStyle = {
   position: "absolute",
   textAlign: "center",
   zIndex: 10,
 };
 
 const catCharacter = {
-  fontSize: "2.5rem",
-  animation: "royalWave 3s ease-in-out infinite",
+  fontSize: "2rem",
+  animation: "forestSway 4s ease-in-out infinite",
   cursor: "pointer",
+  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
 };
 
 const catNameTag = {
-  backgroundColor: "rgba(255, 255, 255, 0.9)",
-  color: "#4B0082",
-  padding: "5px 10px",
-  borderRadius: "15px",
-  fontSize: "10px",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  color: "#2E7D32",
+  padding: "4px 8px",
+  borderRadius: "10px",
+  fontSize: "9px",
   fontWeight: "bold",
   marginTop: "5px",
-  boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+  border: "1px solid #81C784",
+};
+
+const forestElements = {
+  position: "absolute",
+  width: "100%",
+  height: "100%",
+  pointerEvents: "none",
+  zIndex: 1,
+};
+
+const tree1 = {
+  position: "absolute",
+  left: "5%",
+  bottom: "0%",
+  fontSize: "4rem",
+  animation: "windSway 6s ease-in-out infinite",
+};
+
+const tree2 = {
+  position: "absolute",
+  right: "8%",
+  bottom: "0%",
+  fontSize: "3.5rem",
+  animation: "windSway 6s ease-in-out infinite 2s",
+};
+
+const flower1 = {
+  position: "absolute",
+  left: "20%",
+  bottom: "5%",
+  fontSize: "2rem",
+  animation: "forestSway 4s ease-in-out infinite",
+};
+
+const flower2 = {
+  position: "absolute",
+  right: "25%",
+  bottom: "8%",
+  fontSize: "1.8rem",
+  animation: "forestSway 4s ease-in-out infinite 1s",
+};
+
+const mushroom = {
+  position: "absolute",
+  left: "15%",
+  bottom: "2%",
+  fontSize: "1.5rem",
+  animation: "forestSway 5s ease-in-out infinite 3s",
 };
 
 const contentContainer = {
   position: "relative",
   zIndex: 2,
   padding: "20px",
-  width: "100%",
-  maxWidth: "900px",
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
 const castleContainer = {
   transition: "all 2s cubic-bezier(0.4, 0, 0.2, 1)",
   transformStyle: "preserve-3d",
+  maxWidth: "800px",
+  width: "100%",
 };
 
-const castleTower = {
+const castleHeader = {
   textAlign: "center",
   marginBottom: "20px",
   position: "relative",
 };
 
-const towerTop = {
-  fontSize: "4rem",
-  filter: "drop-shadow(0 0 20px rgba(255, 255, 255, 0.8))",
+const castleTowers = {
+  display: "flex",
+  justifyContent: "center",
+  gap: "30px",
+  marginBottom: "10px",
 };
 
-const towerFlag = {
-  position: "absolute",
-  top: "10px",
-  left: "60%",
+const tower1 = {
+  fontSize: "3rem",
+  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
+  animation: "forestSway 6s ease-in-out infinite",
+};
+
+const tower2 = {
+  fontSize: "3.5rem",
+  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
+  animation: "forestSway 6s ease-in-out infinite 1s",
+};
+
+const tower3 = {
+  fontSize: "3rem",
+  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
+  animation: "forestSway 6s ease-in-out infinite 2s",
+};
+
+const castleFlag = {
   fontSize: "1.5rem",
-  animation: "towerFlag 3s ease-in-out infinite",
+  animation: "windSway 3s ease-in-out infinite",
 };
 
 const castleMain = {
   backgroundColor: "rgba(255, 255, 255, 0.95)",
   borderRadius: "25px",
   padding: "35px",
-  border: "4px solid #DAA520",
-  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.4)",
-  backdropFilter: "blur(15px)",
-  color: "#4B0082",
+  border: "4px solid #81C784",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)",
+  backdropFilter: "blur(10px)",
 };
 
 const titleStyle = {
-  fontSize: "32px",
+  fontSize: "2.2rem",
   textAlign: "center",
-  background: "linear-gradient(45deg, #4B0082, #8B008B, #9370DB)",
+  background: "linear-gradient(45deg, #2E7D32, #66BB6A, #4CAF50)",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
   fontWeight: "bold",
   marginBottom: "25px",
-  textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
 };
 
-const castleStory = {
+const enchantedStory = {
   textAlign: "center",
   marginBottom: "25px",
 };
 
 const storyScroll = {
-  backgroundColor: "#F5F5DC",
-  border: "3px solid #DAA520",
+  backgroundColor: "#F1F8E9",
+  border: "3px solid #81C784",
   borderRadius: "15px",
   padding: "20px",
-  boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
+  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
 };
 
-const mysticalText = {
+const ghibliText = {
   fontSize: "16px",
-  lineHeight: "1.6",
-  color: "#4B0082",
+  lineHeight: "1.7",
+  color: "#2E7D32",
   fontStyle: "italic",
   fontWeight: "500",
 };
@@ -481,20 +545,20 @@ const mysticalText = {
 const libraryContainer = {
   overflow: "hidden",
   transition: "all 1.5s ease-in-out",
-  backgroundColor: "rgba(75, 0, 130, 0.1)",
+  backgroundColor: "rgba(129, 199, 132, 0.1)",
   borderRadius: "20px",
   padding: "20px",
-  border: "2px solid #9370DB",
+  border: "2px solid #66BB6A",
 };
 
 const libraryTitle = {
   textAlign: "center",
-  color: "#4B0082",
-  fontSize: "24px",
+  color: "#2E7D32",
+  fontSize: "1.5rem",
   marginBottom: "20px",
 };
 
-const booksContainer = {
+const magicalBooks = {
   display: "flex",
   justifyContent: "center",
   gap: "15px",
@@ -502,9 +566,10 @@ const booksContainer = {
 };
 
 const bookItem = {
-  fontSize: "2.5rem",
-  animation: "bookShimmer 3s ease-in-out infinite",
+  fontSize: "2rem",
+  animation: "bookGlow 3s ease-in-out infinite",
   cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const questionScroll = {
@@ -512,27 +577,27 @@ const questionScroll = {
   borderRadius: "15px",
   padding: "25px",
   marginBottom: "25px",
-  border: "3px solid #DAA520",
+  border: "3px solid #FFB74D",
   textAlign: "center",
 };
 
 const ancientQuestion = {
-  color: "#8B008B",
-  fontSize: "20px",
+  color: "#FF8F00",
+  fontSize: "1.3rem",
   marginBottom: "15px",
 };
 
 const questionText = {
-  fontSize: "18px",
-  color: "#4B0082",
+  fontSize: "1.1rem",
+  color: "#2E7D32",
   lineHeight: "1.6",
   marginBottom: "15px",
   fontWeight: "500",
 };
 
-const heartGlow = {
+const heartSpirit = {
   fontSize: "2rem",
-  animation: "heartPulse 2s ease-in-out infinite",
+  animation: "heartSpirit 2s ease-in-out infinite",
 };
 
 const optionsContainer = {
@@ -542,16 +607,16 @@ const optionsContainer = {
   marginBottom: "20px",
 };
 
-const enchantedButton = {
+const ghibliButton = {
   padding: "18px 25px",
-  fontSize: "16px",
-  border: "3px solid #DAA520",
-  borderRadius: "25px",
+  fontSize: "1rem",
+  border: "3px solid #FFF",
+  borderRadius: "20px",
   cursor: "pointer",
-  color: "#fff",
+  color: "#FFF",
   fontWeight: "bold",
   transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-  boxShadow: "0 8px 20px rgba(75, 0, 130, 0.4)",
+  boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
   fontFamily: "inherit",
 };
 
@@ -559,71 +624,72 @@ const responseContainer = {
   textAlign: "center",
 };
 
-const magicResponse = {
-  backgroundColor: "rgba(218, 165, 32, 0.1)",
+const ghibliResponse = {
+  backgroundColor: "rgba(129, 199, 132, 0.1)",
   borderRadius: "20px",
   padding: "30px",
-  border: "3px solid #DAA520",
+  border: "3px solid #81C784",
 };
 
-const celebrationContainer = {
+const spiritCelebration = {
   marginBottom: "25px",
 };
 
-const royalCelebration = {
+const celebratingSpirits = {
   display: "flex",
   justifyContent: "center",
   gap: "25px",
   marginBottom: "20px",
 };
 
-const celebratingCat1 = {
-  fontSize: "3rem",
-  animation: "royalWave 2s ease-in-out infinite",
+const celebratingSpirit1 = {
+  fontSize: "2.5rem",
+  animation: "spiritFloat 2s ease-in-out infinite",
 };
 
-const celebratingCat2 = {
-  fontSize: "3rem",
-  animation: "heartPulse 2s ease-in-out infinite",
+const celebratingSpirit2 = {
+  fontSize: "2.5rem",
+  animation: "heartSpirit 2s ease-in-out infinite",
 };
 
-const celebratingCat3 = {
-  fontSize: "3rem",
-  animation: "royalWave 2s ease-in-out infinite 1s",
+const celebratingSpirit3 = {
+  fontSize: "2.5rem",
+  animation: "spiritFloat 2s ease-in-out infinite 1s",
 };
 
 const responseTitle = {
-  color: "#8B008B",
-  fontSize: "24px",
+  color: "#2E7D32",
+  fontSize: "1.5rem",
   marginBottom: "15px",
 };
 
 const responseText = {
-  fontSize: "18px",
-  color: "#4B0082",
+  fontSize: "1.1rem",
+  color: "#388E3C",
   lineHeight: "1.6",
   marginBottom: "20px",
 };
 
-const castleBlessing = {
+const natureBlessing = {
   textAlign: "center",
 };
 
-const blessingRunes = {
+const blessingElements = {
   fontSize: "2rem",
-  animation: "runesGlow 3s ease-in-out infinite",
+  animation: "natureBless 3s ease-in-out infinite",
+  letterSpacing: "0.3em",
 };
 
-const royalButton = {
+const enchantedButton = {
   padding: "20px 40px",
-  fontSize: "20px",
-  background: "linear-gradient(45deg, #a29bfe, #6c5ce7, #9b59b6)",
+  fontSize: "1.2rem",
+  background: "linear-gradient(45deg, #66BB6A, #42A5F5, #AB47BC)",
   color: "#fff",
   border: "none",
-  borderRadius: "50px",
+  borderRadius: "25px",
   cursor: "pointer",
   fontWeight: "bold",
   transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-  boxShadow: "0 15px 30px rgba(162, 155, 254, 0.5)",
+  boxShadow: "0 12px 25px rgba(102, 187, 106, 0.5)",
   fontFamily: "inherit",
 };

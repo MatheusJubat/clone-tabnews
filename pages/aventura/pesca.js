@@ -1,58 +1,136 @@
+// pages/aventura/pesca.js - Versão Melhorada: Pescaria dos Momentos
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
 export default function PescaMelhorada() {
   const router = useRouter();
-  const [posicao, setPosicao] = useState(50);
-  const [pegou, setPegou] = useState(false);
+  const [fase, setFase] = useState("instrucoes"); // 'instrucoes', 'pescando', 'completo'
+  const [peixesPescados, setPeixesPescados] = useState([]);
   const [tentativas, setTentativas] = useState(0);
-  const [fishingCats, setFishingCats] = useState([]);
+  const [peixes, setPeixes] = useState([]);
+  const [linhaCast, setLinhaCast] = useState(false);
+  const [pescaAtiva, setPescaAtiva] = useState(false);
   const [waterRipples, setWaterRipples] = useState([]);
-  const [magicFish, setMagicFish] = useState([]);
-  const [encouragement, setEncouragement] = useState("");
-  const alvoRef = useRef(null);
-  const audioRef = useRef(null);
+  const [fishingCats, setFishingCats] = useState([]);
+
+  // Peixes especiais com momentos do relacionamento
+  const peixesEspeciais = [
+    {
+      id: 1,
+      emoji: "🐠",
+      nome: "Peixe da Primeira Conversa",
+      memoria: "Lembra da primeira vez que conversamos? 💬",
+      cor: "#FF6B6B",
+      raridade: "comum",
+    },
+    {
+      id: 2,
+      emoji: "🐟",
+      nome: 'Peixe do Primeiro "Te Amo"',
+      memoria: "O momento mais especial... quando dissemos que nos amávamos 💕",
+      cor: "#4ECDC4",
+      raridade: "raro",
+    },
+    {
+      id: 3,
+      emoji: "🦈",
+      nome: "Tubarão dos Desafios",
+      memoria: "Todos os obstáculos que superamos juntos nos fortaleceram 💪",
+      cor: "#45B7D1",
+      raridade: "épico",
+    },
+    {
+      id: 4,
+      emoji: "🐡",
+      nome: "Baiacu das Risadas",
+      memoria: "Quantas gargalhadas já demos juntos! 😂",
+      cor: "#96CEB4",
+      raridade: "comum",
+    },
+    {
+      id: 5,
+      emoji: "🐙",
+      nome: "Polvo dos Planos",
+      memoria: "Todos os sonhos e planos que fazemos para o futuro 🌟",
+      cor: "#FFEAA7",
+      raridade: "lendário",
+    },
+    {
+      id: 6,
+      emoji: "🦑",
+      nome: "Lula da Cumplicidade",
+      memoria: "A conexão especial que só vocês dois entendem 🤝",
+      cor: "#DDA0DD",
+      raridade: "raro",
+    },
+  ];
 
   useEffect(() => {
-    // Gatos pescadores observando
+    // Gatos pescadores assistindo
     const cats = [
       { id: 1, emoji: "🎣🐱", x: 5, y: 85, name: "Mestre Pescador" },
-      { id: 2, emoji: "🐱‍🏍", x: 90, y: 80, name: "Gato Aventureiro" },
-      { id: 3, emoji: "🐱‍👤", x: 10, y: 15, name: "Ninja Fisher" },
-      { id: 4, emoji: "🐱‍🚀", x: 85, y: 20, name: "Astro Cat" },
+      { id: 2, emoji: "⛵🐱", x: 90, y: 80, name: "Capitão Whiskers" },
+      { id: 3, emoji: "🐱‍🏍", x: 10, y: 15, name: "Gato Aventureiro" },
+      { id: 4, emoji: "🌊🐱", x: 85, y: 20, name: "Surfista Felino" },
     ];
     setFishingCats(cats);
 
-    // Peixes mágicos nadando
-    const fish = [];
+    // Criar peixes nadando
+    const peixesIniciais = [];
     for (let i = 0; i < 8; i++) {
-      fish.push({
-        id: i,
+      const peixeAleatorio =
+        peixesEspeciais[Math.floor(Math.random() * peixesEspeciais.length)];
+      peixesIniciais.push({
+        ...peixeAleatorio,
         x: Math.random() * 80 + 10,
-        y: Math.random() * 60 + 20,
-        emoji: ["🐠", "🐟", "🦈", "🐡", "🦑"][Math.floor(Math.random() * 5)],
-        delay: Math.random() * 3,
+        y: Math.random() * 40 + 40,
+        velocidade: Math.random() * 2 + 1,
+        direcao: Math.random() * 360,
+        id: i + Date.now(),
       });
     }
-    setMagicFish(fish);
+    setPeixes(peixesIniciais);
+  }, []);
 
-    // Movimento do peixinho target
+  // Animação dos peixes
+  useEffect(() => {
+    if (fase !== "pescando") return;
+
     const intervalo = setInterval(() => {
-      if (!pegou) {
-        const novaPos = Math.random() * 70 + 15; // Entre 15% e 85%
-        setPosicao(novaPos);
-        criarOndas();
-      }
-    }, 800);
+      setPeixes((prevPeixes) =>
+        prevPeixes.map((peixe) => {
+          let newX = peixe.x + Math.cos(peixe.direcao) * peixe.velocidade;
+          let newY = peixe.y + Math.sin(peixe.direcao) * peixe.velocidade;
+          let newDirecao = peixe.direcao;
+
+          // Manter peixes na área da água
+          if (newX < 10 || newX > 85) {
+            newDirecao = Math.PI - peixe.direcao;
+            newX = Math.max(10, Math.min(85, newX));
+          }
+          if (newY < 40 || newY > 80) {
+            newDirecao = -peixe.direcao;
+            newY = Math.max(40, Math.min(80, newY));
+          }
+
+          return {
+            ...peixe,
+            x: newX,
+            y: newY,
+            direcao: newDirecao,
+          };
+        }),
+      );
+    }, 100);
 
     return () => clearInterval(intervalo);
-  }, [pegou]);
+  }, [fase]);
 
-  const criarOndas = () => {
+  const criarOnda = (x, y) => {
     const novaOnda = {
       id: Date.now(),
-      x: Math.random() * 100,
-      y: 40 + Math.random() * 40,
+      x: x,
+      y: y,
     };
 
     setWaterRipples((prev) => [...prev, novaOnda]);
@@ -62,44 +140,57 @@ export default function PescaMelhorada() {
     }, 2000);
   };
 
-  const tentarPescar = () => {
-    const alvoTop = parseFloat(alvoRef.current?.style.top || "50%");
-    const isInTarget = alvoTop > 45 && alvoTop < 55;
+  const lancarLinha = () => {
+    if (pescaAtiva) return;
 
+    setPescaAtiva(true);
+    setLinhaCast(true);
     setTentativas((prev) => prev + 1);
-    criarOndas();
 
-    if (isInTarget) {
-      setPegou(true);
-      setEncouragement("🎉 INCRÍVEL! Você pescou o coração dele! 💘");
-      audioRef.current?.play();
+    // Criar onda onde a linha caiu
+    criarOnda(50, 60);
 
-      // Criar celebração
-      for (let i = 0; i < 5; i++) {
-        setTimeout(() => criarOndas(), i * 200);
+    // Simular tempo de espera
+    setTimeout(() => {
+      // Verificar se pegou algum peixe
+      const peixesPertos = peixes.filter((peixe) => {
+        const distancia = Math.sqrt(
+          Math.pow(peixe.x - 50, 2) + Math.pow(peixe.y - 60, 2),
+        );
+        return distancia < 15; // Área de captura
+      });
+
+      if (peixesPertos.length > 0) {
+        const peixePescado = peixesPertos[0];
+        setPeixesPescados((prev) => [...prev, peixePescado]);
+
+        // Remover peixe pescado da água
+        setPeixes((prev) => prev.filter((p) => p.id !== peixePescado.id));
+
+        // Criar múltiplas ondas de comemoração
+        for (let i = 0; i < 5; i++) {
+          setTimeout(() => {
+            criarOnda(Math.random() * 60 + 20, Math.random() * 30 + 50);
+          }, i * 200);
+        }
+
+        // Verificar se completou
+        if (peixesPescados.length + 1 >= 4) {
+          setTimeout(() => setFase("completo"), 1500);
+        }
       }
 
-      setTimeout(() => {
-        router.push("/aventura/fase3");
-      }, 3000);
-    } else {
-      const messages = [
-        "Quase lá! O amor requer paciência! 🎯",
-        "Tente novamente! Os gatinhos acreditam em você! 🐱",
-        "Respire fundo e foque no coração! 💖",
-        "A prática leva à perfeição do amor! ✨",
-      ];
-      setEncouragement(messages[tentativas % messages.length]);
+      setLinhaCast(false);
+      setPescaAtiva(false);
+    }, 2000);
+  };
 
-      setTimeout(() => setEncouragement(""), 2000);
-    }
+  const avancar = () => {
+    router.push("/aventura/fase3");
   };
 
   return (
     <div style={containerStyle}>
-      {/* Fundo do lago encantado */}
-      <div style={backgroundOverlay}></div>
-
       {/* Ondas na água */}
       {waterRipples.map((onda) => (
         <div
@@ -110,21 +201,6 @@ export default function PescaMelhorada() {
             top: `${onda.y}%`,
           }}
         />
-      ))}
-
-      {/* Peixes mágicos nadando */}
-      {magicFish.map((fish) => (
-        <div
-          key={fish.id}
-          style={{
-            ...fishStyle,
-            left: `${fish.x}%`,
-            top: `${fish.y}%`,
-            animationDelay: `${fish.delay}s`,
-          }}
-        >
-          {fish.emoji}
-        </div>
       ))}
 
       {/* Gatos pescadores */}
@@ -143,156 +219,152 @@ export default function PescaMelhorada() {
       ))}
 
       <div style={contentContainer}>
-        <div style={gameContainer}>
-          {/* Título com efeito de água */}
-          <div style={titleContainer}>
-            <h2 style={titleStyle}>🎣 Lago Encantado dos Gatinhos 🎣</h2>
-            <div style={titleWaves}>
-              <span style={wave1}>〰️</span>
-              <span style={wave2}>〰️</span>
-              <span style={wave3}>〰️</span>
-            </div>
-          </div>
-
+        {fase === "instrucoes" && (
           <div style={instructionsContainer}>
-            <p style={instructionText}>
-              🎯 Fique atenta e clique quando o peixinho dourado estiver
-              <br />
-              <strong>na zona encantada do amor!</strong> 💖
-            </p>
+            <h1 style={titleStyle}>🎣 Pescaria dos Momentos Especiais 🎣</h1>
+
+            <div style={storyContainer}>
+              <p style={storyText}>
+                Em um lago mágico, nadam peixes especiais que guardam as
+                memórias mais preciosas do seu relacionamento...
+                <br />
+                <br />
+                Sua missão é pescar 4 peixes para desbloquear os momentos mais
+                importantes da jornada de vocês! 💕
+              </p>
+            </div>
+
+            <div style={instructionsList}>
+              <h3 style={instructionsTitle}>Como Pescar:</h3>
+              <div style={instruction}>
+                🎯 Clique no botão para lançar a linha
+              </div>
+              <div style={instruction}>🐠 Aguarde os peixes se aproximarem</div>
+              <div style={instruction}>⏰ Timing é importante!</div>
+              <div style={instruction}>
+                💝 Cada peixe revela uma memória especial
+              </div>
+            </div>
+
+            <button
+              onClick={() => setFase("pescando")}
+              style={startFishingButton}
+            >
+              🎣 Começar a Pescaria 🎣
+            </button>
           </div>
+        )}
 
-          {/* Sistema de pontuação */}
-          <div style={scoreContainer}>
-            <div style={scoreCard}>
-              <div style={scoreLabel}>Tentativas</div>
-              <div style={scoreValue}>{tentativas}</div>
-            </div>
-            <div style={scoreCard}>
-              <div style={scoreLabel}>Precisão</div>
-              <div style={scoreValue}>
-                {tentativas > 0
-                  ? Math.round(((pegou ? 100 : 0) / tentativas) * 100)
-                  : 0}
-                %
+        {fase === "pescando" && (
+          <div style={fishingGameContainer}>
+            <div style={gameHeader}>
+              <h2 style={gameTitle}>🌊 Lago dos Momentos 🌊</h2>
+              <div style={gameStats}>
+                <div>Peixes Pescados: {peixesPescados.length}/4</div>
+                <div>Tentativas: {tentativas}</div>
               </div>
             </div>
-          </div>
 
-          {/* Aquário mágico */}
-          <div style={aquariumContainer}>
-            <div style={aquarium}>
-              {/* Zona target mágica */}
-              <div style={targetZone}>
-                <div style={targetIndicator}>💖 ZONA DO AMOR 💖</div>
-              </div>
-
-              {/* Peixinho alvo */}
-              <div
-                ref={alvoRef}
-                style={{
-                  ...targetFish,
-                  top: `${posicao}%`,
-                }}
-              >
-                🐠✨
-              </div>
-
-              {/* Decorações do aquário */}
-              <div style={aquariumDecorations}>
-                <div style={seaweed1}>🌿</div>
-                <div style={seaweed2}>🌿</div>
-                <div style={coral}>🪸</div>
-                <div style={shell}>🐚</div>
-              </div>
-
-              {/* Bolhas */}
-              <div style={bubblesContainer}>
-                {[...Array(6)].map((_, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      ...bubbleStyle,
-                      left: `${20 + i * 12}%`,
-                      animationDelay: `${i * 0.5}s`,
-                    }}
-                  >
-                    💧
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Feedback e encorajamento */}
-          {encouragement && (
-            <div style={feedbackContainer}>
-              <p style={feedbackText}>{encouragement}</p>
-            </div>
-          )}
-
-          {/* Controles */}
-          <div style={controlsContainer}>
-            {!pegou ? (
-              <button
-                onClick={tentarPescar}
-                style={fishingButton}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "scale(1.1) rotate(2deg)";
-                  e.target.style.boxShadow =
-                    "0 15px 30px rgba(89, 195, 195, 0.8)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "scale(1) rotate(0deg)";
-                  e.target.style.boxShadow =
-                    "0 8px 20px rgba(89, 195, 195, 0.6)";
-                }}
-              >
-                🎣 Lançar Vara Mágica! 🎣
-              </button>
-            ) : (
-              <div style={successContainer}>
-                <div style={successTitle}>🎉 PESCOU O CORAÇÃO! 🎉</div>
-                <div style={celebrationFish}>
-                  <span style={celebrationEmoji1}>🐠</span>
-                  <span style={celebrationEmoji2}>💖</span>
-                  <span style={celebrationEmoji3}>🐠</span>
+            {/* Área do lago */}
+            <div style={lakeArea}>
+              {/* Peixes nadando */}
+              {peixes.map((peixe) => (
+                <div
+                  key={peixe.id}
+                  style={{
+                    ...fishStyle,
+                    left: `${peixe.x}%`,
+                    top: `${peixe.y}%`,
+                    color: peixe.cor,
+                  }}
+                  title={peixe.nome}
+                >
+                  {peixe.emoji}
                 </div>
-                <p style={successText}>
-                  Os gatinhos pescadores ficaram impressionados!
-                  <br />
-                  Você provou que tem paciência e amor verdadeiro! 💕
-                </p>
-                <div style={fishingReward}>
-                  <div style={rewardText}>🏆 Recompensa Conquistada! 🏆</div>
-                  <div style={rewardItem}>💎 Cristal do Coração Pescado</div>
+              ))}
+
+              {/* Linha de pesca */}
+              {linhaCast && (
+                <div style={fishingLine}>
+                  <div style={fishingHook}>🪝</div>
+                </div>
+              )}
+
+              {/* Área de pesca */}
+              <div style={fishingSpot}>🎯 Zona de Pesca</div>
+            </div>
+
+            <button
+              onClick={lancarLinha}
+              disabled={pescaAtiva}
+              style={{
+                ...fishingButton,
+                opacity: pescaAtiva ? 0.6 : 1,
+                cursor: pescaAtiva ? "not-allowed" : "pointer",
+              }}
+            >
+              {pescaAtiva ? "🎣 Pescando..." : "🎣 Lançar Linha"}
+            </button>
+
+            {/* Peixes pescados */}
+            {peixesPescados.length > 0 && (
+              <div style={caughtFishContainer}>
+                <h3 style={caughtTitle}>🏆 Momentos Capturados:</h3>
+                <div style={caughtFishList}>
+                  {peixesPescados.map((peixe, index) => (
+                    <div key={index} style={caughtFishCard}>
+                      <div style={caughtFishEmoji}>{peixe.emoji}</div>
+                      <div style={caughtFishName}>{peixe.nome}</div>
+                      <div style={caughtFishMemory}>{peixe.memoria}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
           </div>
+        )}
 
-          {/* Galeria de gatos torcendo */}
-          <div style={cheeringContainer}>
-            <div style={cheeringTitle}>🎭 Torcida Felina 🎭</div>
-            <div style={cheeringCats}>
-              <div style={cheerCat1}>📣🐱</div>
-              <div style={cheerCat2}>🎉😸</div>
-              <div style={cheerCat3}>👏🐱</div>
-              <div style={cheerCat4}>🥳😻</div>
+        {fase === "completo" && (
+          <div style={completionContainer}>
+            <h1 style={completionTitle}>🏆 Pescaria Completa! 🏆</h1>
+
+            <div style={completionMessage}>
+              <p style={completionText}>
+                Parabéns! Você pescou todos os momentos especiais! 🎉
+                <br />
+                Cada peixe representa uma memória preciosa da jornada de vocês.
+                <br />
+                Agora essas lembranças estão guardadas para sempre! 💝
+              </p>
             </div>
-            <p style={cheeringText}>
-              "Vai! Vai! Você consegue!" - Coro dos Gatinhos
-            </p>
-          </div>
-        </div>
-      </div>
 
-      {/* Som */}
-      <audio
-        ref={audioRef}
-        src="https://www.fesliyanstudios.com/play-mp3/387"
-        preload="auto"
-      />
+            <div style={allCaughtFish}>
+              <h3 style={treasuresTitle}>💎 Tesouros Pescados:</h3>
+              <div style={treasuresGrid}>
+                {peixesPescados.map((peixe, index) => (
+                  <div key={index} style={treasureCard}>
+                    <div style={treasureEmoji}>{peixe.emoji}</div>
+                    <div style={treasureName}>{peixe.nome}</div>
+                    <div style={treasureRarity}>{peixe.raridade}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={fishingReward}>
+              <h4 style={rewardTitle}>🎁 Recompensa da Pescaria:</h4>
+              <div style={rewardItem}>
+                🏵️ Medallha de Mestre Pescador do Amor
+              </div>
+              <div style={rewardItem}>📜 Pergaminho das Memórias Eternas</div>
+            </div>
+
+            <button onClick={avancar} style={continueButton}>
+              ⛵ Navegar para Próxima Aventura ⛵
+            </button>
+          </div>
+        )}
+      </div>
 
       <style jsx global>{`
         @keyframes ripple {
@@ -309,79 +381,39 @@ export default function PescaMelhorada() {
         @keyframes fishSwim {
           0%,
           100% {
-            transform: translateX(-20px) rotateY(0deg);
+            transform: translateX(0px) scaleX(1);
           }
           50% {
-            transform: translateX(20px) rotateY(180deg);
+            transform: translateX(5px) scaleX(-1);
+          }
+        }
+
+        @keyframes hookDrop {
+          0% {
+            transform: translateY(-100px);
+          }
+          100% {
+            transform: translateY(0px);
           }
         }
 
         @keyframes catFishing {
           0%,
           100% {
-            transform: rotate(-5deg) scale(1);
+            transform: rotate(-2deg) scale(1);
           }
           50% {
-            transform: rotate(5deg) scale(1.1);
+            transform: rotate(2deg) scale(1.05);
           }
         }
 
-        @keyframes waveMove {
+        @keyframes treasureGlow {
           0%,
           100% {
-            transform: translateX(-10px);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
           }
           50% {
-            transform: translateX(10px);
-          }
-        }
-
-        @keyframes bubbleFloat {
-          0% {
-            transform: translateY(0px) scale(0.8);
-            opacity: 0.6;
-          }
-          100% {
-            transform: translateY(-100px) scale(1.2);
-            opacity: 0;
-          }
-        }
-
-        @keyframes targetGlow {
-          0%,
-          100% {
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
-          }
-          50% {
-            box-shadow:
-              0 0 30px rgba(255, 105, 180, 1),
-              0 0 40px rgba(255, 105, 180, 0.8);
-          }
-        }
-
-        @keyframes celebration {
-          0%,
-          100% {
-            transform: scale(1) rotate(0deg);
-          }
-          25% {
-            transform: scale(1.3) rotate(-10deg);
-          }
-          50% {
-            transform: scale(1.2) rotate(10deg);
-          }
-          75% {
-            transform: scale(1.4) rotate(-5deg);
-          }
-        }
-
-        @keyframes seaweedSway {
-          0%,
-          100% {
-            transform: rotate(-10deg);
-          }
-          50% {
-            transform: rotate(10deg);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 1);
           }
         }
       `}</style>
@@ -389,48 +421,25 @@ export default function PescaMelhorada() {
   );
 }
 
+// Estilos
 const containerStyle = {
   minHeight: "100vh",
-  width: "100vw",
   background:
-    "linear-gradient(135deg, #87CEEB 0%, #4682B4 25%, #1E90FF 50%, #0077BE 75%, #006494 100%)",
-  backgroundImage:
-    'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.1" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
-  color: "#ffffff",
-  fontFamily: '"Press Start 2P", monospace',
+    "linear-gradient(to bottom, #87CEEB 0%, #4682B4 30%, #1E90FF 70%, #0077BE 100%)",
   position: "relative",
   overflow: "hidden",
-  padding: 0,
-  margin: 0,
-};
-
-const backgroundOverlay = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  background:
-    "radial-gradient(circle at 50% 100%, rgba(0, 191, 255, 0.3) 0%, transparent 50%)",
-  zIndex: 0,
+  fontFamily: '"Georgia", serif',
+  color: "#fff",
 };
 
 const rippleStyle = {
   position: "absolute",
   width: "20px",
   height: "20px",
-  border: "2px solid rgba(255, 255, 255, 0.6)",
+  border: "2px solid rgba(255, 255, 255, 0.8)",
   borderRadius: "50%",
   animation: "ripple 2s ease-out forwards",
   pointerEvents: "none",
-};
-
-const fishStyle = {
-  position: "absolute",
-  fontSize: "1.5rem",
-  animation: "fishSwim 4s ease-in-out infinite",
-  pointerEvents: "none",
-  zIndex: 1,
 };
 
 const fishingCatStyle = {
@@ -443,6 +452,7 @@ const catCharacter = {
   fontSize: "2rem",
   animation: "catFishing 3s ease-in-out infinite",
   cursor: "pointer",
+  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
 };
 
 const catNameTag = {
@@ -450,7 +460,7 @@ const catNameTag = {
   color: "#1E90FF",
   padding: "4px 8px",
   borderRadius: "10px",
-  fontSize: "8px",
+  fontSize: "10px",
   fontWeight: "bold",
   marginTop: "5px",
   boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
@@ -466,348 +476,306 @@ const contentContainer = {
   justifyContent: "center",
 };
 
-const gameContainer = {
+const instructionsContainer = {
   backgroundColor: "rgba(255, 255, 255, 0.95)",
   borderRadius: "25px",
-  padding: "30px",
+  padding: "40px",
   maxWidth: "600px",
-  width: "100%",
-  border: "4px solid #1E90FF",
-  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
-  backdropFilter: "blur(10px)",
-  color: "#2C3E50",
-};
-
-const titleContainer = {
   textAlign: "center",
-  marginBottom: "20px",
+  color: "#2C3E50",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
 };
 
 const titleStyle = {
-  fontSize: "16px",
-  background: "linear-gradient(45deg, #1E90FF, #00BFFF)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  fontWeight: "bold",
-  marginBottom: "10px",
-};
-
-const titleWaves = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "10px",
-};
-
-const wave1 = {
-  fontSize: "1rem",
+  fontSize: "2.2rem",
   color: "#1E90FF",
-  animation: "waveMove 2s ease-in-out infinite",
+  marginBottom: "25px",
+  textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
 };
 
-const wave2 = {
-  fontSize: "1rem",
-  color: "#00BFFF",
-  animation: "waveMove 2s ease-in-out infinite 0.5s",
-};
-
-const wave3 = {
-  fontSize: "1rem",
-  color: "#87CEEB",
-  animation: "waveMove 2s ease-in-out infinite 1s",
-};
-
-const instructionsContainer = {
-  textAlign: "center",
-  marginBottom: "20px",
+const storyContainer = {
   backgroundColor: "rgba(30, 144, 255, 0.1)",
   borderRadius: "15px",
-  padding: "15px",
+  padding: "20px",
+  marginBottom: "25px",
   border: "2px solid #1E90FF",
 };
 
-const instructionText = {
-  fontSize: "10px",
-  lineHeight: "1.4",
-  color: "#2C3E50",
+const storyText = {
+  fontSize: "1.1rem",
+  lineHeight: "1.6",
+  color: "#34495E",
   margin: 0,
 };
 
-const scoreContainer = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "20px",
-  marginBottom: "25px",
+const instructionsList = {
+  marginBottom: "30px",
 };
 
-const scoreCard = {
-  backgroundColor: "rgba(135, 206, 235, 0.2)",
-  borderRadius: "10px",
-  padding: "10px 15px",
-  textAlign: "center",
-  border: "2px solid #87CEEB",
-};
-
-const scoreLabel = {
-  fontSize: "8px",
-  color: "#666",
-  marginBottom: "5px",
-};
-
-const scoreValue = {
-  fontSize: "12px",
-  fontWeight: "bold",
+const instructionsTitle = {
   color: "#1E90FF",
+  marginBottom: "15px",
 };
 
-const aquariumContainer = {
-  display: "flex",
-  justifyContent: "center",
-  marginBottom: "25px",
+const instruction = {
+  backgroundColor: "rgba(52, 152, 219, 0.2)",
+  padding: "10px 15px",
+  margin: "8px 0",
+  borderRadius: "10px",
+  textAlign: "left",
+  border: "1px solid #3498DB",
 };
 
-const aquarium = {
-  position: "relative",
-  width: "200px",
-  height: "300px",
-  background:
-    "linear-gradient(to bottom, #87CEEB 0%, #4682B4 50%, #1E90FF 100%)",
-  borderRadius: "15px",
-  border: "4px solid #ffffff",
-  overflow: "hidden",
-  boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
+const startFishingButton = {
+  padding: "18px 35px",
+  fontSize: "1.3rem",
+  backgroundColor: "#1E90FF",
+  color: "#fff",
+  border: "none",
+  borderRadius: "25px",
+  cursor: "pointer",
+  fontWeight: "bold",
+  transition: "all 0.3s ease",
+  boxShadow: "0 8px 20px rgba(30, 144, 255, 0.4)",
 };
 
-const targetZone = {
-  position: "absolute",
-  top: "45%",
-  left: 0,
+const fishingGameContainer = {
   width: "100%",
-  height: "20%",
-  backgroundColor: "rgba(255, 105, 180, 0.3)",
-  border: "2px dashed #ff69b4",
-  borderLeft: "none",
-  borderRight: "none",
+  maxWidth: "800px",
+};
+
+const gameHeader = {
+  backgroundColor: "rgba(0, 0, 0, 0.8)",
+  borderRadius: "15px",
+  padding: "20px",
+  marginBottom: "20px",
+  textAlign: "center",
+};
+
+const gameTitle = {
+  color: "#87CEEB",
+  marginBottom: "10px",
+};
+
+const gameStats = {
+  display: "flex",
+  justifyContent: "space-around",
+  color: "#B0E0E6",
+};
+
+const lakeArea = {
+  position: "relative",
+  width: "100%",
+  height: "400px",
+  backgroundColor: "rgba(30, 144, 255, 0.3)",
+  borderRadius: "20px",
+  border: "3px solid #1E90FF",
+  marginBottom: "20px",
+  overflow: "hidden",
+};
+
+const fishStyle = {
+  position: "absolute",
+  fontSize: "2rem",
+  animation: "fishSwim 3s ease-in-out infinite",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
+  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
+};
+
+const fishingLine = {
+  position: "absolute",
+  left: "50%",
+  top: "0",
+  width: "2px",
+  height: "60%",
+  backgroundColor: "#8B4513",
+  transform: "translateX(-50%)",
+};
+
+const fishingHook = {
+  position: "absolute",
+  bottom: "-20px",
+  left: "50%",
+  transform: "translateX(-50%)",
+  fontSize: "1.5rem",
+  animation: "hookDrop 0.5s ease-out",
+};
+
+const fishingSpot = {
+  position: "absolute",
+  left: "40%",
+  top: "55%",
+  width: "20%",
+  height: "10%",
+  border: "2px dashed #FFD700",
+  borderRadius: "50%",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  zIndex: 2,
-  animation: "targetGlow 2s ease-in-out infinite",
-};
-
-const targetIndicator = {
-  fontSize: "8px",
-  color: "#ff1493",
+  color: "#FFD700",
+  fontSize: "12px",
   fontWeight: "bold",
-  textAlign: "center",
-};
-
-const targetFish = {
-  position: "absolute",
-  left: "30%",
-  fontSize: "20px",
-  transition: "top 0.6s ease-in-out",
-  zIndex: 3,
-  filter: "drop-shadow(0 0 5px #FFD700)",
-};
-
-const aquariumDecorations = {
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  right: 0,
-  height: "30%",
-  zIndex: 1,
-};
-
-const seaweed1 = {
-  position: "absolute",
-  bottom: 0,
-  left: "10%",
-  fontSize: "1.5rem",
-  animation: "seaweedSway 3s ease-in-out infinite",
-};
-
-const seaweed2 = {
-  position: "absolute",
-  bottom: 0,
-  right: "10%",
-  fontSize: "1.5rem",
-  animation: "seaweedSway 3s ease-in-out infinite 1.5s",
-};
-
-const coral = {
-  position: "absolute",
-  bottom: 0,
-  left: "40%",
-  fontSize: "1.2rem",
-};
-
-const shell = {
-  position: "absolute",
-  bottom: 0,
-  right: "30%",
-  fontSize: "1rem",
-};
-
-const bubblesContainer = {
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  right: 0,
-  height: "100%",
-  zIndex: 1,
-};
-
-const bubbleStyle = {
-  position: "absolute",
-  bottom: 0,
-  fontSize: "0.8rem",
-  animation: "bubbleFloat 4s ease-in-out infinite",
   opacity: 0.7,
 };
 
-const feedbackContainer = {
+const fishingButton = {
+  display: "block",
+  margin: "0 auto 30px",
+  padding: "15px 30px",
+  fontSize: "1.2rem",
+  backgroundColor: "#FF6B6B",
+  color: "#fff",
+  border: "none",
+  borderRadius: "20px",
+  fontWeight: "bold",
+  transition: "all 0.3s ease",
+  boxShadow: "0 6px 15px rgba(255, 107, 107, 0.4)",
+};
+
+const caughtFishContainer = {
+  backgroundColor: "rgba(0, 0, 0, 0.8)",
+  borderRadius: "15px",
+  padding: "20px",
+};
+
+const caughtTitle = {
+  color: "#FFD700",
   textAlign: "center",
   marginBottom: "15px",
-  minHeight: "30px",
 };
 
-const feedbackText = {
-  fontSize: "10px",
-  color: "#1E90FF",
-  fontWeight: "bold",
-  animation: "celebration 1s ease-in-out",
-  margin: 0,
+const caughtFishList = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+  gap: "15px",
 };
 
-const controlsContainer = {
+const caughtFishCard = {
+  backgroundColor: "rgba(255, 255, 255, 0.1)",
+  borderRadius: "10px",
+  padding: "15px",
   textAlign: "center",
+  border: "2px solid #4ECDC4",
+};
+
+const caughtFishEmoji = {
+  fontSize: "2rem",
+  marginBottom: "8px",
+};
+
+const caughtFishName = {
+  fontWeight: "bold",
+  marginBottom: "5px",
+  color: "#4ECDC4",
+};
+
+const caughtFishMemory = {
+  fontSize: "0.9rem",
+  fontStyle: "italic",
+  color: "#B0E0E6",
+};
+
+const completionContainer = {
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "25px",
+  padding: "40px",
+  maxWidth: "700px",
+  textAlign: "center",
+  color: "#2C3E50",
+  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.3)",
+};
+
+const completionTitle = {
+  fontSize: "2.5rem",
+  color: "#27AE60",
   marginBottom: "25px",
 };
 
-const fishingButton = {
-  padding: "15px 25px",
-  fontSize: "12px",
-  backgroundColor: "#59c3c3",
-  color: "#ffffff",
-  border: "none",
-  borderRadius: "15px",
-  cursor: "pointer",
-  fontWeight: "bold",
-  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  boxShadow: "0 8px 20px rgba(89, 195, 195, 0.6)",
-  fontFamily: "inherit",
+const completionMessage = {
+  marginBottom: "30px",
 };
 
-const successContainer = {
-  textAlign: "center",
-  backgroundColor: "rgba(76, 175, 80, 0.1)",
-  borderRadius: "15px",
-  padding: "20px",
-  border: "3px solid #4CAF50",
+const completionText = {
+  fontSize: "1.2rem",
+  lineHeight: "1.6",
+  color: "#34495E",
 };
 
-const successTitle = {
-  fontSize: "14px",
-  color: "#4CAF50",
-  fontWeight: "bold",
-  marginBottom: "15px",
+const allCaughtFish = {
+  marginBottom: "30px",
 };
 
-const celebrationFish = {
-  display: "flex",
-  justifyContent: "center",
+const treasuresTitle = {
+  color: "#F39C12",
+  marginBottom: "20px",
+};
+
+const treasuresGrid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
   gap: "15px",
-  marginBottom: "15px",
+  marginBottom: "25px",
 };
 
-const celebrationEmoji1 = {
-  fontSize: "2rem",
-  animation: "celebration 2s ease-in-out infinite",
+const treasureCard = {
+  backgroundColor: "#FFF8DC",
+  borderRadius: "15px",
+  padding: "15px",
+  border: "3px solid #FFD700",
+  animation: "treasureGlow 3s ease-in-out infinite",
 };
 
-const celebrationEmoji2 = {
+const treasureEmoji = {
   fontSize: "2.5rem",
-  animation: "celebration 2s ease-in-out infinite 0.5s",
+  marginBottom: "8px",
 };
 
-const celebrationEmoji3 = {
-  fontSize: "2rem",
-  animation: "celebration 2s ease-in-out infinite 1s",
+const treasureName = {
+  fontWeight: "bold",
+  fontSize: "0.9rem",
+  marginBottom: "5px",
+  color: "#8B4513",
 };
 
-const successText = {
-  fontSize: "10px",
-  color: "#2C3E50",
-  lineHeight: "1.4",
-  marginBottom: "15px",
+const treasureRarity = {
+  fontSize: "0.8rem",
+  color: "#DAA520",
+  textTransform: "uppercase",
+  fontWeight: "bold",
 };
 
 const fishingReward = {
   backgroundColor: "rgba(255, 215, 0, 0.2)",
-  borderRadius: "10px",
-  padding: "10px",
+  borderRadius: "15px",
+  padding: "20px",
+  marginBottom: "30px",
   border: "2px solid #FFD700",
 };
 
-const rewardText = {
-  fontSize: "10px",
-  color: "#FF8C00",
-  fontWeight: "bold",
-  marginBottom: "5px",
+const rewardTitle = {
+  color: "#B8860B",
+  marginBottom: "15px",
 };
 
 const rewardItem = {
-  fontSize: "9px",
-  color: "#DAA520",
+  backgroundColor: "rgba(255, 255, 255, 0.8)",
+  padding: "8px 15px",
+  margin: "5px 0",
+  borderRadius: "10px",
+  color: "#8B4513",
   fontWeight: "bold",
 };
 
-const cheeringContainer = {
-  backgroundColor: "rgba(255, 105, 180, 0.1)",
-  borderRadius: "15px",
-  padding: "15px",
-  textAlign: "center",
-  border: "2px solid #ff69b4",
-};
-
-const cheeringTitle = {
-  fontSize: "10px",
-  color: "#ff1493",
+const continueButton = {
+  padding: "18px 35px",
+  fontSize: "1.3rem",
+  backgroundColor: "#3498DB",
+  color: "#fff",
+  border: "none",
+  borderRadius: "25px",
+  cursor: "pointer",
   fontWeight: "bold",
-  marginBottom: "10px",
-};
-
-const cheeringCats = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "15px",
-  marginBottom: "10px",
-};
-
-const cheerCat1 = {
-  fontSize: "1.5rem",
-  animation: "catFishing 2s ease-in-out infinite",
-};
-
-const cheerCat2 = {
-  fontSize: "1.5rem",
-  animation: "catFishing 2s ease-in-out infinite 0.3s",
-};
-
-const cheerCat3 = {
-  fontSize: "1.5rem",
-  animation: "catFishing 2s ease-in-out infinite 0.6s",
-};
-
-const cheerCat4 = {
-  fontSize: "1.5rem",
-  animation: "catFishing 2s ease-in-out infinite 0.9s",
-};
-
-const cheeringText = {
-  fontSize: "8px",
-  color: "#666",
-  fontStyle: "italic",
-  margin: 0,
+  transition: "all 0.3s ease",
+  boxShadow: "0 12px 25px rgba(52, 152, 219, 0.5)",
 };

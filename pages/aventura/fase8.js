@@ -114,7 +114,7 @@ export default function Fase8MacLarensPub() {
   };
 
   const avancar = () => {
-    router.push("/aventura/fase-final");
+    router.push("/aventura/faseFinal");
   };
 
   return (
