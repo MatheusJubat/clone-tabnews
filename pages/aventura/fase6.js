@@ -1,413 +1,415 @@
+// pages/aventura/fase6.js - Steven Universe Melhorado
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-export default function Fase6StevenUniverse() {
+export default function Fase6StevenUniverseMelhorada() {
   const router = useRouter();
   const [etapaAtual, setEtapaAtual] = useState(0);
-  const [gemaEscolhida, setGemaEscolhida] = useState(null);
+  const [gemasColetadas, setGemasColetadas] = useState([]);
+  const [musicaAtiva, setMusicaAtiva] = useState(false);
   const [fusionCompleta, setFusionCompleta] = useState(false);
-  const [partituras, setPartituras] = useState([]);
-  const [musicaCompleta, setMusicaCompleta] = useState(false);
-  const [cristaisColetados, setCristaisColetados] = useState(0);
-  const [gemCats, setGemCats] = useState([]);
+  const [stevenFeliz, setStevenFeliz] = useState(false);
+  const [cookieCat, setCookieCat] = useState(false);
 
   const gemas = [
     {
       nome: "Ametista",
       cor: "#9966CC",
       emoji: "💜",
-      personalidade: "Divertida e espontânea",
+      personalidade: "Divertida como a Millena quando joga",
       poder: "Shapeshifting do Coração",
+      frase: "Ei, vocês são tão legais quanto Cookie Cat!",
     },
     {
       nome: "Pérola",
-      cor: "#FFE4E1",
+      cor: "#FFE4E1", 
       emoji: "🤍",
-      personalidade: "Organizada e carinhosa",
-      poder: "Perfection in Love",
+      personalidade: "Organizada como o Matheus tentando ser",
+      poder: "Perfeição no Amor",
+      frase: "Que relacionamento bem estruturado!",
     },
     {
       nome: "Garnet",
       cor: "#DC143C",
       emoji: "❤️",
-      personalidade: "Sábia e protetora",
-      poder: "Future Vision do Amor",
+      personalidade: "Sábia como vocês dois juntos",
+      poder: "Visão do Futuro (spoiler: casamento!)",
+      frase: "Eu posso ver... vocês vão ser muito felizes!",
     },
     {
-      nome: "Quartzo Rosa",
+      nome: "Steven",
       cor: "#FF69B4",
-      emoji: "💖",
-      personalidade: "Amorosa e compreensiva",
-      poder: "Healing Love Powers",
+      emoji: "🌟",
+      personalidade: "Empolgado como vocês com games",
+      poder: "Escudo do Amor Protetor",
+      frase: "WOW! Esse amor é mais forte que meu escudo!",
     },
   ];
 
-  const notasMusica = ["🎵", "🎶", "🎼", "🎹", "🎺", "🎻"];
+  const perguntas = [
+    {
+      pergunta: "Se o Steven fosse escolher um jogo pra vocês jogarem juntos, qual seria?",
+      opcoes: [
+        "🎮 Fallout 4 (a Millena ia adorar son)",
+        "🏠 Animal Crossing (fofo demais)",
+        "⚔️ Far Cry (que ela quer que você jogue!)",
+        "🌟 Todos, desde que seja junto",
+      ],
+      correta: 3,
+      reacao: "Steven aprova! Jogar junto é o que importa! 🎮💕",
+    },
+    {
+      pergunta: "Qual seria a fusão perfeita de vocês dois?",
+      opcoes: [
+        "👑 Matheus + Millena = Poder Supremo do Amor",
+        "🎮 GameCouple (mestres dos controles)",
+        "💻 CodeLove (programando o futuro)",
+        "😻 CatParents (país de gatos)",
+      ],
+      correta: 0,
+      reacao: "Garnet está orgulhosa! Essa fusão seria ÉPICA! ✨",
+    },
+  ];
+
+  const [perguntaAtual, setPerguntaAtual] = useState(0);
 
   useEffect(() => {
-    // Gatos das Gemas
-    const cats = [
-      { id: 1, emoji: "💜🐱", x: 10, y: 80, name: "Amethyst Cat" },
-      { id: 2, emoji: "🤍🐱", x: 85, y: 75, name: "Pearl Cat" },
-      { id: 3, emoji: "❤️🐱", x: 15, y: 20, name: "Garnet Cat" },
-      { id: 4, emoji: "💖🐱", x: 80, y: 25, name: "Rose Cat" },
+    // Sequência de apresentação
+    const timeouts = [
+      setTimeout(() => setEtapaAtual(1), 1000), // Steven aparece
+      setTimeout(() => setStevenFeliz(true), 2000), // Steven fica feliz
+      setTimeout(() => setCookieCat(true), 3000), // Cookie Cat aparece
+      setTimeout(() => setEtapaAtual(2), 4000), // Começar coleta de gemas
     ];
-    setGemCats(cats);
 
-    // Animação das estrelas
-    const interval = setInterval(() => {
-      const star = document.createElement("div");
-      star.innerHTML = "⭐";
-      star.style.position = "absolute";
-      star.style.left = Math.random() * window.innerWidth + "px";
-      star.style.top = "0px";
-      star.style.fontSize = "20px";
-      star.style.pointerEvents = "none";
-      star.style.animation = "fallingStar 3s linear forwards";
-      star.style.zIndex = "1";
-      document.body.appendChild(star);
-
-      setTimeout(() => {
-        if (star.parentNode) {
-          star.parentNode.removeChild(star);
-        }
-      }, 3000);
-    }, 1000);
-
-    return () => clearInterval(interval);
+    return () => timeouts.forEach(clearTimeout);
   }, []);
 
-  const escolherGema = (gema) => {
-    setGemaEscolhida(gema);
-    setTimeout(() => {
-      setEtapaAtual(1);
-    }, 1500);
-  };
+  const coletarGema = (gemaIndex) => {
+    const gema = gemas[gemaIndex];
+    if (!gemasColetadas.includes(gema.nome)) {
+      setGemasColetadas([...gemasColetadas, gema.nome]);
+      
+      // Ativar música quando coletar primeira gema
+      if (gemasColetadas.length === 0) {
+        setMusicaAtiva(true);
+      }
 
-  const tocarNota = (nota) => {
-    setPartituras([...partituras, nota]);
-    if (partituras.length >= 5) {
-      setMusicaCompleta(true);
-      setTimeout(() => {
-        setEtapaAtual(2);
-      }, 2000);
+      // Se coletou todas as gemas, ir para perguntas
+      if (gemasColetadas.length === 3) {
+        setTimeout(() => {
+          setEtapaAtual(3);
+        }, 1500);
+      }
     }
   };
 
-  const coletarCristal = () => {
-    setCristaisColetados(cristaisColetados + 1);
-    if (cristaisColetados >= 2) {
+  const responderPergunta = (opcaoIndex) => {
+    const pergunta = perguntas[perguntaAtual];
+    const acertou = opcaoIndex === pergunta.correta;
+
+    if (acertou && perguntaAtual < perguntas.length - 1) {
+      setPerguntaAtual(perguntaAtual + 1);
+    } else if (acertou) {
+      // Fusão completa!
       setFusionCompleta(true);
       setTimeout(() => {
         router.push("/aventura/fase7");
-      }, 3000);
+      }, 4000);
     }
-  };
-
-  const avancar = () => {
-    router.push("/aventura/fase7");
   };
 
   return (
     <div style={containerStyle}>
-      {/* Templo das Gemas background */}
+      {/* Background do templo */}
       <div style={templeBackground}>
-        <div style={templeShape}></div>
+        <div style={templeDoor}>🏛️</div>
+        <div style={warpPad}>⭐</div>
       </div>
 
-      {/* Gatos das Gemas */}
-      {gemCats.map((cat) => (
-        <div
-          key={cat.id}
-          style={{
-            ...gemCatStyle,
-            left: `${cat.x}%`,
-            top: `${cat.y}%`,
-          }}
-        >
-          <div style={gemCatChar}>{cat.emoji}</div>
-          <div style={gemCatName}>{cat.name}</div>
+      {/* Cookie Cat flutuando */}
+      {cookieCat && (
+        <div style={cookieCatContainer}>
+          <div style={cookieCatEmoji}>🍪🐱</div>
+          <div style={cookieCatSong}>
+            ♪ "Cookie Cat, he's a pet for your tummy!" ♪
+          </div>
         </div>
-      ))}
+      )}
 
       <div style={contentContainer}>
+        {/* Etapa 0 - Loading */}
         {etapaAtual === 0 && (
-          <div style={sectionContainer}>
-            <h1 style={titleStyle}>💎 O TEMPLO DAS GEMAS DO AMOR 💎</h1>
-            <p style={subtitleStyle}>
-              Steven e os Crystal Gems prepararam um teste especial!
-              <br />
-              Para descobrir o segredo do amor verdadeiro, você deve escolher
-              uma Gema que represente seu coração e formar uma fusão perfeita!
-              ✨
-            </p>
+          <div style={loadingContainer}>
+            <div style={stevenLoading}>🌟</div>
+            <p style={loadingText}>Steven está preparando o templo...</p>
+          </div>
+        )}
 
-            <div style={stevenContainer}>
-              <div style={stevenAvatar}>👦🌟</div>
-              <div style={stevenSpeech}>
-                "Ei! Eu sou Steven! As Gems querem te conhecer melhor! Escolha
-                uma que combine com você!" 🎸
+        {/* Etapa 1 - Steven apresenta */}
+        {etapaAtual >= 1 && etapaAtual < 2 && (
+          <div style={stevenContainer}>
+            <div style={stevenAvatar}>
+              <div 
+                style={{
+                  ...stevenChar,
+                  animation: stevenFeliz ? "stevenExcited 2s ease-in-out infinite" : "stevenNormal 3s ease-in-out infinite"
+                }}
+              >
+                👦🌟
               </div>
             </div>
 
-            <div style={gemasContainer}>
+            <div style={stevenSpeech}>
+              <h2 style={stevenTitle}>🌟 Oi! Eu sou Steven! 🌟</h2>
+              <p style={stevenText}>
+                As Crystal Gems me contaram sobre vocês dois e WOW! 
+                <br />
+                Que história de amor incrível! ✨
+                <br />
+                Vamos fazer um teste especial para ver se vocês são uma fusão perfeita!
+              </p>
+              
+              {stevenFeliz && (
+                <div style={stevenExcitement}>
+                  <p style={excitedText}>
+                    "Isso vai ser ÉPICO! Tipo quando eu descobri meus poderes!" 🎸⭐
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Etapa 2 - Coleta de Gemas */}
+        {etapaAtual === 2 && (
+          <div style={gemsContainer}>
+            <h1 style={titleStyle}>💎 Templo das Crystal Gems 💎</h1>
+            <p style={instructionStyle}>
+              Colete 4 gemas para formar a fusão perfeita do amor! ✨
+            </p>
+
+            {/* Música indicator */}
+            {musicaAtiva && (
+              <div style={musicIndicator}>
+                <div style={musicNote}>🎵</div>
+                <div style={musicText}>♪ "We are the Crystal Gems!" ♪</div>
+                <div style={musicNote}>🎶</div>
+              </div>
+            )}
+
+            <div style={gemsGrid}>
               {gemas.map((gema, index) => (
                 <div
                   key={index}
                   style={{
-                    ...gemaCard,
+                    ...gemCard,
                     backgroundColor: gema.cor,
-                    transform:
-                      gemaEscolhida === gema
-                        ? "scale(1.2) rotate(360deg)"
-                        : "scale(1)",
-                    boxShadow:
-                      gemaEscolhida === gema
-                        ? `0 0 30px ${gema.cor}`
-                        : `0 0 15px ${gema.cor}`,
+                    opacity: gemasColetadas.includes(gema.nome) ? 0.5 : 1,
+                    transform: gemasColetadas.includes(gema.nome) ? "scale(0.8)" : "scale(1)",
                   }}
-                  onClick={() => escolherGema(gema)}
+                  onClick={() => coletarGema(index)}
                 >
-                  <div style={gemaEmoji}>{gema.emoji}</div>
-                  <h3 style={gemaNome}>{gema.nome}</h3>
-                  <p style={gemaPersonalidade}>{gema.personalidade}</p>
-                  <div style={gemaPoder}>{gema.poder}</div>
+                  <div style={gemEmoji}>{gema.emoji}</div>
+                  <h3 style={gemNome}>{gema.nome}</h3>
+                  <p style={gemPersonalidade}>{gema.personalidade}</p>
+                  <div style={gemPoder}>{gema.poder}</div>
+                  
+                  {gemasColetadas.includes(gema.nome) && (
+                    <div style={gemFrase}>
+                      "{gema.frase}"
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
 
-            {gemaEscolhida && (
-              <div style={fusionMessage}>
-                <h2 style={fusionTitle}>
-                  ✨ Fusão iniciada com {gemaEscolhida.nome}! ✨
-                </h2>
-                <div style={fusionEffect}>
-                  <span style={fusionParticle1}>💫</span>
-                  <span style={fusionParticle2}>⭐</span>
-                  <span style={fusionParticle3}>✨</span>
-                </div>
-                <p>O poder do amor está se manifestando...</p>
+            <div style={progressContainer}>
+              <p style={progressText}>
+                Gemas coletadas: {gemasColetadas.length}/4 💎
+              </p>
+              <div style={progressBar}>
+                <div 
+                  style={{
+                    ...progressFill,
+                    width: `${(gemasColetadas.length / 4) * 100}%`
+                  }}
+                ></div>
               </div>
-            )}
+            </div>
           </div>
         )}
 
-        {etapaAtual === 1 && (
-          <div style={sectionContainer}>
-            <h1 style={titleStyle}>🎵 COMPOSE A CANÇÃO DO AMOR 🎵</h1>
-            <p style={subtitleStyle}>
-              Como Steven, você deve criar uma melodia que toque o coração!
-              <br />
-              As Gems dizem que a música é a linguagem universal do amor! 🎸
-            </p>
+        {/* Etapa 3 - Perguntas finais */}
+        {etapaAtual === 3 && !fusionCompleta && (
+          <div style={questionContainer}>
+            <h2 style={questionTitle}>
+              🌟 Teste Final das Crystal Gems 🌟
+            </h2>
 
-            <div style={pearlContainer}>
-              <div style={pearlAvatar}>👩‍🎤💎</div>
-              <div style={pearlSpeech}>
-                "A música conecta corações através do espaço e tempo! Toque com
-                seu coração!" 🎼
+            <div style={questionCard}>
+              <p style={questionText}>
+                {perguntas[perguntaAtual].pergunta}
+              </p>
+
+              <div style={optionsContainer}>
+                {perguntas[perguntaAtual].opcoes.map((opcao, index) => (
+                  <button
+                    key={index}
+                    onClick={() => responderPergunta(index)}
+                    style={{
+                      ...optionButton,
+                      backgroundColor: index % 2 === 0 ? "#e74c3c" : "#3498db",
+                    }}
+                  >
+                    {opcao}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div style={musicContainer}>
-              <div style={partituraDisplay}>
-                <h3 style={partituraTitle}>🎼 Sua Melodia do Amor 🎼</h3>
-                <div style={notasVisuais}>
-                  {partituras.map((nota, index) => (
-                    <span key={index} style={notaStyle}>
-                      {nota}
-                    </span>
-                  ))}
-                </div>
-                {partituras.length === 0 && (
-                  <p style={placeholderText}>
-                    Clique nas notas para compor sua música!
-                  </p>
-                )}
-              </div>
+            <div style={gemsCheering}>
+              <div style={cheeringGem1}>💜</div>
+              <div style={cheeringGem2}>🤍</div>
+              <div style={cheeringGem3}>❤️</div>
+              <div style={cheeringGem4}>🌟</div>
+            </div>
+          </div>
+        )}
 
-              <div style={instrumentos}>
-                <h4 style={instrumentTitle}>🎹 Instrumentos Mágicos 🎹</h4>
-                <div style={notasContainer}>
-                  {notasMusica.map((nota, index) => (
-                    <button
-                      key={index}
-                      style={{
-                        ...notaButton,
-                        backgroundColor: [
-                          "#9966CC",
-                          "#FFE4E1",
-                          "#DC143C",
-                          "#FF69B4",
-                          "#87CEEB",
-                          "#98FB98",
-                        ][index],
-                      }}
-                      onClick={() => tocarNota(nota)}
-                    >
-                      {nota}
-                    </button>
-                  ))}
-                </div>
-              </div>
+        {/* Etapa 4 - Fusão Completa */}
+        {fusionCompleta && (
+          <div style={fusionContainer}>
+            <h1 style={fusionTitle}>✨💎 FUSÃO COMPLETA! 💎✨</h1>
 
-              <p style={progressStyle}>
-                Notas na melodia: {partituras.length}/6 🎵
+            <div style={fusionGem}>
+              <div style={fusionAvatar}>💑🌟</div>
+              <div style={fusionGlow}></div>
+            </div>
+
+            <div style={fusionDescription}>
+              <h3 style={fusionName}>Matheus + Millena = AMOR INFINITO!</h3>
+              <p style={fusionPowers}>
+                Poderes da Fusão:
+                <br />
+                💖 Amor Incondicional
+                <br />
+                🎮 Sintonia em Games
+                <br />
+                😂 Risadas Infinitas
+                <br />
+                🏠 Criação do Lar Perfeito
               </p>
             </div>
 
-            {musicaCompleta && (
-              <div style={successMessage}>
-                <h2 style={successTitle}>
-                  🌟 Melodia perfeita! A fusão está quase completa! 🌟
-                </h2>
-                <div style={musicSuccess}>
-                  <span style={musicNote1}>🎵</span>
-                  <span style={musicNote2}>💖</span>
-                  <span style={musicNote3}>🎶</span>
+            <div style={allGemsApproval}>
+              <h3 style={approvalTitle}>💎 As Crystal Gems Aprovam! 💎</h3>
+              <div style={gemsReaction}>
+                <div style={gemReaction}>
+                  <div style={reactionGem}>💜</div>
+                  <div style={reactionText}>"Vocês são demais!" - Ametista</div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {etapaAtual === 2 && (
-          <div style={sectionContainer}>
-            <h1 style={titleStyle}>💖 COLETA DOS CRISTAIS DO AMOR 💖</h1>
-            <p style={subtitleStyle}>
-              Garnet sente que você está pronta para o teste final!
-              <br />
-              Colete os cristais especiais para completar a fusão do amor
-              verdadeiro! 💎
-            </p>
-
-            <div style={garnetContainer}>
-              <div style={garnetAvatar}>👩‍❤️‍👩🕶️</div>
-              <div style={garnetSpeech}>
-                "Eu posso ver o futuro... e vocês dois têm um lindo destino
-                juntos! Mas primeiro, prove que seu amor é verdadeiro!" ❤️
+                <div style={gemReaction}>
+                  <div style={reactionGem}>🤍</div>
+                  <div style={reactionText}>"Perfeição!" - Pérola</div>
+                </div>
+                <div style={gemReaction}>
+                  <div style={reactionGem}>❤️</div>
+                  <div style={reactionText}>"Destinados!" - Garnet</div>
+                </div>
+                <div style={gemReaction}>
+                  <div style={reactionGem}>🌟</div>
+                  <div style={reactionText}>"INCRÍVEL!" - Steven</div>
+                </div>
               </div>
             </div>
 
-            <div style={cristaisContainer}>
-              <div style={cristalButton} onClick={coletarCristal}>
-                <div style={cristalEmoji}>💎</div>
-                <div style={cristalName}>Cristal da Confiança</div>
-                <div style={cristalDesc}>Base do amor verdadeiro</div>
-              </div>
-              <div style={cristalButton} onClick={coletarCristal}>
-                <div style={cristalEmoji}>💎</div>
-                <div style={cristalName}>Cristal da Felicidade</div>
-                <div style={cristalDesc}>Alegria compartilhada</div>
-              </div>
-              <div style={cristalButton} onClick={coletarCristal}>
-                <div style={cristalEmoji}>💎</div>
-                <div style={cristalName}>Cristal da Cumplicidade</div>
-                <div style={cristalDesc}>Conexão de almas</div>
+            <div style={stevenFinalMessage}>
+              <div style={stevenFinalAvatar}>👦⭐</div>
+              <div style={stevenFinalText}>
+                "Cara, isso foi MELHOR que Cookie Cat! Vocês são uma fusão perfeita! 
+                Agora vamos para a próxima aventura!" 🎸✨
               </div>
             </div>
-
-            <p style={progressStyle}>
-              Cristais coletados: {cristaisColetados}/3 💎
-            </p>
-
-            {fusionCompleta && (
-              <div style={finalFusion}>
-                <h1 style={fusionCompleteStyle}>✨💖 FUSÃO COMPLETA! 💖✨</h1>
-                <div style={fusionGem}>
-                  <div style={fusionAvatar}>💑✨</div>
-                </div>
-                <p style={fusionDescription}>
-                  Incrível! Vocês dois se tornaram uma fusão perfeita de amor,
-                  confiança e felicidade!
-                  <br />
-                  Como Garnet sempre diz: "O amor é a resposta para tudo!"
-                  <br />
-                  Steven está super orgulhoso de vocês! 🌟
-                </p>
-
-                <div style={allGemsApproval}>
-                  <h3 style={approvalTitle}>
-                    💎 Aprovação das Crystal Gems 💎
-                  </h3>
-                  <div style={gemsReaction}>
-                    <div style={gemReaction}>
-                      <div style={reactionAvatar}>💜</div>
-                      <div style={reactionText}>"Radical!" - Amethyst</div>
-                    </div>
-                    <div style={gemReaction}>
-                      <div style={reactionAvatar}>🤍</div>
-                      <div style={reactionText}>"Perfeito!" - Pearl</div>
-                    </div>
-                    <div style={gemReaction}>
-                      <div style={reactionAvatar}>❤️</div>
-                      <div style={reactionText}>"Destinados!" - Garnet</div>
-                    </div>
-                    <div style={gemReaction}>
-                      <div style={reactionAvatar}>💖</div>
-                      <div style={reactionText}>"Lindo!" - Rose Quartz</div>
-                    </div>
-                  </div>
-                </div>
-
-                <button onClick={avancar} style={nextButton}>
-                  🌟 Próxima Dimensão Cristal 🌟
-                </button>
-              </div>
-            )}
           </div>
         )}
       </div>
 
       <style jsx global>{`
-        @keyframes fallingStar {
-          to {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
+        @keyframes stevenNormal {
+          0%, 100% {
+            transform: translateY(0px) rotate(-2deg);
+          }
+          50% {
+            transform: translateY(-10px) rotate(2deg);
+          }
+        }
+
+        @keyframes stevenExcited {
+          0%, 100% {
+            transform: scale(1) rotate(-5deg);
+          }
+          25% {
+            transform: scale(1.2) rotate(5deg);
+          }
+          50% {
+            transform: scale(1.1) rotate(-3deg);
+          }
+          75% {
+            transform: scale(1.3) rotate(7deg);
           }
         }
 
         @keyframes gemGlow {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.1);
-          }
-        }
-
-        @keyframes fusionSpin {
-          0% {
-            transform: rotate(0deg) scale(1);
-          }
-          50% {
-            transform: rotate(180deg) scale(1.2);
-          }
-          100% {
-            transform: rotate(360deg) scale(1);
-          }
-        }
-
-        @keyframes musicFloat {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        @keyframes crystalShine {
-          0%,
-          100% {
+          0%, 100% {
             box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
           }
           50% {
-            box-shadow:
-              0 0 40px rgba(255, 105, 180, 1),
-              0 0 60px rgba(255, 105, 180, 0.8);
+            box-shadow: 0 0 40px rgba(255, 105, 180, 1);
+          }
+        }
+
+        @keyframes cookieCatFloat {
+          0%, 100% {
+            transform: translateY(0px) rotate(-5deg);
+          }
+          50% {
+            transform: translateY(-20px) rotate(5deg);
+          }
+        }
+
+        @keyframes musicNote {
+          0%, 100% {
+            transform: translateY(0px) scale(1);
+          }
+          50% {
+            transform: translateY(-15px) scale(1.2);
+          }
+        }
+
+        @keyframes fusionPower {
+          0%, 100% {
+            transform: scale(1) rotate(0deg);
+            filter: hue-rotate(0deg);
+          }
+          50% {
+            transform: scale(1.2) rotate(180deg);
+            filter: hue-rotate(180deg);
+          }
+        }
+
+        @keyframes gemCheer {
+          0%, 100% {
+            transform: translateY(0px) scale(1);
+          }
+          25% {
+            transform: translateY(-20px) scale(1.3);
+          }
+          50% {
+            transform: translateY(-10px) scale(1.1);
+          }
+          75% {
+            transform: translateY(-15px) scale(1.2);
           }
         }
       `}</style>
@@ -417,52 +419,53 @@ export default function Fase6StevenUniverse() {
 
 const containerStyle = {
   minHeight: "100vh",
-  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",
   position: "relative",
   overflow: "hidden",
   fontFamily: '"Comic Sans MS", cursive',
+  color: "#fff",
 };
 
 const templeBackground = {
   position: "absolute",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  opacity: 0.1,
+  top: "10%",
+  right: "10%",
+  opacity: 0.3,
+  fontSize: "4rem",
 };
 
-const templeShape = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "300px",
-  height: "300px",
-  background: "conic-gradient(from 0deg, #ff69b4, #9966cc, #00bfff, #ff1493)",
-  borderRadius: "50%",
+const templeDoor = {
+  fontSize: "5rem",
+  marginBottom: "20px",
+};
+
+const warpPad = {
+  fontSize: "3rem",
   animation: "gemGlow 3s ease-in-out infinite",
 };
 
-const gemCatStyle = {
+const cookieCatContainer = {
   position: "absolute",
+  top: "15%",
+  left: "10%",
   textAlign: "center",
   zIndex: 10,
 };
 
-const gemCatChar = {
-  fontSize: "2rem",
-  animation: "gemGlow 3s ease-in-out infinite",
+const cookieCatEmoji = {
+  fontSize: "3rem",
+  animation: "cookieCatFloat 4s ease-in-out infinite",
+  marginBottom: "10px",
 };
 
-const gemCatName = {
-  backgroundColor: "rgba(255, 255, 255, 0.9)",
-  color: "#764ba2",
-  padding: "4px 8px",
-  borderRadius: "10px",
-  fontSize: "10px",
+const cookieCatSong = {
+  backgroundColor: "rgba(255, 192, 203, 0.9)",
+  color: "#8B4513",
+  padding: "10px 15px",
+  borderRadius: "20px",
+  fontSize: "12px",
   fontWeight: "bold",
-  marginTop: "5px",
+  border: "2px solid #FF69B4",
 };
 
 const contentContainer = {
@@ -475,354 +478,346 @@ const contentContainer = {
   justifyContent: "center",
 };
 
-const sectionContainer = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "20px",
-  padding: "40px",
-  maxWidth: "800px",
+const loadingContainer = {
   textAlign: "center",
-  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
-  border: "3px solid #ff69b4",
 };
 
-const titleStyle = {
-  fontSize: "32px",
+const stevenLoading = {
+  fontSize: "4rem",
+  animation: "stevenExcited 2s ease-in-out infinite",
   marginBottom: "20px",
-  background: "linear-gradient(45deg, #ff69b4, #9966cc)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  fontWeight: "bold",
 };
 
-const subtitleStyle = {
-  fontSize: "18px",
-  marginBottom: "30px",
-  color: "#555",
-  lineHeight: "1.6",
+const loadingText = {
+  fontSize: "1.2rem",
+  opacity: 0.8,
 };
 
 const stevenContainer = {
-  backgroundColor: "rgba(255, 192, 203, 0.3)",
-  borderRadius: "15px",
-  padding: "20px",
-  marginBottom: "30px",
-  border: "2px solid #ff69b4",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "25px",
+  padding: "40px",
+  maxWidth: "700px",
+  border: "4px solid #FF69B4",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
+  color: "#333",
+  textAlign: "center",
 };
 
 const stevenAvatar = {
-  fontSize: "3rem",
-  marginBottom: "10px",
+  marginBottom: "20px",
+};
+
+const stevenChar = {
+  fontSize: "4rem",
 };
 
 const stevenSpeech = {
-  fontSize: "16px",
+  marginBottom: "20px",
+};
+
+const stevenTitle = {
+  color: "#FF69B4",
+  fontSize: "2rem",
+  marginBottom: "15px",
+};
+
+const stevenText = {
+  fontSize: "1.1rem",
+  lineHeight: "1.6",
+  marginBottom: "15px",
+};
+
+const stevenExcitement = {
+  backgroundColor: "rgba(255, 215, 0, 0.2)",
+  borderRadius: "15px",
+  padding: "15px",
+  border: "2px solid #FFD700",
+};
+
+const excitedText = {
+  color: "#FF8C00",
+  fontWeight: "bold",
+  fontStyle: "italic",
+  margin: 0,
+};
+
+const gemsContainer = {
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "25px",
+  padding: "40px",
+  maxWidth: "900px",
+  border: "4px solid #9966CC",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
   color: "#333",
+  textAlign: "center",
+};
+
+const titleStyle = {
+  fontSize: "2.5rem",
+  background: "linear-gradient(45deg, #9966CC, #FF69B4)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  fontWeight: "bold",
+  marginBottom: "15px",
+};
+
+const instructionStyle = {
+  fontSize: "1.2rem",
+  color: "#666",
+  marginBottom: "30px",
+};
+
+const musicIndicator = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "15px",
+  backgroundColor: "rgba(153, 102, 204, 0.2)",
+  borderRadius: "15px",
+  padding: "15px",
+  marginBottom: "30px",
+  border: "2px solid #9966CC",
+};
+
+const musicNote = {
+  fontSize: "1.5rem",
+  animation: "musicNote 2s ease-in-out infinite",
+};
+
+const musicText = {
+  color: "#9966CC",
+  fontWeight: "bold",
   fontStyle: "italic",
 };
 
-const gemasContainer = {
+const gemsGrid = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
   gap: "20px",
   marginBottom: "30px",
 };
 
-const gemaCard = {
-  padding: "20px",
-  borderRadius: "15px",
+const gemCard = {
+  padding: "25px",
+  borderRadius: "20px",
   cursor: "pointer",
   transition: "all 0.5s ease",
   border: "3px solid white",
   color: "white",
   fontWeight: "bold",
+  textAlign: "center",
+  animation: "gemGlow 3s ease-in-out infinite",
 };
 
-const gemaEmoji = {
+const gemEmoji = {
   fontSize: "3rem",
-  marginBottom: "10px",
+  marginBottom: "15px",
 };
 
-const gemaNome = {
+const gemNome = {
   margin: "10px 0",
-  fontSize: "20px",
+  fontSize: "1.3rem",
 };
 
-const gemaPersonalidade = {
-  fontSize: "14px",
+const gemPersonalidade = {
+  fontSize: "0.9rem",
   opacity: 0.9,
   marginBottom: "10px",
-};
-
-const gemaPoder = {
-  fontSize: "12px",
   fontStyle: "italic",
+};
+
+const gemPoder = {
+  fontSize: "0.8rem",
   backgroundColor: "rgba(255, 255, 255, 0.2)",
-  padding: "5px 10px",
-  borderRadius: "10px",
-};
-
-const fusionMessage = {
-  padding: "20px",
-  backgroundColor: "#ffe4e1",
-  borderRadius: "10px",
-  border: "2px solid #ff69b4",
-};
-
-const fusionTitle = {
-  color: "#ff1493",
-  marginBottom: "15px",
-};
-
-const fusionEffect = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "20px",
-  marginBottom: "15px",
-};
-
-const fusionParticle1 = {
-  fontSize: "2rem",
-  animation: "fusionSpin 2s ease-in-out infinite",
-};
-
-const fusionParticle2 = {
-  fontSize: "2rem",
-  animation: "fusionSpin 2s ease-in-out infinite 0.5s",
-};
-
-const fusionParticle3 = {
-  fontSize: "2rem",
-  animation: "fusionSpin 2s ease-in-out infinite 1s",
-};
-
-const pearlContainer = {
-  backgroundColor: "rgba(255, 228, 225, 0.5)",
+  padding: "8px 12px",
   borderRadius: "15px",
-  padding: "20px",
-  marginBottom: "30px",
-  border: "2px solid #ffe4e1",
-};
-
-const pearlAvatar = {
-  fontSize: "3rem",
   marginBottom: "10px",
 };
 
-const pearlSpeech = {
-  fontSize: "16px",
+const gemFrase = {
+  fontSize: "0.8rem",
+  backgroundColor: "rgba(0, 0, 0, 0.3)",
+  padding: "8px 12px",
+  borderRadius: "10px",
+  fontStyle: "italic",
+  marginTop: "10px",
+};
+
+const progressContainer = {
+  textAlign: "center",
+};
+
+const progressText = {
+  fontSize: "1.1rem",
+  fontWeight: "bold",
+  color: "#9966CC",
+  marginBottom: "10px",
+};
+
+const progressBar = {
+  width: "100%",
+  height: "12px",
+  backgroundColor: "rgba(153, 102, 204, 0.3)",
+  borderRadius: "6px",
+  overflow: "hidden",
+};
+
+const progressFill = {
+  height: "100%",
+  backgroundColor: "#9966CC",
+  borderRadius: "6px",
+  transition: "width 0.5s ease",
+};
+
+const questionContainer = {
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "25px",
+  padding: "40px",
+  maxWidth: "800px",
+  border: "4px solid #FF69B4",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
   color: "#333",
-  fontStyle: "italic",
+  textAlign: "center",
 };
 
-const musicContainer = {
+const questionTitle = {
+  color: "#FF69B4",
+  fontSize: "2rem",
+  marginBottom: "25px",
+};
+
+const questionCard = {
   backgroundColor: "#f8f9fa",
+  borderRadius: "20px",
   padding: "30px",
-  borderRadius: "15px",
-  border: "2px solid #9966cc",
+  marginBottom: "30px",
+  border: "3px solid #9966CC",
 };
 
-const partituraDisplay = {
-  minHeight: "100px",
-  backgroundColor: "white",
-  borderRadius: "10px",
-  padding: "20px",
-  marginBottom: "20px",
-  border: "2px dashed #9966cc",
+const questionText = {
+  fontSize: "1.3rem",
+  color: "#333",
+  marginBottom: "25px",
+  lineHeight: "1.4",
 };
 
-const partituraTitle = {
-  color: "#9966cc",
-  fontSize: "18px",
-  marginBottom: "15px",
-};
-
-const notasVisuais = {
+const optionsContainer = {
   display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexWrap: "wrap",
-  gap: "10px",
-  minHeight: "40px",
-};
-
-const notaStyle = {
-  fontSize: "2rem",
-  margin: "0 5px",
-  animation: "musicFloat 2s ease-in-out infinite",
-};
-
-const placeholderText = {
-  color: "#999",
-  fontStyle: "italic",
-  margin: 0,
-};
-
-const instrumentos = {
-  marginBottom: "20px",
-};
-
-const instrumentTitle = {
-  color: "#764ba2",
-  fontSize: "16px",
-  marginBottom: "15px",
-};
-
-const notasContainer = {
-  display: "flex",
-  flexWrap: "wrap",
+  flexDirection: "column",
   gap: "15px",
-  justifyContent: "center",
-  marginBottom: "20px",
 };
 
-const notaButton = {
-  fontSize: "2rem",
-  padding: "15px 20px",
-  color: "white",
+const optionButton = {
+  padding: "18px 25px",
+  fontSize: "1.1rem",
+  color: "#fff",
   border: "none",
-  borderRadius: "50%",
+  borderRadius: "15px",
   cursor: "pointer",
+  fontWeight: "bold",
   transition: "all 0.3s ease",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-  fontWeight: "bold",
+  fontFamily: "inherit",
 };
 
-const progressStyle = {
-  fontSize: "16px",
-  color: "#666",
-  fontWeight: "bold",
-};
-
-const successMessage = {
-  padding: "20px",
-  backgroundColor: "#e7f3ff",
-  borderRadius: "10px",
-  border: "2px solid #00bfff",
+const gemsCheering = {
+  display: "flex",
+  justifyContent: "center",
+  gap: "25px",
   marginTop: "20px",
 };
 
-const successTitle = {
-  color: "#0066cc",
-  marginBottom: "15px",
+const cheeringGem1 = {
+  fontSize: "2.5rem",
+  animation: "gemCheer 2s ease-in-out infinite",
 };
 
-const musicSuccess = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "15px",
+const cheeringGem2 = {
+  fontSize: "2.5rem",
+  animation: "gemCheer 2s ease-in-out infinite 0.3s",
 };
 
-const musicNote1 = {
-  fontSize: "2rem",
-  animation: "musicFloat 1.5s ease-in-out infinite",
+const cheeringGem3 = {
+  fontSize: "2.5rem",
+  animation: "gemCheer 2s ease-in-out infinite 0.6s",
 };
 
-const musicNote2 = {
-  fontSize: "2rem",
-  animation: "musicFloat 1.5s ease-in-out infinite 0.3s",
+const cheeringGem4 = {
+  fontSize: "2.5rem",
+  animation: "gemCheer 2s ease-in-out infinite 0.9s",
 };
 
-const musicNote3 = {
-  fontSize: "2rem",
-  animation: "musicFloat 1.5s ease-in-out infinite 0.6s",
-};
-
-const garnetContainer = {
-  backgroundColor: "rgba(220, 20, 60, 0.2)",
-  borderRadius: "15px",
-  padding: "20px",
-  marginBottom: "30px",
-  border: "2px solid #dc143c",
-};
-
-const garnetAvatar = {
-  fontSize: "3rem",
-  marginBottom: "10px",
-};
-
-const garnetSpeech = {
-  fontSize: "16px",
+const fusionContainer = {
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "25px",
+  padding: "40px",
+  maxWidth: "800px",
+  border: "4px solid #FFD700",
+  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.3)",
   color: "#333",
-  fontStyle: "italic",
-};
-
-const cristaisContainer = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "20px",
-  marginBottom: "30px",
-};
-
-const cristalButton = {
-  padding: "20px",
-  backgroundColor: "linear-gradient(45deg, #ff1493, #9966cc)",
-  background: "linear-gradient(45deg, #ff1493, #9966cc)",
-  color: "white",
-  border: "none",
-  borderRadius: "15px",
-  cursor: "pointer",
-  transition: "all 0.3s ease",
-  fontWeight: "bold",
-  boxShadow: "0 6px 12px rgba(255, 20, 147, 0.3)",
-  animation: "crystalShine 3s ease-in-out infinite",
-};
-
-const cristalEmoji = {
-  fontSize: "3rem",
-  marginBottom: "10px",
-};
-
-const cristalName = {
-  fontSize: "18px",
-  marginBottom: "8px",
-};
-
-const cristalDesc = {
-  fontSize: "14px",
-  opacity: "0.9",
-};
-
-const finalFusion = {
   textAlign: "center",
-  padding: "30px",
 };
 
-const fusionCompleteStyle = {
-  fontSize: "36px",
-  background: "linear-gradient(45deg, #ff69b4, #9966cc, #00bfff)",
+const fusionTitle = {
+  fontSize: "2.5rem",
+  background: "linear-gradient(45deg, #FFD700, #FF69B4, #9966CC)",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
-  marginBottom: "20px",
+  fontWeight: "bold",
+  marginBottom: "25px",
 };
 
 const fusionGem = {
-  marginBottom: "20px",
+  position: "relative",
+  display: "inline-block",
+  marginBottom: "25px",
 };
 
 const fusionAvatar = {
-  fontSize: "4rem",
-  animation: "gemGlow 2s ease-in-out infinite",
+  fontSize: "5rem",
+  animation: "fusionPower 3s ease-in-out infinite",
+};
+
+const fusionGlow = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "120px",
+  height: "120px",
+  borderRadius: "50%",
+  background: "radial-gradient(circle, rgba(255,215,0,0.6) 0%, transparent 70%)",
+  animation: "fusionPower 3s ease-in-out infinite",
 };
 
 const fusionDescription = {
-  fontSize: "18px",
-  color: "#555",
   marginBottom: "30px",
-  lineHeight: "1.6",
+};
+
+const fusionName = {
+  color: "#FFD700",
+  fontSize: "1.8rem",
+  marginBottom: "15px",
+};
+
+const fusionPowers = {
+  fontSize: "1.1rem",
+  lineHeight: "1.8",
+  color: "#666",
 };
 
 const allGemsApproval = {
-  backgroundColor: "rgba(255, 105, 180, 0.1)",
-  borderRadius: "15px",
-  padding: "20px",
-  marginBottom: "30px",
-  border: "2px solid #ff69b4",
+  backgroundColor: "#f8f9fa",
+  borderRadius: "20px",
+  padding: "25px",
+  marginBottom: "25px",
+  border: "3px solid #9966CC",
 };
 
 const approvalTitle = {
-  color: "#ff1493",
-  fontSize: "20px",
-  marginBottom: "15px",
+  color: "#9966CC",
+  fontSize: "1.5rem",
+  marginBottom: "20px",
 };
 
 const gemsReaction = {
@@ -835,26 +830,37 @@ const gemReaction = {
   textAlign: "center",
 };
 
-const reactionAvatar = {
+const reactionGem = {
   fontSize: "2rem",
   marginBottom: "8px",
 };
 
 const reactionText = {
-  fontSize: "14px",
-  color: "#333",
+  fontSize: "0.9rem",
+  color: "#666",
   fontWeight: "bold",
 };
 
-const nextButton = {
-  padding: "15px 30px",
-  fontSize: "20px",
-  backgroundColor: "#ff69b4",
-  color: "white",
-  border: "none",
-  borderRadius: "25px",
-  cursor: "pointer",
+const stevenFinalMessage = {
+  backgroundColor: "rgba(255, 105, 180, 0.2)",
+  borderRadius: "20px",
+  padding: "25px",
+  border: "3px solid #FF69B4",
+  display: "flex",
+  alignItems: "center",
+  gap: "20px",
+};
+
+const stevenFinalAvatar = {
+  fontSize: "3rem",
+  animation: "stevenExcited 2s ease-in-out infinite",
+};
+
+const stevenFinalText = {
+  flex: 1,
+  color: "#FF1493",
+  fontSize: "1.1rem",
   fontWeight: "bold",
-  transition: "all 0.3s ease",
-  boxShadow: "0 6px 12px rgba(255, 105, 180, 0.4)",
+  fontStyle: "italic",
+  textAlign: "left",
 };
