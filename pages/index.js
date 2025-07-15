@@ -1,11 +1,27 @@
+// pages/index.js - Versão Melhorada
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+
+// ✅ IMPORTS ADICIONADOS:
+import { MusicPlayer, musicPlayerCSS } from "../hooks/useMusic";
+import {
+  useEasterEggs,
+  EasterEggButton,
+  EasterEggMessage,
+  SpecialEffects,
+  EasterEggCounter,
+  easterEggCSS,
+} from "../hooks/useEasterEggs";
 
 export default function HomeMelhorada() {
   const router = useRouter();
   const [mostrarBotao, setMostrarBotao] = useState(false);
   const [animacaoAtiva, setAnimacaoAtiva] = useState(false);
   const [particulas, setParticulas] = useState([]);
+
+  // ✅ HOOK DE EASTER EGGS
+  const { findEasterEgg, showMessage, setShowMessage, specialEffects } =
+    useEasterEggs("home");
 
   useEffect(() => {
     // Criar partículas flutuantes
@@ -29,10 +45,8 @@ export default function HomeMelhorada() {
 
   const aceitarDesafio = () => {
     setMostrarBotao(true);
-    // Adicionar efeito sonoro se possível
-    const audio = new Audio(
-      "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUeCT2W3O/BdSAFKH7K7tiUO",
-    );
+    // Trigger easter egg automaticamente
+    findEasterEgg({ x: 50, y: 60 });
   };
 
   const comecar = () => {
@@ -41,120 +55,11 @@ export default function HomeMelhorada() {
 
   return (
     <div style={containerStyle}>
-      {/* Background com gradiente animado */}
-      <div style={backgroundGradient}></div>
-
-      {/* Partículas flutuantes */}
-      {particulas.map((particula) => (
-        <div
-          key={particula.id}
-          style={{
-            ...particulaStyle,
-            left: `${particula.x}%`,
-            top: `${particula.y}%`,
-            animationDelay: `${particula.delay}s`,
-            animationDuration: `${particula.duration}s`,
-          }}
-        >
-          ✨
-        </div>
-      ))}
-
-      {/* Conteúdo principal */}
-      <div style={contentContainer}>
-        <div
-          style={{
-            ...mainCard,
-            transform: animacaoAtiva
-              ? "translateY(0) scale(1)"
-              : "translateY(50px) scale(0.9)",
-            opacity: animacaoAtiva ? 1 : 0,
-          }}
-        >
-          {/* Ícone do coração animado */}
-          <div style={heartContainer}>
-            <div style={heartIcon}>💖</div>
-            <div style={heartGlow}></div>
-          </div>
-
-          <h1 style={titleStyle}>Bom dia, meu amor! ☀️</h1>
-
-          <p style={subtitleStyle}>
-            Hoje você foi escolhida para uma missão muito especial...
-            <br />
-            Uma jornada através de mundos mágicos e aventuras incríveis
-            <br />
-            que irá revelar o maior segredo do universo! 🌟
-          </p>
-
-          <div style={decorativeElements}>
-            <div style={elementLeft}>🌙</div>
-            <div style={elementRight}>⭐</div>
-          </div>
-
-          {!mostrarBotao ? (
-            <button
-              onClick={aceitarDesafio}
-              style={challengeButton}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "scale(1.1) rotate(2deg)";
-                e.target.style.boxShadow =
-                  "0 15px 35px rgba(255, 105, 180, 0.6)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "scale(1) rotate(0deg)";
-                e.target.style.boxShadow =
-                  "0 10px 25px rgba(255, 105, 180, 0.4)";
-              }}
-            >
-              ✨ Aceitar o Desafio Mágico ✨
-            </button>
-          ) : (
-            <div style={revealContainer}>
-              <div style={magicReveal}>
-                <h3 style={revealTitle}>🎭 A Magia Começa Aqui! 🎭</h3>
-                <p style={revealText}>
-                  Prepare-se para uma jornada através de:
-                </p>
-                <div style={adventureList}>
-                  <div style={adventureItem}>🐱 Reino dos Gatos Mágicos</div>
-                  <div style={adventureItem}>💎 Templo das Gemas do Amor</div>
-                  <div style={adventureItem}>🍺 Taverna dos Amigos Eternos</div>
-                  <div style={adventureItem}>🎮 Mundos 8-bit Nostálgicos</div>
-                  <div style={adventureItem}>💖 E muito mais...</div>
-                </div>
-              </div>
-
-              <button
-                onClick={comecar}
-                style={startButton}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "scale(1.1)";
-                  e.target.style.background =
-                    "linear-gradient(45deg, #ff1493, #ff69b4, #9966cc)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "scale(1)";
-                  e.target.style.background =
-                    "linear-gradient(45deg, #ff69b4, #ff1493, #9966cc)";
-                }}
-              >
-                🚀 Iniciar Jornada 🚀
-              </button>
-            </div>
-          )}
-
-          {/* Elementos decorativos rodapé */}
-          <div style={footerElements}>
-            <div style={floatingElement1}>🦋</div>
-            <div style={floatingElement2}>🌸</div>
-            <div style={floatingElement3}>✨</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Animações CSS */}
+      {/* ✅ CSS GLOBAL */}
       <style jsx global>{`
+        ${musicPlayerCSS}
+        ${easterEggCSS}
+        
         @keyframes float {
           0%,
           100% {
@@ -222,6 +127,189 @@ export default function HomeMelhorada() {
           }
         }
       `}</style>
+
+      {/* ✅ MÚSICA E EASTER EGGS */}
+      <MusicPlayer
+        phaseName="home"
+        position="bottom-right"
+        showControls={true}
+      />
+
+      <EasterEggCounter currentPhase="home" position="top-right" />
+
+      {/* ✅ EASTER EGGS ESCONDIDOS */}
+      <EasterEggButton
+        position={{ top: "10%", left: "15%" }}
+        size={45}
+        onFind={findEasterEgg}
+      />
+
+      <EasterEggButton
+        position={{ bottom: "20%", right: "10%" }}
+        size={40}
+        onFind={findEasterEgg}
+      />
+
+      <EasterEggButton
+        position={{ top: "60%", left: "8%" }}
+        size={50}
+        onFind={findEasterEgg}
+        shape="square"
+      />
+
+      <EasterEggButton
+        position={{ top: "30%", right: "12%" }}
+        size={35}
+        onFind={findEasterEgg}
+      />
+
+      {/* Background com gradiente animado */}
+      <div style={backgroundGradient}></div>
+
+      {/* Partículas flutuantes */}
+      {particulas.map((particula) => (
+        <div
+          key={particula.id}
+          style={{
+            ...particulaStyle,
+            left: `${particula.x}%`,
+            top: `${particula.y}%`,
+            animationDelay: `${particula.delay}s`,
+            animationDuration: `${particula.duration}s`,
+          }}
+        >
+          ✨
+        </div>
+      ))}
+
+      {/* Conteúdo principal */}
+      <div style={contentContainer}>
+        <div
+          style={{
+            ...mainCard,
+            transform: animacaoAtiva
+              ? "translateY(0) scale(1)"
+              : "translateY(50px) scale(0.9)",
+            opacity: animacaoAtiva ? 1 : 0,
+          }}
+        >
+          {/* Ícone do coração animado com easter egg */}
+          <div
+            style={heartContainer}
+            onClick={() => findEasterEgg({ x: 50, y: 40 })}
+          >
+            <div style={heartIcon}>💖</div>
+            <div style={heartGlow}></div>
+          </div>
+
+          <h1 style={titleStyle}>Bom dia, meu amor! ☀️</h1>
+
+          <p style={subtitleStyle}>
+            Hoje você foi escolhida para uma missão muito especial...
+            <br />
+            Uma jornada através de mundos mágicos e aventuras incríveis
+            <br />
+            que irá revelar o maior segredo do universo! 🌟
+          </p>
+
+          <div style={decorativeElements}>
+            <div
+              style={elementLeft}
+              onClick={() => findEasterEgg({ x: 30, y: 50 })}
+            >
+              🌙
+            </div>
+            <div
+              style={elementRight}
+              onClick={() => findEasterEgg({ x: 70, y: 50 })}
+            >
+              ⭐
+            </div>
+          </div>
+
+          {!mostrarBotao ? (
+            <button
+              onClick={aceitarDesafio}
+              style={challengeButton}
+              onMouseEnter={(e) => {
+                e.target.style.transform = "scale(1.1) rotate(2deg)";
+                e.target.style.boxShadow =
+                  "0 15px 35px rgba(255, 105, 180, 0.6)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = "scale(1) rotate(0deg)";
+                e.target.style.boxShadow =
+                  "0 10px 25px rgba(255, 105, 180, 0.4)";
+              }}
+            >
+              ✨ Aceitar o Desafio Mágico ✨
+            </button>
+          ) : (
+            <div style={revealContainer}>
+              <div style={magicReveal}>
+                <h3 style={revealTitle}>🎭 A Magia Começa Aqui! 🎭</h3>
+                <p style={revealText}>
+                  Prepare-se para uma jornada através de:
+                </p>
+                <div style={adventureList}>
+                  <div style={adventureItem}>🐱 Reino dos Gatos Mágicos</div>
+                  <div style={adventureItem}>💎 Templo das Gemas do Amor</div>
+                  <div style={adventureItem}>🍺 Taverna dos Amigos Eternos</div>
+                  <div style={adventureItem}>🎮 Mundos 8-bit Nostálgicos</div>
+                  <div style={adventureItem}>💖 E muito mais...</div>
+                </div>
+              </div>
+
+              <button
+                onClick={comecar}
+                style={startButton}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1)";
+                  e.target.style.background =
+                    "linear-gradient(45deg, #ff1493, #ff69b4, #9966cc)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1)";
+                  e.target.style.background =
+                    "linear-gradient(45deg, #ff69b4, #ff1493, #9966cc)";
+                }}
+              >
+                🚀 Iniciar Jornada 🚀
+              </button>
+            </div>
+          )}
+
+          {/* Elementos decorativos rodapé com easter eggs */}
+          <div style={footerElements}>
+            <div
+              style={floatingElement1}
+              onClick={() => findEasterEgg({ x: 20, y: 80 })}
+            >
+              🦋
+            </div>
+            <div
+              style={floatingElement2}
+              onClick={() => findEasterEgg({ x: 50, y: 80 })}
+            >
+              🌸
+            </div>
+            <div
+              style={floatingElement3}
+              onClick={() => findEasterEgg({ x: 80, y: 80 })}
+            >
+              ✨
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ✅ COMPONENTES DE FEEDBACK */}
+      <EasterEggMessage
+        message={showMessage}
+        onClose={() => setShowMessage(null)}
+      />
+
+      <SpecialEffects effects={specialEffects} />
     </div>
   );
 }
@@ -279,6 +367,8 @@ const heartContainer = {
   position: "relative",
   display: "inline-block",
   marginBottom: "30px",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const heartIcon = {
@@ -330,6 +420,8 @@ const elementLeft = {
   left: "20%",
   fontSize: "1.5rem",
   animation: "float 3s ease-in-out infinite",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const elementRight = {
@@ -337,6 +429,8 @@ const elementRight = {
   right: "20%",
   fontSize: "1.5rem",
   animation: "float 3s ease-in-out infinite 1.5s",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const challengeButton = {
@@ -420,6 +514,8 @@ const floatingElement1 = {
   left: "10%",
   fontSize: "1.2rem",
   animation: "float 4s ease-in-out infinite",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const floatingElement2 = {
@@ -428,6 +524,8 @@ const floatingElement2 = {
   transform: "translateX(-50%)",
   fontSize: "1.2rem",
   animation: "float 4s ease-in-out infinite 1s",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const floatingElement3 = {
@@ -435,4 +533,6 @@ const floatingElement3 = {
   right: "10%",
   fontSize: "1.2rem",
   animation: "float 4s ease-in-out infinite 2s",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
 };

@@ -1,4 +1,4 @@
-// components/LoveStats.js
+// components/LoveStats.js - VERSÃO CORRIGIDA COM DATA REAL
 import { useState, useEffect } from "react";
 
 export default function LoveStats({
@@ -16,7 +16,7 @@ export default function LoveStats({
     diaAtual: new Date().getDate(),
   });
 
-  // DATA REAL DO RELACIONAMENTO: 10 de setembro de 2022
+  // ✅ DATA REAL DO RELACIONAMENTO: 10 de setembro de 2022
   const dataInicio = new Date("2022-09-10T00:00:00");
 
   useEffect(() => {
@@ -58,11 +58,23 @@ export default function LoveStats({
   const calculateMonths = (start, end) => {
     const yearDiff = end.getFullYear() - start.getFullYear();
     const monthDiff = end.getMonth() - start.getMonth();
-    return yearDiff * 12 + monthDiff;
+    const dayDiff = end.getDate() - start.getDate();
+
+    let months = yearDiff * 12 + monthDiff;
+    if (dayDiff < 0) months--; // Se ainda não completou o mês
+
+    return months;
   };
 
   const calculateYears = (start, end) => {
-    return end.getFullYear() - start.getFullYear();
+    const yearDiff = end.getFullYear() - start.getFullYear();
+    const monthDiff = end.getMonth() - start.getMonth();
+    const dayDiff = end.getDate() - start.getDate();
+
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      return yearDiff - 1;
+    }
+    return yearDiff;
   };
 
   const formatNumber = (num) => {
@@ -112,7 +124,7 @@ export default function LoveStats({
     {
       emoji: "🐱",
       label: "Gatinhos Vistos",
-      value: "847",
+      value: Math.floor(liveStats.diasJuntos * 1.2) || "847",
       description: "E contando...",
     },
     {
@@ -163,7 +175,7 @@ export default function LoveStats({
     {
       emoji: "🎮",
       label: "Jogos Jogados",
-      value: "157",
+      value: Math.floor(liveStats.diasJuntos * 0.8) || "157",
       sublabel: "Player 1 & Player 2",
     },
     {
@@ -174,6 +186,7 @@ export default function LoveStats({
     },
   ];
 
+  // Marcos baseados na data real
   const milestones = [
     {
       emoji: "🎉",
@@ -198,6 +211,12 @@ export default function LoveStats({
       label: "500 Dias",
       date: "22 de Janeiro de 2024",
       achieved: liveStats.diasJuntos >= 500,
+    },
+    {
+      emoji: "🌟",
+      label: "700 Dias",
+      date: "21 de Agosto de 2024",
+      achieved: liveStats.diasJuntos >= 700,
     },
     {
       emoji: "💍",
@@ -419,6 +438,7 @@ export default function LoveStats({
 // Hook para usar as estatísticas em qualquer lugar
 export const useLoveStats = () => {
   const [stats, setStats] = useState({});
+  // ✅ DATA REAL DO RELACIONAMENTO: 10 de setembro de 2022
   const dataInicio = new Date("2022-09-10T00:00:00");
 
   useEffect(() => {

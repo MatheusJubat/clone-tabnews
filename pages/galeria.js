@@ -1,4 +1,4 @@
-// pages/galeria.js - Versão atualizada
+// pages/galeria.js - Versão Completa com Música e Easter Eggs
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
@@ -23,9 +23,15 @@ import LoveStats, { useLoveStats } from "../components/LoveStats";
 
 export default function GaleriaMelhorada() {
   const router = useRouter();
+
   // ✅ HOOKS ADICIONADOS:
-  const { findEasterEgg, showMessage, specialEffects, getTotalEggsFound } =
-    useEasterEggs("galeria");
+  const {
+    findEasterEgg,
+    showMessage,
+    setShowMessage,
+    specialEffects,
+    getTotalEggsFound,
+  } = useEasterEggs("galeria");
   const liveStats = useLoveStats();
 
   const [magicDust, setMagicDust] = useState([]);
@@ -162,16 +168,6 @@ export default function GaleriaMelhorada() {
           }
         }
 
-        @keyframes statPulse {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.1);
-          }
-        }
-
         @keyframes slideIn {
           from {
             opacity: 0;
@@ -231,6 +227,19 @@ export default function GaleriaMelhorada() {
         onFind={findEasterEgg}
       />
 
+      <EasterEggButton
+        position={{ top: "25%", right: "8%" }}
+        size={35}
+        onFind={findEasterEgg}
+      />
+
+      <EasterEggButton
+        position={{ bottom: "35%", left: "15%" }}
+        size={40}
+        onFind={findEasterEgg}
+        shape="square"
+      />
+
       {/* Poeira mágica de fundo */}
       {magicDust.map((particle) => (
         <div
@@ -277,9 +286,24 @@ export default function GaleriaMelhorada() {
                 {liveStats.diasJuntos || 0} dias de amor, risadas e gatinhos! 🥰
               </p>
               <div style={titleDecoration}>
-                <span style={decorEmoji1}>🐾</span>
-                <span style={decorEmoji2}>💕</span>
-                <span style={decorEmoji3}>🐾</span>
+                <span
+                  style={decorEmoji1}
+                  onClick={() => findEasterEgg({ x: 35, y: 20 })}
+                >
+                  🐾
+                </span>
+                <span
+                  style={decorEmoji2}
+                  onClick={() => findEasterEgg({ x: 50, y: 20 })}
+                >
+                  💕
+                </span>
+                <span
+                  style={decorEmoji3}
+                  onClick={() => findEasterEgg({ x: 65, y: 20 })}
+                >
+                  🐾
+                </span>
               </div>
             </div>
           </div>
@@ -528,18 +552,21 @@ const decorEmoji1 = {
   fontSize: "1.5rem",
   animation: "catClap 2s ease-in-out infinite",
   cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const decorEmoji2 = {
   fontSize: "1.8rem",
   animation: "catClap 2s ease-in-out infinite 0.5s",
   cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const decorEmoji3 = {
   fontSize: "1.5rem",
   animation: "catClap 2s ease-in-out infinite 1s",
   cursor: "pointer",
+  transition: "all 0.3s ease",
 };
 
 const momentCounter = {

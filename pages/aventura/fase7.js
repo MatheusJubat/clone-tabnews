@@ -1,3 +1,4 @@
+// pages/aventura/fase7.js - VERSÃO CORRIGIDA
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
@@ -175,6 +176,8 @@ export default function Fase7Gatos8Bit() {
 
         {!gameOver ? (
           <div style={gameQuestionContainer}>
+            {" "}
+            {/* ✅ ESTA VARIÁVEL ESTAVA FALTANDO */}
             {/* Vida do jogador */}
             <div style={livesContainer}>
               <span style={livesLabel}>LIVES:</span>
@@ -184,10 +187,8 @@ export default function Fase7Gatos8Bit() {
                 </span>
               ))}
             </div>
-
             {/* Gato pixel principal */}
             <div style={pixelCat}>{pixelEffect ? "🐱" : "😸"}</div>
-
             {/* Pergunta principal */}
             <div style={questionBox}>
               <div style={questionHeader}>❮ STAGE {perguntaAtual + 1}-1 ❯</div>
@@ -199,7 +200,6 @@ export default function Fase7Gatos8Bit() {
                 <span style={hintText}>{perguntas[perguntaAtual].dica}</span>
               </div>
             </div>
-
             {!mostraResposta ? (
               <div style={optionsContainer}>
                 {perguntas[perguntaAtual].opcoes.map((opcao, index) => (
@@ -242,7 +242,6 @@ export default function Fase7Gatos8Bit() {
                 </div>
               </div>
             )}
-
             {/* Controles 8-bit */}
             <div style={controlsHint}>❮ SELECT OPTION WITH MOUSE CURSOR ❯</div>
           </div>
@@ -510,7 +509,7 @@ const scoreValue = {
   fontWeight: "bold",
 };
 
-// ESTA É A CONSTANTE QUE ESTAVA FALTANDO:
+// ✅ ESTA É A VARIÁVEL QUE ESTAVA FALTANDO:
 const gameQuestionContainer = {
   textAlign: "center",
   padding: "20px",
