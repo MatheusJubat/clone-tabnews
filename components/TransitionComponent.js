@@ -1,313 +1,243 @@
-import { useState, useEffect } from "react";
+// components/TransitionComponent.js
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+
+const TRANSITION_MESSAGES = {
+  fase1: {
+    fase2: "🧪 Saindo do mundo mágico... Entrando no laboratório da Maomao!",
+    default: "✨ Continuando a aventura mágica...",
+  },
+  fase2: {
+    pesca: "🎣 Deixando o laboratório... Hora da pescaria dos momentos!",
+    default: "🌊 Navegando para águas tranquilas...",
+  },
+  pesca: {
+    fase3: "🏰 Saindo do lago... Entrando no Castelo do Calcifer!",
+    default: "🔥 Seguindo em direção ao fogo mágico...",
+  },
+  fase3: {
+    "fase-flores": "🌸 Deixando o castelo... Chegando ao Jardim das Flores!",
+    default: "🌺 Caminhando pelo jardim encantado...",
+  },
+  "fase-flores": {
+    "fase-games": "🎮 Saindo do jardim... Hora de convencer o Matheus a jogar!",
+    default: "👾 Entrando no mundo dos games...",
+  },
+  "fase-games": {
+    fase4: "⚡ Missão cumprida... Partindo para a galáxia Jedi!",
+    default: "🌌 Viajando pelo espaço...",
+  },
+  fase4: {
+    fase5: "🎬 Deixando a galáxia... Chegando ao cinema!",
+    default: "🍿 Preparando-se para o show...",
+  },
+  fase5: {
+    fase6: "💎 Saindo do cinema... Entrando no mundo das Crystal Gems!",
+    default: "✨ Fusionando com a magia...",
+  },
+  fase6: {
+    fase7: "🎮 Deixando Beach City... Chegando ao Arcade 8-bit!",
+    default: "👾 Carregando o próximo level...",
+  },
+  fase7: {
+    fase8: "🍺 Game Over... Bem-vindos ao MacLaren's Pub!",
+    default: "🎭 A história está quase no fim...",
+  },
+  fase8: {
+    faseFinal: "💫 Última chamada... Preparando a grande revelação!",
+    default: "🎆 O momento final se aproxima...",
+  },
+  faseFinal: {
+    pedido: "💍 Chegou a hora... A pergunta mais importante!",
+    default: "💖 O coração está acelerado...",
+  },
+};
+
+export function useTransition() {
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionData, setTransitionData] = useState(null);
+  const router = useRouter();
+
+  const startTransition = async (
+    fromPhase,
+    toPhase,
+    customMessage = null,
+    duration = 2000,
+  ) => {
+    const message = customMessage || getTransitionMessage(fromPhase, toPhase);
+
+    setTransitionData({
+      fromPhase,
+      toPhase,
+      message,
+      onComplete: () => {
+        router.push(`/aventura/${toPhase}`);
+      },
+    });
+
+    setIsTransitioning(true);
+
+    // Aguardar duração da transição
+    await new Promise((resolve) => setTimeout(resolve, duration));
+
+    setIsTransitioning(false);
+    setTransitionData(null);
+  };
+
+  return {
+    isTransitioning,
+    transitionData,
+    startTransition,
+  };
+}
+
+export function getTransitionMessage(fromPhase, toPhase) {
+  const phaseMessages = TRANSITION_MESSAGES[fromPhase];
+  if (phaseMessages) {
+    return phaseMessages[toPhase] || phaseMessages.default;
+  }
+  return "✨ Continuando a jornada mágica...";
+}
 
 export default function TransitionComponent({
   fromPhase,
   toPhase,
-  message = "Preparando próxima aventura...",
+  message,
   onComplete,
 }) {
-  const [step, setStep] = useState(0);
-  const [particles, setParticles] = useState([]);
-  const [magicCircle, setMagicCircle] = useState(false);
-
-  const phaseInfo = {
-    joguinho: {
-      emoji: "💖",
-      name: "Joguinho do Amor",
-      color: "#ff69b4",
-    },
-    galeria: {
-      emoji: "📸",
-      name: "Galeria Mágica",
-      color: "#9370db",
-    },
-    fase1: {
-      emoji: "📜",
-      name: "Grimório Secreto",
-      color: "#8b5fbf",
-    },
-    fase2: {
-      emoji: "🧪",
-      name: "Laboratório da Apotecária",
-      color: "#8e6e53",
-    },
-    pesca: {
-      emoji: "🎣",
-      name: "Lago Encantado",
-      color: "#1e90ff",
-    },
-    fase3: {
-      emoji: "🏰",
-      name: "Castelo dos Gatinhos",
-      color: "#4b0082",
-    },
-    fase4: {
-      emoji: "⚡",
-      name: "Galáxia Jedi",
-      color: "#ffe81f",
-    },
-    fase5: {
-      emoji: "🌸",
-      name: "Anime Café",
-      color: "#ff69b4",
-    },
-    fase6: {
-      emoji: "💎",
-      name: "Templo das Gemas",
-      color: "#667eea",
-    },
-    fase7: {
-      emoji: "🎮",
-      name: "Arcade 8-bit",
-      color: "#ff1493",
-    },
-    fase8: {
-      emoji: "🍺",
-      name: "MacLaren's Pub",
-      color: "#daa520",
-    },
-    "fase-final": {
-      emoji: "💫",
-      name: "Grande Revelação",
-      color: "#ffd700",
-    },
-    pedido: {
-      emoji: "💍",
-      name: "Momento Especial",
-      color: "#ff6b81",
-    },
-  };
+  const [progress, setProgress] = useState(0);
+  const [dots, setDots] = useState("");
 
   useEffect(() => {
-    // Criar partículas mágicas
-    const newParticles = [];
-    for (let i = 0; i < 40; i++) {
-      newParticles.push({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        emoji: ["✨", "💫", "🌟", "⭐", "💖", "🐱"][
-          Math.floor(Math.random() * 6)
-        ],
-        delay: Math.random() * 3,
-        speed: 2 + Math.random() * 3,
+    // Animação de progresso
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          setTimeout(onComplete, 500);
+          return 100;
+        }
+        return prev + 2;
       });
-    }
-    setParticles(newParticles);
+    }, 40);
 
-    // Sequência de transição
-    const sequence = [
-      () => setStep(1), // Fade in
-      () => setMagicCircle(true), // Círculo mágico
-      () => setStep(2), // Mensagem aparece
-      () => setStep(3), // Fase atual desaparece
-      () => setStep(4), // Transição
-      () => setStep(5), // Nova fase aparece
-      () => {
-        setTimeout(() => {
-          if (onComplete) onComplete();
-        }, 500);
-      },
-    ];
+    // Animação dos pontos
+    const dotsInterval = setInterval(() => {
+      setDots((prev) => {
+        if (prev.length >= 3) return "";
+        return prev + ".";
+      });
+    }, 500);
 
-    sequence.forEach((fn, index) => {
-      setTimeout(fn, index * 800);
-    });
+    return () => {
+      clearInterval(progressInterval);
+      clearInterval(dotsInterval);
+    };
   }, [onComplete]);
-
-  const currentPhase = phaseInfo[fromPhase];
-  const nextPhase = phaseInfo[toPhase];
 
   return (
     <div style={containerStyle}>
-      {/* Partículas mágicas */}
-      {particles.map((particle) => (
-        <div
-          key={particle.id}
-          style={{
-            ...particleStyle,
-            left: `${particle.x}%`,
-            top: `${particle.y}%`,
-            animationDelay: `${particle.delay}s`,
-            animationDuration: `${particle.speed}s`,
-          }}
-        >
-          {particle.emoji}
-        </div>
-      ))}
-
-      {/* Fundo gradiente baseado nas fases */}
-      <div
-        style={{
-          ...backgroundGradient,
-          background: `linear-gradient(135deg, ${currentPhase?.color || "#667eea"} 0%, ${nextPhase?.color || "#764ba2"} 100%)`,
-        }}
-      />
-
-      {/* Círculo mágico */}
-      {magicCircle && (
-        <div style={magicCircleContainer}>
-          <div style={outerCircle}>
-            <div style={middleCircle}>
-              <div style={innerCircle}>
-                <div style={centerGem}>💎</div>
-              </div>
-            </div>
+      {/* Background com estrelas */}
+      <div style={starsBackground}>
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            style={{
+              ...starStyle,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+            }}
+          >
+            ✨
           </div>
-
-          {/* Runas ao redor */}
-          <div style={runesContainer}>
-            {["💖", "🐱", "✨", "🌟", "💫", "⭐"].map((rune, index) => (
-              <div
-                key={index}
-                style={{
-                  ...runeStyle,
-                  transform: `rotate(${index * 60}deg) translateY(-80px)`,
-                  animationDelay: `${index * 0.2}s`,
-                }}
-              >
-                {rune}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+        ))}
+      </div>
 
       {/* Conteúdo da transição */}
       <div style={contentContainer}>
-        {/* Fase atual saindo */}
-        {step >= 1 && step <= 3 && currentPhase && (
-          <div
-            style={{
-              ...phaseCard,
-              opacity: step <= 2 ? 1 : 0,
-              transform:
-                step <= 2
-                  ? "scale(1) translateY(0)"
-                  : "scale(0.8) translateY(-50px)",
-            }}
-          >
-            <div style={phaseEmoji}>{currentPhase.emoji}</div>
-            <h2 style={phaseName}>{currentPhase.name}</h2>
-            <p style={phaseStatus}>Completado! ✨</p>
+        <div style={logoContainer}>
+          <div style={magicPortal}>
+            <div style={portalRing1}></div>
+            <div style={portalRing2}></div>
+            <div style={portalRing3}></div>
+            <div style={portalCenter}>🌟</div>
           </div>
-        )}
+        </div>
 
-        {/* Mensagem de transição */}
-        {step >= 2 && step <= 4 && (
-          <div
-            style={{
-              ...transitionMessage,
-              opacity: step === 2 || step === 3 ? 1 : 0,
-            }}
-          >
-            <div style={messageContainer}>
-              <div style={loadingCats}>
-                <span style={loadingCat1}>🐱</span>
-                <span style={loadingCat2}>😸</span>
-                <span style={loadingCat3}>😻</span>
-              </div>
+        <h2 style={titleStyle}>Transportando para nova dimensão{dots}</h2>
 
-              <h3 style={messageTitle}>Portais Mágicos Ativados!</h3>
-              <p style={messageText}>{message}</p>
+        <div style={messageContainer}>
+          <p style={messageStyle}>{message}</p>
+        </div>
 
-              <div style={progressBar}>
-                <div style={progressFill} />
-              </div>
-            </div>
+        {/* Barra de progresso */}
+        <div style={progressContainer}>
+          <div style={progressBar}>
+            <div
+              style={{
+                ...progressFill,
+                width: `${progress}%`,
+              }}
+            />
           </div>
-        )}
+          <div style={progressText}>{Math.round(progress)}%</div>
+        </div>
 
-        {/* Nova fase entrando */}
-        {step >= 5 && nextPhase && (
-          <div
-            style={{
-              ...phaseCard,
-              opacity: step >= 5 ? 1 : 0,
-              transform:
-                step >= 5
-                  ? "scale(1) translateY(0)"
-                  : "scale(0.8) translateY(50px)",
-            }}
-          >
-            <div style={phaseEmoji}>{nextPhase.emoji}</div>
-            <h2 style={phaseName}>{nextPhase.name}</h2>
-            <p style={phaseStatus}>Iniciando... 🚀</p>
-          </div>
-        )}
+        {/* Gatinhos de loading */}
+        <div style={loadingCats}>
+          <div style={loadingCat1}>🐱</div>
+          <div style={loadingCat2}>😸</div>
+          <div style={loadingCat3}>😻</div>
+        </div>
+
+        <div style={flavorText}>
+          {progress < 30 && "🔮 Carregando magia..."}
+          {progress >= 30 && progress < 60 && "✨ Preparando surpresas..."}
+          {progress >= 60 && progress < 90 && "🎭 Ajustando cenário..."}
+          {progress >= 90 && "🎉 Quase lá!"}
+        </div>
       </div>
 
       <style jsx global>{`
-        @keyframes magicFloat {
+        @keyframes twinkle {
           0%,
           100% {
-            transform: translateY(0px) rotate(0deg) scale(1);
-            opacity: 0.8;
+            opacity: 0;
+            transform: scale(0);
           }
           50% {
-            transform: translateY(-20px) rotate(180deg) scale(1.2);
             opacity: 1;
-          }
-        }
-
-        @keyframes circleRotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @keyframes runeOrbit {
-          from {
-            transform: rotate(0deg) translateY(-80px) rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg) translateY(-80px) rotate(-360deg);
-          }
-        }
-
-        @keyframes catBounce {
-          0%,
-          100% {
-            transform: translateY(0px) scale(1);
-          }
-          50% {
-            transform: translateY(-10px) scale(1.1);
-          }
-        }
-
-        @keyframes progressGrow {
-          from {
-            width: 0%;
-          }
-          to {
-            width: 100%;
-          }
-        }
-
-        @keyframes pulseGlow {
-          0%,
-          100% {
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
             transform: scale(1);
           }
-          50% {
-            box-shadow: 0 0 40px rgba(255, 105, 180, 1);
-            transform: scale(1.05);
+        }
+
+        @keyframes portal {
+          0% {
+            transform: rotate(0deg) scale(1);
+          }
+          100% {
+            transform: rotate(360deg) scale(1.1);
           }
         }
 
-        @keyframes fadeSlideUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
+        @keyframes portalPulse {
+          0%,
+          100% {
+            opacity: 0.3;
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+          50% {
+            opacity: 0.8;
+          }
+        }
+
+        @keyframes catJump {
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
           }
         }
       `}</style>
@@ -315,201 +245,167 @@ export default function TransitionComponent({
   );
 }
 
+// Estilos
 const containerStyle = {
   position: "fixed",
   top: 0,
   left: 0,
   width: "100vw",
   height: "100vh",
-  zIndex: 9999,
+  background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontFamily: '"Inter", "Segoe UI", sans-serif',
-  overflow: "hidden",
+  zIndex: 10000,
+  fontFamily: '"Comic Sans MS", cursive',
 };
 
-const backgroundGradient = {
+const starsBackground = {
   position: "absolute",
   top: 0,
   left: 0,
   width: "100%",
   height: "100%",
-  zIndex: 0,
-};
-
-const particleStyle = {
-  position: "absolute",
-  fontSize: "16px",
-  animation: "magicFloat infinite ease-in-out",
   pointerEvents: "none",
-  zIndex: 1,
 };
 
-const magicCircleContainer = {
+const starStyle = {
   position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  zIndex: 2,
-};
-
-const outerCircle = {
-  width: "200px",
-  height: "200px",
-  border: "3px solid rgba(255, 255, 255, 0.6)",
-  borderRadius: "50%",
-  animation: "circleRotate 10s linear infinite",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const middleCircle = {
-  width: "140px",
-  height: "140px",
-  border: "2px solid rgba(255, 215, 0, 0.8)",
-  borderRadius: "50%",
-  animation: "circleRotate 8s linear infinite reverse",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const innerCircle = {
-  width: "80px",
-  height: "80px",
-  border: "2px solid rgba(255, 105, 180, 0.9)",
-  borderRadius: "50%",
-  animation: "circleRotate 6s linear infinite",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: "rgba(255, 255, 255, 0.1)",
-};
-
-const centerGem = {
-  fontSize: "2rem",
-  animation: "pulseGlow 2s ease-in-out infinite",
-};
-
-const runesContainer = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "200px",
-  height: "200px",
-};
-
-const runeStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  fontSize: "1.5rem",
-  animation: "runeOrbit 20s linear infinite",
-  transformOrigin: "0 0",
+  fontSize: "12px",
+  animation: "twinkle 2s ease-in-out infinite",
 };
 
 const contentContainer = {
-  position: "relative",
-  zIndex: 3,
   textAlign: "center",
   color: "white",
+  zIndex: 2,
 };
 
-const phaseCard = {
-  backgroundColor: "rgba(255, 255, 255, 0.9)",
-  borderRadius: "20px",
-  padding: "30px",
-  margin: "20px",
-  border: "3px solid rgba(255, 215, 0, 0.8)",
-  backdropFilter: "blur(10px)",
-  transition: "all 1s cubic-bezier(0.4, 0, 0.2, 1)",
-  animation: "fadeSlideUp 1s ease-out",
-  color: "#333",
+const logoContainer = {
+  marginBottom: "30px",
 };
 
-const phaseEmoji = {
-  fontSize: "4rem",
-  marginBottom: "15px",
-  animation: "catBounce 2s ease-in-out infinite",
+const magicPortal = {
+  position: "relative",
+  display: "inline-block",
+  width: "120px",
+  height: "120px",
 };
 
-const phaseName = {
+const portalRing1 = {
+  position: "absolute",
+  width: "120px",
+  height: "120px",
+  border: "3px solid rgba(255, 255, 255, 0.6)",
+  borderRadius: "50%",
+  animation: "portal 3s linear infinite",
+};
+
+const portalRing2 = {
+  position: "absolute",
+  width: "80px",
+  height: "80px",
+  top: "20px",
+  left: "20px",
+  border: "2px solid rgba(255, 105, 180, 0.8)",
+  borderRadius: "50%",
+  animation: "portal 2s linear infinite reverse",
+};
+
+const portalRing3 = {
+  position: "absolute",
+  width: "40px",
+  height: "40px",
+  top: "40px",
+  left: "40px",
+  border: "2px solid rgba(147, 112, 219, 0.9)",
+  borderRadius: "50%",
+  animation: "portalPulse 1.5s ease-in-out infinite",
+};
+
+const portalCenter = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  fontSize: "2rem",
+  animation: "twinkle 2s ease-in-out infinite",
+};
+
+const titleStyle = {
   fontSize: "1.8rem",
   fontWeight: "bold",
-  marginBottom: "10px",
-  background: "linear-gradient(45deg, #ff69b4, #9370db)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-};
-
-const phaseStatus = {
-  fontSize: "1.1rem",
-  color: "#666",
-  fontStyle: "italic",
-};
-
-const transitionMessage = {
-  transition: "opacity 1s ease-in-out",
+  marginBottom: "20px",
+  textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
 };
 
 const messageContainer = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "20px",
-  padding: "30px",
-  border: "3px solid rgba(255, 105, 180, 0.8)",
+  backgroundColor: "rgba(255, 255, 255, 0.1)",
+  borderRadius: "15px",
+  padding: "20px",
+  marginBottom: "30px",
+  border: "2px solid rgba(255, 255, 255, 0.3)",
   backdropFilter: "blur(10px)",
-  color: "#333",
+};
+
+const messageStyle = {
+  fontSize: "1.2rem",
+  fontStyle: "italic",
+  margin: 0,
+  lineHeight: "1.4",
+};
+
+const progressContainer = {
+  marginBottom: "30px",
+};
+
+const progressBar = {
+  width: "300px",
+  height: "20px",
+  backgroundColor: "rgba(255, 255, 255, 0.3)",
+  borderRadius: "10px",
+  overflow: "hidden",
+  margin: "0 auto 10px",
+  border: "2px solid rgba(255, 255, 255, 0.5)",
+};
+
+const progressFill = {
+  height: "100%",
+  background: "linear-gradient(90deg, #ff69b4, #9966cc, #ff1493)",
+  borderRadius: "8px",
+  transition: "width 0.1s ease-out",
+};
+
+const progressText = {
+  fontSize: "1.1rem",
+  fontWeight: "bold",
+  color: "#ffd700",
 };
 
 const loadingCats = {
   display: "flex",
   justifyContent: "center",
-  gap: "15px",
+  gap: "20px",
   marginBottom: "20px",
 };
 
 const loadingCat1 = {
   fontSize: "2rem",
-  animation: "catBounce 1.5s ease-in-out infinite",
+  animation: "catJump 1s ease-in-out infinite",
 };
 
 const loadingCat2 = {
   fontSize: "2rem",
-  animation: "catBounce 1.5s ease-in-out infinite 0.3s",
+  animation: "catJump 1s ease-in-out infinite 0.3s",
 };
 
 const loadingCat3 = {
   fontSize: "2rem",
-  animation: "catBounce 1.5s ease-in-out infinite 0.6s",
+  animation: "catJump 1s ease-in-out infinite 0.6s",
 };
 
-const messageTitle = {
-  fontSize: "1.5rem",
-  color: "#ff1493",
-  marginBottom: "10px",
-  fontWeight: "bold",
-};
-
-const messageText = {
-  fontSize: "1.1rem",
-  color: "#666",
-  marginBottom: "20px",
-};
-
-const progressBar = {
-  width: "100%",
-  height: "8px",
-  backgroundColor: "rgba(255, 105, 180, 0.3)",
-  borderRadius: "4px",
-  overflow: "hidden",
-};
-
-const progressFill = {
-  height: "100%",
-  backgroundColor: "#ff69b4",
-  borderRadius: "4px",
-  animation: "progressGrow 3s ease-in-out",
+const flavorText = {
+  fontSize: "1rem",
+  opacity: 0.8,
+  fontStyle: "italic",
 };

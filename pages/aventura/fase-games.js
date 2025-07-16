@@ -87,7 +87,7 @@ export default function FaseGames() {
   };
 
   const avancar = () => {
-    router.push("/aventura/fase7");
+    router.push("/aventura/fase3");
   };
 
   return (

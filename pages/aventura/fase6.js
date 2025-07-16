@@ -1,352 +1,367 @@
-// pages/aventura/fase6.js - Steven Universe Melhorado
+// pages/aventura/fase6.js - Steven Universe Melhorado com Quiz Divertido
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 export default function Fase6StevenUniverseMelhorada() {
   const router = useRouter();
   const [etapaAtual, setEtapaAtual] = useState(0);
+  const [perguntaAtual, setPerguntaAtual] = useState(0);
+  const [pontos, setPontos] = useState(0);
   const [gemasColetadas, setGemasColetadas] = useState([]);
-  const [musicaAtiva, setMusicaAtiva] = useState(false);
-  const [fusionCompleta, setFusionCompleta] = useState(false);
   const [stevenFeliz, setStevenFeliz] = useState(false);
-  const [cookieCat, setCookieCat] = useState(false);
+  const [fusionCompleta, setFusionCompleta] = useState(false);
+  const [animacaoFusao, setAnimacaoFusao] = useState(false);
 
-  const gemas = [
+  const perguntasGemas = [
     {
-      nome: "Ametista",
-      cor: "#9966CC",
-      emoji: "💜",
-      personalidade: "Divertida como a Millena quando joga",
-      poder: "Shapeshifting do Coração",
-      frase: "Ei, vocês são tão legais quanto Cookie Cat!",
-    },
-    {
-      nome: "Pérola",
-      cor: "#FFE4E1", 
-      emoji: "🤍",
-      personalidade: "Organizada como o Matheus tentando ser",
-      poder: "Perfeição no Amor",
-      frase: "Que relacionamento bem estruturado!",
-    },
-    {
-      nome: "Garnet",
-      cor: "#DC143C",
-      emoji: "❤️",
-      personalidade: "Sábia como vocês dois juntos",
-      poder: "Visão do Futuro (spoiler: casamento!)",
-      frase: "Eu posso ver... vocês vão ser muito felizes!",
-    },
-    {
-      nome: "Steven",
-      cor: "#FF69B4",
-      emoji: "🌟",
-      personalidade: "Empolgado como vocês com games",
-      poder: "Escudo do Amor Protetor",
-      frase: "WOW! Esse amor é mais forte que meu escudo!",
-    },
-  ];
-
-  const perguntas = [
-    {
-      pergunta: "Se o Steven fosse escolher um jogo pra vocês jogarem juntos, qual seria?",
+      pergunta: "Se a Millena fosse uma Gem, qual seria seu poder especial?",
       opcoes: [
-        "🎮 Fallout 4 (a Millena ia adorar son)",
-        "🏠 Animal Crossing (fofo demais)",
-        "⚔️ Far Cry (que ela quer que você jogue!)",
-        "🌟 Todos, desde que seja junto",
+        "🎮 Controlar videogames com a mente",
+        "😂 Fazer qualquer um rir instantaneamente",
+        "🐱 Invocar gatinhos fofinhos",
+        "💻 Hackear qualquer sistema (inclusive o coração do Matheus)",
       ],
       correta: 3,
-      reacao: "Steven aprova! Jogar junto é o que importa! 🎮💕",
+      gema: "Millena-nita",
+      cor: "#ff69b4",
+      reacao: "Steven: 'UAU! Que poder incrível son!' ⭐",
     },
     {
-      pergunta: "Qual seria a fusão perfeita de vocês dois?",
+      pergunta: "E se o Matheus fosse uma Gem, qual seria seu maior defeito?",
       opcoes: [
-        "👑 Matheus + Millena = Poder Supremo do Amor",
-        "🎮 GameCouple (mestres dos controles)",
-        "💻 CodeLove (programando o futuro)",
-        "😻 CatParents (país de gatos)",
+        "🎮 Procrastinar jogando ao invés de trabalhar",
+        "☕ Não funcionar sem café",
+        "😴 Roncar durante as missões importantes",
+        "📱 Demorar 3 horas pra responder mensagem son",
       ],
-      correta: 0,
-      reacao: "Garnet está orgulhosa! Essa fusão seria ÉPICA! ✨",
+      correta: 3,
+      gema: "Matheusita",
+      cor: "#4ecdc4",
+      reacao: "Garnet: 'Vejo o futuro... ele vai melhorar isso!' 🔮",
+    },
+    {
+      pergunta: "Como vocês dois reagiriam se tivessem que salvar Beach City?",
+      opcoes: [
+        "💪 Millena iria sozinha enquanto Matheus faz café",
+        "🤝 Trabalhariam juntos como uma equipe perfeita",
+        "😅 Matheus tentaria resolver com programação",
+        "🐱 Mandariam os gatinhos resolverem son",
+      ],
+      correta: 1,
+      gema: "Millena + Matheus",
+      cor: "#9966cc",
+      reacao: "Steven: 'Isso é amor verdadeiro! Como o Cookie Cat!' 🍪",
+    },
+    {
+      pergunta: "Qual seria o nome da fusão de vocês dois?",
+      opcoes: [
+        "💎 Milletheus (muito formal)",
+        "🌟 MateMillena (clássico)",
+        "😂 Millão-de-Amor (zoeira)",
+        "💕 AmoreDeluxe (estilo JoJo son)",
+      ],
+      correta: 2,
+      gema: "Fusão Completa",
+      cor: "#ffd700",
+      reacao: "TODAS as Gems: 'KKKKK PERFEITO SON!' 😂💎",
     },
   ];
 
-  const [perguntaAtual, setPerguntaAtual] = useState(0);
-
   useEffect(() => {
-    // Sequência de apresentação
-    const timeouts = [
-      setTimeout(() => setEtapaAtual(1), 1000), // Steven aparece
-      setTimeout(() => setStevenFeliz(true), 2000), // Steven fica feliz
-      setTimeout(() => setCookieCat(true), 3000), // Cookie Cat aparece
-      setTimeout(() => setEtapaAtual(2), 4000), // Começar coleta de gemas
-    ];
-
-    return () => timeouts.forEach(clearTimeout);
+    setTimeout(() => setEtapaAtual(1), 1000);
   }, []);
 
-  const coletarGema = (gemaIndex) => {
-    const gema = gemas[gemaIndex];
-    if (!gemasColetadas.includes(gema.nome)) {
-      setGemasColetadas([...gemasColetadas, gema.nome]);
-      
-      // Ativar música quando coletar primeira gema
-      if (gemasColetadas.length === 0) {
-        setMusicaAtiva(true);
-      }
-
-      // Se coletou todas as gemas, ir para perguntas
-      if (gemasColetadas.length === 3) {
-        setTimeout(() => {
-          setEtapaAtual(3);
-        }, 1500);
-      }
-    }
-  };
-
   const responderPergunta = (opcaoIndex) => {
-    const pergunta = perguntas[perguntaAtual];
+    const pergunta = perguntasGemas[perguntaAtual];
     const acertou = opcaoIndex === pergunta.correta;
 
-    if (acertou && perguntaAtual < perguntas.length - 1) {
-      setPerguntaAtual(perguntaAtual + 1);
-    } else if (acertou) {
-      // Fusão completa!
-      setFusionCompleta(true);
-      setTimeout(() => {
-        router.push("/aventura/fase7");
-      }, 4000);
+    if (acertou) {
+      setPontos(pontos + 100);
+      setGemasColetadas([...gemasColetadas, pergunta.gema]);
+      setStevenFeliz(true);
+    } else {
+      setPontos(pontos + 50);
     }
+
+    setTimeout(() => {
+      if (perguntaAtual < perguntasGemas.length - 1) {
+        setPerguntaAtual(perguntaAtual + 1);
+        setStevenFeliz(false);
+      } else {
+        iniciarFusao();
+      }
+    }, 2500);
   };
+
+  const iniciarFusao = () => {
+    setAnimacaoFusao(true);
+    setTimeout(() => {
+      setFusionCompleta(true);
+      setEtapaAtual(3);
+    }, 3000);
+  };
+
+  const avancar = () => {
+    router.push("/aventura/fase7"); // Vai para o arcade 8-bit
+  };
+
+  const perguntaAtualObj = perguntasGemas[perguntaAtual] || perguntasGemas[0];
 
   return (
     <div style={containerStyle}>
-      {/* Background do templo */}
-      <div style={templeBackground}>
-        <div style={templeDoor}>🏛️</div>
+      {/* Background do Beach City */}
+      <div style={beachCityBackground}>
+        <div style={temple}>🏛️</div>
+        <div style={donut}>🍩</div>
         <div style={warpPad}>⭐</div>
       </div>
-
-      {/* Cookie Cat flutuando */}
-      {cookieCat && (
-        <div style={cookieCatContainer}>
-          <div style={cookieCatEmoji}>🍪🐱</div>
-          <div style={cookieCatSong}>
-            ♪ "Cookie Cat, he's a pet for your tummy!" ♪
-          </div>
-        </div>
-      )}
 
       <div style={contentContainer}>
         {/* Etapa 0 - Loading */}
         {etapaAtual === 0 && (
           <div style={loadingContainer}>
-            <div style={stevenLoading}>🌟</div>
-            <p style={loadingText}>Steven está preparando o templo...</p>
+            <div style={stevenLoading}>⭐</div>
+            <p style={loadingText}>Steven está preparando as Gems...</p>
           </div>
         )}
 
-        {/* Etapa 1 - Steven apresenta */}
-        {etapaAtual >= 1 && etapaAtual < 2 && (
-          <div style={stevenContainer}>
-            <div style={stevenAvatar}>
-              <div 
-                style={{
-                  ...stevenChar,
-                  animation: stevenFeliz ? "stevenExcited 2s ease-in-out infinite" : "stevenNormal 3s ease-in-out infinite"
-                }}
-              >
-                👦🌟
+        {/* Etapa 1 - Introdução Steven */}
+        {etapaAtual === 1 && (
+          <div style={introContainer}>
+            <h1 style={titleStyle}>⭐ Steven Universe & as Crystal Gems ⭐</h1>
+
+            <div style={stevenIntroContainer}>
+              <div style={stevenAvatar}>
+                <div style={stevenFace}>👦⭐</div>
+                <div style={stevenGlow}></div>
+              </div>
+              <div style={stevenSpeech}>
+                "OI! Eu sou Steven! As Crystal Gems me contaram sobre vocês dois
+                e cara... QUE HISTÓRIA DE AMOR INCRÍVEL SON! 🌟
+                <br />
+                <br />
+                Vamos fazer um teste especial para ver se vocês são uma fusão
+                perfeita! Tipo... mais perfeita que Cookie Cat! 🍪✨"
               </div>
             </div>
 
-            <div style={stevenSpeech}>
-              <h2 style={stevenTitle}>🌟 Oi! Eu sou Steven! 🌟</h2>
-              <p style={stevenText}>
-                As Crystal Gems me contaram sobre vocês dois e WOW! 
-                <br />
-                Que história de amor incrível! ✨
-                <br />
-                Vamos fazer um teste especial para ver se vocês são uma fusão perfeita!
-              </p>
-              
+            <div style={gemsIntro}>
+              <h3 style={gemsTitle}>💎 Conheçam as Crystal Gems! 💎</h3>
+              <div style={gemsContainer}>
+                <div style={gemCard}>
+                  <div style={gemAvatar}>💜</div>
+                  <div style={gemName}>Ametista</div>
+                  <div style={gemRole}>
+                    "Eles são legais! Como batata frita!"
+                  </div>
+                </div>
+                <div style={gemCard}>
+                  <div style={gemAvatar}>🤍</div>
+                  <div style={gemName}>Pérola</div>
+                  <div style={gemRole}>
+                    "Que relacionamento bem organizado!"
+                  </div>
+                </div>
+                <div style={gemCard}>
+                  <div style={gemAvatar}>❤️</div>
+                  <div style={gemName}>Garnet</div>
+                  <div style={gemRole}>
+                    "Eu vejo um futuro brilhante juntos."
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button onClick={() => setEtapaAtual(2)} style={startTestButton}>
+              💎 Começar Teste de Fusão! 💎
+            </button>
+          </div>
+        )}
+
+        {/* Etapa 2 - Quiz das Gems */}
+        {etapaAtual === 2 && (
+          <div style={quizContainer}>
+            <div style={quizHeader}>
+              <h2 style={quizTitle}>💎 Teste das Crystal Gems 💎</h2>
+              <div style={progressContainer}>
+                <div>
+                  Pergunta: {perguntaAtual + 1}/{perguntasGemas.length}
+                </div>
+                <div>Pontos: {pontos}</div>
+                <div>Gemas: {gemasColetadas.length}</div>
+              </div>
+            </div>
+
+            <div style={questionContainer}>
+              <div style={stevenQuizHost}>
+                <div style={stevenQuizAvatar}>
+                  <div
+                    style={{
+                      ...stevenQuizFace,
+                      animation: stevenFeliz
+                        ? "stevenExcited 1s ease-in-out infinite"
+                        : "stevenNormal 3s ease-in-out infinite",
+                    }}
+                  >
+                    {stevenFeliz ? "🤩⭐" : "👦⭐"}
+                  </div>
+                </div>
+                <div style={stevenQuizSpeech}>
+                  {stevenFeliz
+                    ? "ISSO AÍ SON! Vocês são demais! 🌟"
+                    : "Vamos ver... essa é importante!"}
+                </div>
+              </div>
+
+              <div style={questionBox}>
+                <h3 style={questionText}>{perguntaAtualObj.pergunta}</h3>
+
+                <div style={optionsContainer}>
+                  {perguntaAtualObj.opcoes.map((opcao, index) => (
+                    <button
+                      key={index}
+                      onClick={() => responderPergunta(index)}
+                      style={{
+                        ...optionButton,
+                        backgroundColor:
+                          index % 2 === 0 ? "#e74c3c" : "#3498db",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.transform = "scale(1.05) rotate(1deg)";
+                        e.target.style.boxShadow =
+                          "0 10px 20px rgba(0,0,0,0.3)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.transform = "scale(1) rotate(0deg)";
+                        e.target.style.boxShadow = "0 5px 15px rgba(0,0,0,0.2)";
+                      }}
+                    >
+                      {opcao}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Reação das Gems */}
               {stevenFeliz && (
-                <div style={stevenExcitement}>
-                  <p style={excitedText}>
-                    "Isso vai ser ÉPICO! Tipo quando eu descobri meus poderes!" 🎸⭐
-                  </p>
+                <div style={gemsReactionContainer}>
+                  <div style={reactionBubble}>{perguntaAtualObj.reacao}</div>
+                  <div style={celebratingGems}>
+                    <div style={celebratingGem1}>💜</div>
+                    <div style={celebratingGem2}>🤍</div>
+                    <div style={celebratingGem3}>❤️</div>
+                    <div style={celebratingGem4}>⭐</div>
+                  </div>
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {/* Etapa 2 - Coleta de Gemas */}
-        {etapaAtual === 2 && (
-          <div style={gemsContainer}>
-            <h1 style={titleStyle}>💎 Templo das Crystal Gems 💎</h1>
-            <p style={instructionStyle}>
-              Colete 4 gemas para formar a fusão perfeita do amor! ✨
-            </p>
-
-            {/* Música indicator */}
-            {musicaAtiva && (
-              <div style={musicIndicator}>
-                <div style={musicNote}>🎵</div>
-                <div style={musicText}>♪ "We are the Crystal Gems!" ♪</div>
-                <div style={musicNote}>🎶</div>
+        {/* Etapa 3 - Fusão Completa */}
+        {etapaAtual === 3 && (
+          <div style={fusionContainer}>
+            {animacaoFusao && !fusionCompleta && (
+              <div style={fusionAnimation}>
+                <h2 style={fusionTitle}>✨💎 INICIANDO FUSÃO! 💎✨</h2>
+                <div style={fusionCircle}>
+                  <div style={fusionGem1}>💎</div>
+                  <div style={fusionGem2}>💖</div>
+                  <div style={fusionGem3}>⭐</div>
+                </div>
+                <p style={fusionText}>Combinando essências do amor...</p>
               </div>
             )}
 
-            <div style={gemsGrid}>
-              {gemas.map((gema, index) => (
-                <div
-                  key={index}
-                  style={{
-                    ...gemCard,
-                    backgroundColor: gema.cor,
-                    opacity: gemasColetadas.includes(gema.nome) ? 0.5 : 1,
-                    transform: gemasColetadas.includes(gema.nome) ? "scale(0.8)" : "scale(1)",
-                  }}
-                  onClick={() => coletarGema(index)}
-                >
-                  <div style={gemEmoji}>{gema.emoji}</div>
-                  <h3 style={gemNome}>{gema.nome}</h3>
-                  <p style={gemPersonalidade}>{gema.personalidade}</p>
-                  <div style={gemPoder}>{gema.poder}</div>
-                  
-                  {gemasColetadas.includes(gema.nome) && (
-                    <div style={gemFrase}>
-                      "{gema.frase}"
+            {fusionCompleta && (
+              <div style={fusionCompleteContainer}>
+                <h1 style={fusionCompleteTitle}>🌟💖 FUSÃO PERFEITA! 💖🌟</h1>
+
+                <div style={fusionResultContainer}>
+                  <div style={fusionAvatar}>
+                    <div style={fusionCharacter}>👨‍❤️‍👩</div>
+                    <div style={fusionAura}></div>
+                  </div>
+                  <h2 style={fusionName}>✨ MILLÃO-DE-AMOR ✨</h2>
+                  <p style={fusionDescription}>
+                    A fusão mais fofa e engraçada de Beach City son!
+                  </p>
+                </div>
+
+                <div style={fusionPowersContainer}>
+                  <h3 style={powersTitle}>🌟 Poderes da Fusão:</h3>
+                  <div style={powersList}>
+                    <div style={powerItem}>
+                      💕 Amor Incondicional Level 9000
                     </div>
-                  )}
+                    <div style={powerItem}>
+                      😂 Risadas Infinitas (sem cooldown)
+                    </div>
+                    <div style={powerItem}>🎮 Sincronização Gamer Perfeita</div>
+                    <div style={powerItem}>🐱 Magnetismo Felino</div>
+                    <div style={powerItem}>☕ Produção Ilimitada de Café</div>
+                    <div style={powerItem}>💻 Debug de Relacionamento</div>
+                  </div>
                 </div>
-              ))}
-            </div>
 
-            <div style={progressContainer}>
-              <p style={progressText}>
-                Gemas coletadas: {gemasColetadas.length}/4 💎
-              </p>
-              <div style={progressBar}>
-                <div 
-                  style={{
-                    ...progressFill,
-                    width: `${(gemasColetadas.length / 4) * 100}%`
-                  }}
-                ></div>
+                <div style={gemsApprovalContainer}>
+                  <h3 style={approvalTitle}>💎 Aprovação das Crystal Gems:</h3>
+                  <div style={approvalGems}>
+                    <div style={approvalGem}>
+                      <div style={gemEmoji}>💜</div>
+                      <div style={gemApproval}>
+                        "Vocês são demais! Like, sério!" - Ametista
+                      </div>
+                    </div>
+                    <div style={approvalGem}>
+                      <div style={gemEmoji}>🤍</div>
+                      <div style={gemApproval}>
+                        "Que técnica de fusão impecável!" - Pérola
+                      </div>
+                    </div>
+                    <div style={approvalGem}>
+                      <div style={gemEmoji}>❤️</div>
+                      <div style={gemApproval}>
+                        "Eu vejo casamento no futuro." - Garnet
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={stevenFinalContainer}>
+                  <div style={stevenFinalAvatar}>👦⭐</div>
+                  <div style={stevenFinalText}>
+                    "UAU! Isso foi MELHOR que quando descobri que Cookie Cat
+                    voltou! Vocês são uma equipe INCRÍVEL son! 🍪⭐
+                    <br />
+                    <br />
+                    Agora vamos para a próxima aventura!"
+                  </div>
+                </div>
+
+                <button onClick={avancar} style={nextAdventureButton}>
+                  🎮 Próxima Fase: Arcade 8-bit! 🎮
+                </button>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Etapa 3 - Perguntas finais */}
-        {etapaAtual === 3 && !fusionCompleta && (
-          <div style={questionContainer}>
-            <h2 style={questionTitle}>
-              🌟 Teste Final das Crystal Gems 🌟
-            </h2>
-
-            <div style={questionCard}>
-              <p style={questionText}>
-                {perguntas[perguntaAtual].pergunta}
-              </p>
-
-              <div style={optionsContainer}>
-                {perguntas[perguntaAtual].opcoes.map((opcao, index) => (
-                  <button
-                    key={index}
-                    onClick={() => responderPergunta(index)}
-                    style={{
-                      ...optionButton,
-                      backgroundColor: index % 2 === 0 ? "#e74c3c" : "#3498db",
-                    }}
-                  >
-                    {opcao}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div style={gemsCheering}>
-              <div style={cheeringGem1}>💜</div>
-              <div style={cheeringGem2}>🤍</div>
-              <div style={cheeringGem3}>❤️</div>
-              <div style={cheeringGem4}>🌟</div>
-            </div>
-          </div>
-        )}
-
-        {/* Etapa 4 - Fusão Completa */}
-        {fusionCompleta && (
-          <div style={fusionContainer}>
-            <h1 style={fusionTitle}>✨💎 FUSÃO COMPLETA! 💎✨</h1>
-
-            <div style={fusionGem}>
-              <div style={fusionAvatar}>💑🌟</div>
-              <div style={fusionGlow}></div>
-            </div>
-
-            <div style={fusionDescription}>
-              <h3 style={fusionName}>Matheus + Millena = AMOR INFINITO!</h3>
-              <p style={fusionPowers}>
-                Poderes da Fusão:
-                <br />
-                💖 Amor Incondicional
-                <br />
-                🎮 Sintonia em Games
-                <br />
-                😂 Risadas Infinitas
-                <br />
-                🏠 Criação do Lar Perfeito
-              </p>
-            </div>
-
-            <div style={allGemsApproval}>
-              <h3 style={approvalTitle}>💎 As Crystal Gems Aprovam! 💎</h3>
-              <div style={gemsReaction}>
-                <div style={gemReaction}>
-                  <div style={reactionGem}>💜</div>
-                  <div style={reactionText}>"Vocês são demais!" - Ametista</div>
-                </div>
-                <div style={gemReaction}>
-                  <div style={reactionGem}>🤍</div>
-                  <div style={reactionText}>"Perfeição!" - Pérola</div>
-                </div>
-                <div style={gemReaction}>
-                  <div style={reactionGem}>❤️</div>
-                  <div style={reactionText}>"Destinados!" - Garnet</div>
-                </div>
-                <div style={gemReaction}>
-                  <div style={reactionGem}>🌟</div>
-                  <div style={reactionText}>"INCRÍVEL!" - Steven</div>
-                </div>
-              </div>
-            </div>
-
-            <div style={stevenFinalMessage}>
-              <div style={stevenFinalAvatar}>👦⭐</div>
-              <div style={stevenFinalText}>
-                "Cara, isso foi MELHOR que Cookie Cat! Vocês são uma fusão perfeita! 
-                Agora vamos para a próxima aventura!" 🎸✨
-              </div>
-            </div>
+            )}
           </div>
         )}
       </div>
 
       <style jsx global>{`
         @keyframes stevenNormal {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) rotate(-2deg);
           }
           50% {
-            transform: translateY(-10px) rotate(2deg);
+            transform: translateY(-8px) rotate(2deg);
           }
         }
 
         @keyframes stevenExcited {
-          0%, 100% {
+          0%,
+          100% {
             transform: scale(1) rotate(-5deg);
           }
           25% {
@@ -360,56 +375,63 @@ export default function Fase6StevenUniverseMelhorada() {
           }
         }
 
-        @keyframes gemGlow {
-          0%, 100% {
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+        @keyframes gemFloat {
+          0%,
+          100% {
+            transform: translateY(0px) rotate(0deg);
           }
           50% {
-            box-shadow: 0 0 40px rgba(255, 105, 180, 1);
+            transform: translateY(-15px) rotate(180deg);
           }
         }
 
-        @keyframes cookieCatFloat {
-          0%, 100% {
-            transform: translateY(0px) rotate(-5deg);
+        @keyframes fusionSpin {
+          0% {
+            transform: rotate(0deg) scale(1);
           }
           50% {
-            transform: translateY(-20px) rotate(5deg);
+            transform: rotate(180deg) scale(1.5);
+          }
+          100% {
+            transform: rotate(360deg) scale(1);
           }
         }
 
-        @keyframes musicNote {
-          0%, 100% {
-            transform: translateY(0px) scale(1);
+        @keyframes fusionGlow {
+          0%,
+          100% {
+            opacity: 0.8;
+            transform: scale(1);
           }
           50% {
-            transform: translateY(-15px) scale(1.2);
+            opacity: 1;
+            transform: scale(1.2);
           }
         }
 
-        @keyframes fusionPower {
-          0%, 100% {
-            transform: scale(1) rotate(0deg);
-            filter: hue-rotate(0deg);
-          }
-          50% {
-            transform: scale(1.2) rotate(180deg);
-            filter: hue-rotate(180deg);
-          }
-        }
-
-        @keyframes gemCheer {
-          0%, 100% {
+        @keyframes gemCelebrate {
+          0%,
+          100% {
             transform: translateY(0px) scale(1);
           }
           25% {
-            transform: translateY(-20px) scale(1.3);
+            transform: translateY(-15px) scale(1.2);
           }
           50% {
             transform: translateY(-10px) scale(1.1);
           }
           75% {
-            transform: translateY(-15px) scale(1.2);
+            transform: translateY(-20px) scale(1.3);
+          }
+        }
+
+        @keyframes cookieCat {
+          0%,
+          100% {
+            transform: rotate(-10deg);
+          }
+          50% {
+            transform: rotate(10deg);
           }
         }
       `}</style>
@@ -417,55 +439,47 @@ export default function Fase6StevenUniverseMelhorada() {
   );
 }
 
+// Estilos
 const containerStyle = {
   minHeight: "100vh",
-  background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",
+  background:
+    "linear-gradient(135deg, #87CEEB 0%, #98FB98 30%, #FFB6C1 70%, #DDA0DD 100%)",
   position: "relative",
   overflow: "hidden",
   fontFamily: '"Comic Sans MS", cursive',
   color: "#fff",
 };
 
-const templeBackground = {
+const beachCityBackground = {
   position: "absolute",
-  top: "10%",
-  right: "10%",
+  width: "100%",
+  height: "100%",
   opacity: 0.3,
-  fontSize: "4rem",
+  pointerEvents: "none",
 };
 
-const templeDoor = {
-  fontSize: "5rem",
-  marginBottom: "20px",
+const temple = {
+  position: "absolute",
+  top: "10%",
+  left: "10%",
+  fontSize: "4rem",
+  animation: "gemFloat 4s ease-in-out infinite",
+};
+
+const donut = {
+  position: "absolute",
+  top: "20%",
+  right: "15%",
+  fontSize: "3rem",
+  animation: "cookieCat 3s ease-in-out infinite",
 };
 
 const warpPad = {
-  fontSize: "3rem",
-  animation: "gemGlow 3s ease-in-out infinite",
-};
-
-const cookieCatContainer = {
   position: "absolute",
-  top: "15%",
-  left: "10%",
-  textAlign: "center",
-  zIndex: 10,
-};
-
-const cookieCatEmoji = {
+  bottom: "20%",
+  right: "20%",
   fontSize: "3rem",
-  animation: "cookieCatFloat 4s ease-in-out infinite",
-  marginBottom: "10px",
-};
-
-const cookieCatSong = {
-  backgroundColor: "rgba(255, 192, 203, 0.9)",
-  color: "#8B4513",
-  padding: "10px 15px",
-  borderRadius: "20px",
-  fontSize: "12px",
-  fontWeight: "bold",
-  border: "2px solid #FF69B4",
+  animation: "gemFloat 4s ease-in-out infinite 2s",
 };
 
 const contentContainer = {
@@ -490,261 +504,261 @@ const stevenLoading = {
 
 const loadingText = {
   fontSize: "1.2rem",
-  opacity: 0.8,
-};
-
-const stevenContainer = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "25px",
-  padding: "40px",
-  maxWidth: "700px",
-  border: "4px solid #FF69B4",
-  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
-  color: "#333",
-  textAlign: "center",
-};
-
-const stevenAvatar = {
-  marginBottom: "20px",
-};
-
-const stevenChar = {
-  fontSize: "4rem",
-};
-
-const stevenSpeech = {
-  marginBottom: "20px",
-};
-
-const stevenTitle = {
-  color: "#FF69B4",
-  fontSize: "2rem",
-  marginBottom: "15px",
-};
-
-const stevenText = {
-  fontSize: "1.1rem",
-  lineHeight: "1.6",
-  marginBottom: "15px",
-};
-
-const stevenExcitement = {
-  backgroundColor: "rgba(255, 215, 0, 0.2)",
-  borderRadius: "15px",
-  padding: "15px",
-  border: "2px solid #FFD700",
-};
-
-const excitedText = {
-  color: "#FF8C00",
-  fontWeight: "bold",
-  fontStyle: "italic",
-  margin: 0,
-};
-
-const gemsContainer = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "25px",
-  padding: "40px",
-  maxWidth: "900px",
-  border: "4px solid #9966CC",
-  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
-  color: "#333",
-  textAlign: "center",
-};
-
-const titleStyle = {
-  fontSize: "2.5rem",
-  background: "linear-gradient(45deg, #9966CC, #FF69B4)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  fontWeight: "bold",
-  marginBottom: "15px",
-};
-
-const instructionStyle = {
-  fontSize: "1.2rem",
-  color: "#666",
-  marginBottom: "30px",
-};
-
-const musicIndicator = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "15px",
-  backgroundColor: "rgba(153, 102, 204, 0.2)",
-  borderRadius: "15px",
-  padding: "15px",
-  marginBottom: "30px",
-  border: "2px solid #9966CC",
-};
-
-const musicNote = {
-  fontSize: "1.5rem",
-  animation: "musicNote 2s ease-in-out infinite",
-};
-
-const musicText = {
-  color: "#9966CC",
-  fontWeight: "bold",
-  fontStyle: "italic",
-};
-
-const gemsGrid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  gap: "20px",
-  marginBottom: "30px",
-};
-
-const gemCard = {
-  padding: "25px",
-  borderRadius: "20px",
-  cursor: "pointer",
-  transition: "all 0.5s ease",
-  border: "3px solid white",
-  color: "white",
-  fontWeight: "bold",
-  textAlign: "center",
-  animation: "gemGlow 3s ease-in-out infinite",
-};
-
-const gemEmoji = {
-  fontSize: "3rem",
-  marginBottom: "15px",
-};
-
-const gemNome = {
-  margin: "10px 0",
-  fontSize: "1.3rem",
-};
-
-const gemPersonalidade = {
-  fontSize: "0.9rem",
   opacity: 0.9,
-  marginBottom: "10px",
-  fontStyle: "italic",
 };
 
-const gemPoder = {
-  fontSize: "0.8rem",
-  backgroundColor: "rgba(255, 255, 255, 0.2)",
-  padding: "8px 12px",
-  borderRadius: "15px",
-  marginBottom: "10px",
-};
-
-const gemFrase = {
-  fontSize: "0.8rem",
-  backgroundColor: "rgba(0, 0, 0, 0.3)",
-  padding: "8px 12px",
-  borderRadius: "10px",
-  fontStyle: "italic",
-  marginTop: "10px",
-};
-
-const progressContainer = {
-  textAlign: "center",
-};
-
-const progressText = {
-  fontSize: "1.1rem",
-  fontWeight: "bold",
-  color: "#9966CC",
-  marginBottom: "10px",
-};
-
-const progressBar = {
-  width: "100%",
-  height: "12px",
-  backgroundColor: "rgba(153, 102, 204, 0.3)",
-  borderRadius: "6px",
-  overflow: "hidden",
-};
-
-const progressFill = {
-  height: "100%",
-  backgroundColor: "#9966CC",
-  borderRadius: "6px",
-  transition: "width 0.5s ease",
-};
-
-const questionContainer = {
+const introContainer = {
   backgroundColor: "rgba(255, 255, 255, 0.95)",
   borderRadius: "25px",
   padding: "40px",
   maxWidth: "800px",
   border: "4px solid #FF69B4",
   boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
-  color: "#333",
   textAlign: "center",
-};
-
-const questionTitle = {
-  color: "#FF69B4",
-  fontSize: "2rem",
-  marginBottom: "25px",
-};
-
-const questionCard = {
-  backgroundColor: "#f8f9fa",
-  borderRadius: "20px",
-  padding: "30px",
-  marginBottom: "30px",
-  border: "3px solid #9966CC",
-};
-
-const questionText = {
-  fontSize: "1.3rem",
   color: "#333",
-  marginBottom: "25px",
-  lineHeight: "1.4",
 };
 
-const optionsContainer = {
-  display: "flex",
-  flexDirection: "column",
+const titleStyle = {
+  fontSize: "2.5rem",
+  background: "linear-gradient(45deg, #FF69B4, #9966CC, #FFB6C1)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  fontWeight: "bold",
+  marginBottom: "25px",
+};
+
+const stevenIntroContainer = {
+  backgroundColor: "rgba(255, 182, 193, 0.3)",
+  borderRadius: "20px",
+  padding: "25px",
+  marginBottom: "30px",
+  border: "3px solid #FF69B4",
+};
+
+const stevenAvatar = {
+  position: "relative",
+  display: "inline-block",
+  marginBottom: "15px",
+};
+
+const stevenFace = {
+  fontSize: "4rem",
+  animation: "stevenNormal 3s ease-in-out infinite",
+  position: "relative",
+  zIndex: 2,
+};
+
+const stevenGlow = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "80px",
+  height: "80px",
+  background:
+    "radial-gradient(circle, rgba(255, 105, 180, 0.6) 0%, transparent 70%)",
+  borderRadius: "50%",
+  animation: "fusionGlow 2s ease-in-out infinite",
+};
+
+const stevenSpeech = {
+  fontSize: "1.1rem",
+  color: "#FF1493",
+  lineHeight: "1.6",
+  fontWeight: "bold",
+};
+
+const gemsIntro = {
+  marginBottom: "30px",
+};
+
+const gemsTitle = {
+  color: "#9966CC",
+  fontSize: "1.5rem",
+  marginBottom: "20px",
+};
+
+const gemsContainer = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
   gap: "15px",
 };
 
-const optionButton = {
-  padding: "18px 25px",
+const gemCard = {
+  backgroundColor: "#f8f9fa",
+  borderRadius: "15px",
+  padding: "20px",
+  border: "2px solid #9966CC",
+  textAlign: "center",
+};
+
+const gemAvatar = {
+  fontSize: "2.5rem",
+  marginBottom: "8px",
+  animation: "gemFloat 3s ease-in-out infinite",
+};
+
+const gemName = {
   fontSize: "1.1rem",
+  fontWeight: "bold",
+  color: "#9966CC",
+  marginBottom: "5px",
+};
+
+const gemRole = {
+  fontSize: "0.9rem",
+  color: "#666",
+  fontStyle: "italic",
+};
+
+const startTestButton = {
+  padding: "20px 40px",
+  fontSize: "1.3rem",
+  backgroundColor: "#FF69B4",
   color: "#fff",
   border: "none",
-  borderRadius: "15px",
+  borderRadius: "25px",
   cursor: "pointer",
   fontWeight: "bold",
   transition: "all 0.3s ease",
   fontFamily: "inherit",
 };
 
-const gemsCheering = {
+const quizContainer = {
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "25px",
+  padding: "40px",
+  maxWidth: "800px",
+  border: "4px solid #9966CC",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
+  color: "#333",
+};
+
+const quizHeader = {
+  textAlign: "center",
+  marginBottom: "30px",
+};
+
+const quizTitle = {
+  color: "#9966CC",
+  fontSize: "2rem",
+  marginBottom: "15px",
+};
+
+const progressContainer = {
+  display: "flex",
+  justifyContent: "space-around",
+  backgroundColor: "#f8f9fa",
+  padding: "15px",
+  borderRadius: "15px",
+  border: "2px solid #FF69B4",
+  fontSize: "1rem",
+  fontWeight: "bold",
+  color: "#9966CC",
+};
+
+const questionContainer = {
+  textAlign: "center",
+};
+
+const stevenQuizHost = {
+  backgroundColor: "rgba(255, 182, 193, 0.2)",
+  borderRadius: "15px",
+  padding: "20px",
+  marginBottom: "25px",
+  border: "2px solid #FF69B4",
+};
+
+const stevenQuizAvatar = {
+  marginBottom: "10px",
+};
+
+const stevenQuizFace = {
+  fontSize: "3rem",
+};
+
+const stevenQuizSpeech = {
+  fontSize: "1rem",
+  color: "#FF1493",
+  fontWeight: "bold",
+  fontStyle: "italic",
+};
+
+const questionBox = {
+  backgroundColor: "#f8f9fa",
+  borderRadius: "20px",
+  padding: "25px",
+  border: "3px solid #9966CC",
+};
+
+const questionText = {
+  fontSize: "1.3rem",
+  color: "#333",
+  marginBottom: "20px",
+  lineHeight: "1.4",
+};
+
+const optionsContainer = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "12px",
+  marginBottom: "20px",
+};
+
+const optionButton = {
+  padding: "15px 20px",
+  fontSize: "1rem",
+  color: "#fff",
+  border: "none",
+  borderRadius: "12px",
+  cursor: "pointer",
+  fontWeight: "bold",
+  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)",
+  fontFamily: "inherit",
+  textAlign: "left",
+};
+
+const gemsReactionContainer = {
+  marginTop: "20px",
+  textAlign: "center",
+};
+
+const reactionBubble = {
+  backgroundColor: "rgba(40, 167, 69, 0.2)",
+  border: "2px solid #28a745",
+  borderRadius: "15px",
+  padding: "15px",
+  marginBottom: "15px",
+  color: "#28a745",
+  fontWeight: "bold",
+  fontStyle: "italic",
+};
+
+const celebratingGems = {
   display: "flex",
   justifyContent: "center",
-  gap: "25px",
-  marginTop: "20px",
+  gap: "15px",
 };
 
-const cheeringGem1 = {
-  fontSize: "2.5rem",
-  animation: "gemCheer 2s ease-in-out infinite",
+const celebratingGem1 = {
+  fontSize: "2rem",
+  animation: "gemCelebrate 2s ease-in-out infinite",
 };
 
-const cheeringGem2 = {
-  fontSize: "2.5rem",
-  animation: "gemCheer 2s ease-in-out infinite 0.3s",
+const celebratingGem2 = {
+  fontSize: "2rem",
+  animation: "gemCelebrate 2s ease-in-out infinite 0.2s",
 };
 
-const cheeringGem3 = {
-  fontSize: "2.5rem",
-  animation: "gemCheer 2s ease-in-out infinite 0.6s",
+const celebratingGem3 = {
+  fontSize: "2rem",
+  animation: "gemCelebrate 2s ease-in-out infinite 0.4s",
 };
 
-const cheeringGem4 = {
-  fontSize: "2.5rem",
-  animation: "gemCheer 2s ease-in-out infinite 0.9s",
+const celebratingGem4 = {
+  fontSize: "2rem",
+  animation: "gemCelebrate 2s ease-in-out infinite 0.6s",
 };
 
 const fusionContainer = {
@@ -758,109 +772,212 @@ const fusionContainer = {
   textAlign: "center",
 };
 
+const fusionAnimation = {
+  textAlign: "center",
+};
+
 const fusionTitle = {
+  fontSize: "2rem",
+  color: "#FFD700",
+  marginBottom: "25px",
+  animation: "gemFloat 2s ease-in-out infinite",
+};
+
+const fusionCircle = {
+  position: "relative",
+  display: "inline-block",
+  marginBottom: "20px",
+};
+
+const fusionGem1 = {
+  fontSize: "3rem",
+  animation: "fusionSpin 3s linear infinite",
+  position: "absolute",
+  left: "-40px",
+};
+
+const fusionGem2 = {
+  fontSize: "3rem",
+  animation: "fusionSpin 3s linear infinite 1s",
+  position: "relative",
+  zIndex: 2,
+};
+
+const fusionGem3 = {
+  fontSize: "3rem",
+  animation: "fusionSpin 3s linear infinite 2s",
+  position: "absolute",
+  right: "-40px",
+};
+
+const fusionText = {
+  fontSize: "1.2rem",
+  color: "#9966CC",
+  fontStyle: "italic",
+};
+
+const fusionCompleteContainer = {
+  textAlign: "center",
+};
+
+const fusionCompleteTitle = {
   fontSize: "2.5rem",
   background: "linear-gradient(45deg, #FFD700, #FF69B4, #9966CC)",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
   fontWeight: "bold",
   marginBottom: "25px",
+  animation: "gemFloat 3s ease-in-out infinite",
 };
 
-const fusionGem = {
-  position: "relative",
-  display: "inline-block",
+const fusionResultContainer = {
+  backgroundColor: "rgba(255, 215, 0, 0.2)",
+  borderRadius: "20px",
+  padding: "25px",
   marginBottom: "25px",
+  border: "3px solid #FFD700",
 };
 
 const fusionAvatar = {
-  fontSize: "5rem",
-  animation: "fusionPower 3s ease-in-out infinite",
+  position: "relative",
+  display: "inline-block",
+  marginBottom: "15px",
 };
 
-const fusionGlow = {
+const fusionCharacter = {
+  fontSize: "4rem",
+  animation: "stevenExcited 2s ease-in-out infinite",
+  position: "relative",
+  zIndex: 2,
+};
+
+const fusionAura = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "120px",
-  height: "120px",
+  width: "100px",
+  height: "100px",
+  background:
+    "radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, transparent 70%)",
   borderRadius: "50%",
-  background: "radial-gradient(circle, rgba(255,215,0,0.6) 0%, transparent 70%)",
-  animation: "fusionPower 3s ease-in-out infinite",
-};
-
-const fusionDescription = {
-  marginBottom: "30px",
+  animation: "fusionGlow 2s ease-in-out infinite",
 };
 
 const fusionName = {
+  fontSize: "2rem",
   color: "#FFD700",
-  fontSize: "1.8rem",
-  marginBottom: "15px",
+  fontWeight: "bold",
+  marginBottom: "10px",
 };
 
-const fusionPowers = {
-  fontSize: "1.1rem",
-  lineHeight: "1.8",
-  color: "#666",
+const fusionDescription = {
+  fontSize: "1.2rem",
+  color: "#FF69B4",
+  fontStyle: "italic",
+  fontWeight: "bold",
 };
 
-const allGemsApproval = {
+const fusionPowersContainer = {
   backgroundColor: "#f8f9fa",
   borderRadius: "20px",
   padding: "25px",
   marginBottom: "25px",
-  border: "3px solid #9966CC",
+  border: "2px solid #9966CC",
+};
+
+const powersTitle = {
+  color: "#9966CC",
+  fontSize: "1.5rem",
+  marginBottom: "15px",
+};
+
+const powersList = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "8px",
+};
+
+const powerItem = {
+  backgroundColor: "rgba(153, 102, 204, 0.1)",
+  padding: "10px 15px",
+  borderRadius: "15px",
+  color: "#9966CC",
+  fontWeight: "bold",
+  fontSize: "0.9rem",
+};
+
+const gemsApprovalContainer = {
+  backgroundColor: "rgba(255, 182, 193, 0.2)",
+  borderRadius: "20px",
+  padding: "25px",
+  marginBottom: "25px",
+  border: "2px solid #FF69B4",
 };
 
 const approvalTitle = {
-  color: "#9966CC",
-  fontSize: "1.5rem",
-  marginBottom: "20px",
+  color: "#FF69B4",
+  fontSize: "1.3rem",
+  marginBottom: "15px",
 };
 
-const gemsReaction = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+const approvalGems = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+};
+
+const approvalGem = {
+  display: "flex",
+  alignItems: "center",
   gap: "15px",
+  backgroundColor: "rgba(255, 255, 255, 0.5)",
+  borderRadius: "10px",
+  padding: "10px 15px",
 };
 
-const gemReaction = {
-  textAlign: "center",
+const gemEmoji = {
+  fontSize: "1.5rem",
 };
 
-const reactionGem = {
-  fontSize: "2rem",
-  marginBottom: "8px",
-};
-
-const reactionText = {
+const gemApproval = {
+  flex: 1,
   fontSize: "0.9rem",
   color: "#666",
   fontWeight: "bold",
+  textAlign: "left",
 };
 
-const stevenFinalMessage = {
-  backgroundColor: "rgba(255, 105, 180, 0.2)",
-  borderRadius: "20px",
-  padding: "25px",
-  border: "3px solid #FF69B4",
-  display: "flex",
-  alignItems: "center",
-  gap: "20px",
+const stevenFinalContainer = {
+  backgroundColor: "rgba(255, 182, 193, 0.3)",
+  borderRadius: "15px",
+  padding: "20px",
+  marginBottom: "25px",
+  border: "2px solid #FF69B4",
 };
 
 const stevenFinalAvatar = {
   fontSize: "3rem",
   animation: "stevenExcited 2s ease-in-out infinite",
+  marginBottom: "10px",
 };
 
 const stevenFinalText = {
-  flex: 1,
+  fontSize: "1rem",
   color: "#FF1493",
-  fontSize: "1.1rem",
   fontWeight: "bold",
-  fontStyle: "italic",
-  textAlign: "left",
+  lineHeight: "1.5",
+};
+
+const nextAdventureButton = {
+  padding: "20px 40px",
+  fontSize: "1.3rem",
+  background: "linear-gradient(45deg, #FF69B4, #9966CC)",
+  color: "#fff",
+  border: "none",
+  borderRadius: "25px",
+  cursor: "pointer",
+  fontWeight: "bold",
+  transition: "all 0.3s ease",
+  fontFamily: "inherit",
 };

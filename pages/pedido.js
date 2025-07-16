@@ -8,7 +8,7 @@ export default function PedidoCasamentoFinal() {
   const [resposta, setResposta] = useState(null);
 
   const mensagemCompleta =
-    "Minha Millena... Depois de tudo o que passamos juntos, todas as aventuras, risos, lágrimas e sonhos compartilhados... Eu tenho uma pergunta muito importante pra te fazer...";
+    "Minha Millena... Depois de tudo o que passamos juntos, todas as aventuras, risos, lágrimas e sonhos compartilhados... Eu tenho uma pergunta muito importante pra te fazer son...";
 
   useEffect(() => {
     // Sequência temporal da apresentação
@@ -248,7 +248,7 @@ export default function PedidoCasamentoFinal() {
 
             <div style={proposalSubtext}>
               <p>Prometo te fazer rir todos os dias (mesmo com piadas ruins)</p>
-              <p>Ser seu player 2 para sempre (mesmo sem jogar Far Cry)</p>
+              <p>Ser seu player 2 para sempre (mesmo sem jogar Far Cry son)</p>
               <p>E amar você em todas as aventuras da vida son</p>
               <p>Aceitar todos os seus "picos" com amor 💕</p>
             </div>
