@@ -1,8 +1,11 @@
 // pages/aventura/fase5.js - Cinema & Quiz Personalizado Melhorado
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import TransitionComponent from "../../components/TransitionComponent";
+import { useTransition, getTransitionMessage } from "../../hooks/useTransition";
 
 export default function Fase5CinemaPersonalizado() {
+  const { isTransitioning, transitionData, startTransition } = useTransition();
   const router = useRouter();
   const [etapaAtual, setEtapaAtual] = useState(0);
   const [perguntaAtual, setPerguntaAtual] = useState(0);
@@ -154,8 +157,9 @@ export default function Fase5CinemaPersonalizado() {
     }, 3000);
   };
 
-  const avancar = () => {
-    router.push("/aventura/fase6"); // Vai para Steven Universe
+  const avancar = async () => {
+    const message = getTransitionMessage("fase5", "fase6");
+    await startTransition("fase5", "fase6", message, 1000);
   };
 
   const perguntaAtualObj =

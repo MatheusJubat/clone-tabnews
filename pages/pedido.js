@@ -1,903 +1,1009 @@
-import { useEffect, useState } from "react";
+// pages/pedido.js - Pedido Final Melhorado
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { MusicPlayer, musicPlayerCSS } from "../hooks/useMusic";
+import {
+  useEasterEggs,
+  EasterEggButton,
+  EasterEggMessage,
+  SpecialEffects,
+  EasterEggCounter,
+  easterEggCSS,
+} from "../hooks/useEasterEggs";
+import LoveStats from "../components/LoveStats";
 
-export default function PedidoCasamentoFinal() {
-  const [etapaAtual, setEtapaAtual] = useState(0);
-  const [mostrarCoracoes, setMostrarCoracoes] = useState(false);
-  const [confettiAtivo, setConfettiAtivo] = useState(false);
-  const [mensagemRevelada, setMensagemRevelada] = useState("");
+export default function PedidoFinal() {
+  const router = useRouter();
+  const {
+    findEasterEgg,
+    showMessage,
+    setShowMessage,
+    specialEffects,
+    getTotalEggsFound,
+  } = useEasterEggs("pedido-final");
+
+  const [etapaAtual, setEtapaAtual] = useState("revelacao"); // 'revelacao', 'pergunta', 'resposta', 'celebracao'
   const [resposta, setResposta] = useState(null);
+  const [coracoes, setCoracoes] = useState([]);
+  const [gatinhosDancando, setGatinhosDancando] = useState([]);
+  const [fogosDeArtificio, setFogosDeArtificio] = useState([]);
+  const [mostrarAnel, setMostrarAnel] = useState(false);
+  const [musicaAtiva, setMusicaAtiva] = useState(false);
 
-  const mensagemCompleta =
-    "Minha Millena... Depois de tudo o que passamos juntos, todas as aventuras, risos, lágrimas e sonhos compartilhados... Eu tenho uma pergunta muito importante pra te fazer son...";
+  const gatinhosCelebrando = [
+    { id: 1, emoji: "🐱", nome: "Whiskers", x: 10, y: 80 },
+    { id: 2, emoji: "😸", nome: "Mittens", x: 20, y: 60 },
+    { id: 3, emoji: "😻", nome: "Shadow", x: 80, y: 70 },
+    { id: 4, emoji: "🐱‍👤", nome: "Ninja", x: 90, y: 85 },
+    { id: 5, emoji: "🐱‍🚀", nome: "Cosmos", x: 50, y: 90 },
+  ];
 
   useEffect(() => {
-    // Sequência temporal da apresentação
-    const timeouts = [
-      setTimeout(() => setEtapaAtual(1), 2000), // Mostrar primeira mensagem
-      setTimeout(() => setEtapaAtual(2), 6000), // Revelar carrossel de memórias
-      setTimeout(() => setEtapaAtual(3), 12000), // Mostrar countdown
-      setTimeout(() => setEtapaAtual(4), 18000), // PERGUNTA FINAL
-    ];
+    // Configurar gatinhos dançando
+    setGatinhosDancando(gatinhosCelebrando);
 
-    // Efeito de digitação
-    let i = 0;
-    const typingEffect = setInterval(() => {
-      if (i < mensagemCompleta.length) {
-        setMensagemRevelada(mensagemCompleta.slice(0, i + 1));
-        i++;
-      } else {
-        clearInterval(typingEffect);
-      }
-    }, 100);
-
-    return () => {
-      timeouts.forEach(clearTimeout);
-      clearInterval(typingEffect);
-    };
+    // Efeito de entrada
+    setTimeout(() => {
+      setMostrarAnel(true);
+    }, 2000);
   }, []);
 
-  const responderSim = async () => {
-    setResposta("sim");
-    setMostrarCoracoes(true);
-    setConfettiAtivo(true);
+  const criarCoracao = (x, y) => {
+    const novoCoracao = {
+      id: Date.now() + Math.random(),
+      x: x,
+      y: y,
+      emoji: ["💖", "💕", "💓", "💗", "💘", "💝"][
+        Math.floor(Math.random() * 6)
+      ],
+    };
 
-    // Tocar música de celebração
-    const audio = new Audio();
-    audio.src = "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav"; // Som de sino
-    audio.play().catch(() => {}); // Ignorar erro se não conseguir tocar
+    setCoracoes((prev) => [...prev, novoCoracao]);
 
-    // Importar e disparar confetti
-    try {
-      const { default: confetti } = await import("canvas-confetti");
-
-      // Múltiplas rajadas de confetti
-      const count = 200;
-      const defaults = {
-        origin: { y: 0.7 },
-      };
-
-      function fire(particleRatio, opts) {
-        confetti({
-          ...defaults,
-          ...opts,
-          particleCount: Math.floor(count * particleRatio),
-        });
-      }
-
-      fire(0.25, {
-        spread: 26,
-        startVelocity: 55,
-      });
-      fire(0.2, {
-        spread: 60,
-      });
-      fire(0.35, {
-        spread: 100,
-        decay: 0.91,
-        scalar: 0.8,
-      });
-      fire(0.1, {
-        spread: 120,
-        startVelocity: 25,
-        decay: 0.92,
-        scalar: 1.2,
-      });
-      fire(0.1, {
-        spread: 120,
-        startVelocity: 45,
-      });
-
-      // Confetti contínuo
-      const interval = setInterval(() => {
-        fire(0.1, {
-          spread: 60,
-          startVelocity: 30,
-        });
-      }, 250);
-
-      setTimeout(() => clearInterval(interval), 5000);
-    } catch (error) {
-      console.log("Confetti não disponível");
-    }
+    setTimeout(() => {
+      setCoracoes((prev) => prev.filter((c) => c.id !== novoCoracao.id));
+    }, 3000);
   };
 
-  const memorias = [
-    {
-      emoji: "🏠",
-      texto: "4 de setembro de 2022 - Nosso primeiro encontro no Seu Barzin",
-      data: "O dia que mudou tudo",
-    },
-    {
-      emoji: "💍",
-      texto: "10 de setembro de 2022 - Oficialmente namorados",
-      data: "No casamento da vó Edi",
-    },
-    {
-      emoji: "🐱",
-      texto: "Nossos momentos com gatinhos",
-      data: "Sempre fofinhos",
-    },
-    {
-      emoji: "💻",
-      texto: "Você me ajudando com programação",
-      data: "Minha professora favorita",
-    },
-    {
-      emoji: "🎮",
-      texto: "Jogando videogame juntos",
-      data: "Player 1 e Player 2",
-    },
-    {
-      emoji: "🌟",
-      texto: "Sonhando com nosso futuro",
-      data: "Para sempre juntos",
-    },
-  ];
+  const criarFogosDeArtificio = () => {
+    const fogos = [];
+    for (let i = 0; i < 20; i++) {
+      fogos.push({
+        id: Date.now() + i,
+        x: Math.random() * 100,
+        y: Math.random() * 60 + 20,
+        cor: ["#ff6b6b", "#4ecdc4", "#45b7d1", "#ffa07a", "#98d8c8", "#f7b733"][
+          Math.floor(Math.random() * 6)
+        ],
+        delay: Math.random() * 2,
+      });
+    }
+    setFogosDeArtificio(fogos);
+
+    setTimeout(() => {
+      setFogosDeArtificio([]);
+    }, 5000);
+  };
+
+  const responderSim = () => {
+    setResposta("sim");
+    setEtapaAtual("celebracao");
+    setMusicaAtiva(true);
+
+    // Criar explosão de corações
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        criarCoracao(
+          Math.random() * window.innerWidth,
+          Math.random() * window.innerHeight,
+        );
+      }, i * 100);
+    }
+
+    // Fogos de artifício
+    criarFogosDeArtificio();
+
+    // Easter egg especial
+    findEasterEgg({
+      x: 50,
+      y: 50,
+      message: "💍 ELA DISSE SIM!!!! 🎉🎉🎉",
+    });
+  };
+
+  const responderNao = () => {
+    // Easter egg brincalhão
+    findEasterEgg({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      message: "😢 Mas... mas... eu fiz um site inteiro! 😭",
+    });
+  };
+
+  const clickGatinho = (gatinho) => {
+    findEasterEgg({
+      x: gatinho.x,
+      y: gatinho.y,
+      message: `🐱 ${gatinho.nome} está torcendo pelo SIM! 💕`,
+    });
+  };
+
+  const prosseguirPergunta = () => {
+    setEtapaAtual("pergunta");
+  };
 
   return (
     <div style={containerStyle}>
-      {/* Background com estrelas animadas */}
-      <div style={starsBackground}>
-        {[...Array(100)].map((_, i) => (
-          <div
-            key={i}
-            style={{
-              ...starStyle,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`,
-            }}
-          >
-            ✨
-          </div>
-        ))}
-      </div>
+      <style jsx global>{`
+        ${musicPlayerCSS}
+        ${easterEggCSS}
+        
+        @keyframes coracaoVoando {
+          0% {
+            transform: translateY(0px) scale(0) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-300px) scale(1.5) rotate(360deg);
+            opacity: 0;
+          }
+        }
 
-      {/* Chuva de corações quando aceita */}
-      {mostrarCoracoes && (
-        <div style={heartsContainer}>
-          {[...Array(50)].map((_, i) => (
-            <div
-              key={i}
-              style={{
-                ...heartRain,
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                fontSize: `${Math.random() * 20 + 15}px`,
-              }}
-            >
-              💖
-            </div>
-          ))}
+        @keyframes gatinhoDancando {
+          0%,
+          100% {
+            transform: scale(1) rotate(-10deg);
+          }
+          25% {
+            transform: scale(1.2) rotate(10deg);
+          }
+          50% {
+            transform: scale(1.1) rotate(-5deg);
+          }
+          75% {
+            transform: scale(1.3) rotate(15deg);
+          }
+        }
+
+        @keyframes fogosExplodindo {
+          0% {
+            transform: scale(0);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.5);
+            opacity: 0.8;
+          }
+          100% {
+            transform: scale(3);
+            opacity: 0;
+          }
+        }
+
+        @keyframes anelBrilhando {
+          0%,
+          100% {
+            transform: scale(1) rotate(0deg);
+            filter: brightness(1) drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+          }
+          50% {
+            transform: scale(1.2) rotate(180deg);
+            filter: brightness(1.5) drop-shadow(0 0 30px rgba(255, 215, 0, 1));
+          }
+        }
+
+        @keyframes backgroundCelebration {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+
+        @keyframes tituloMagico {
+          0%,
+          100% {
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+            transform: scale(1);
+          }
+          50% {
+            text-shadow:
+              0 0 40px rgba(255, 105, 180, 1),
+              0 0 60px rgba(255, 105, 180, 0.8);
+            transform: scale(1.05);
+          }
+        }
+
+        @keyframes botaoSim {
+          0%,
+          100% {
+            transform: scale(1);
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.6);
+          }
+          50% {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(40, 167, 69, 1);
+          }
+        }
+
+        @keyframes gatinahoAbraco {
+          0%,
+          100% {
+            transform: translateX(0px);
+          }
+          50% {
+            transform: translateX(-10px);
+          }
+        }
+
+        @keyframes gatinahoAbraco2 {
+          0%,
+          100% {
+            transform: translateX(0px);
+          }
+          50% {
+            transform: translateX(10px);
+          }
+        }
+
+        @keyframes celebracaoText {
+          0%,
+          100% {
+            transform: scale(1) rotate(0deg);
+          }
+          25% {
+            transform: scale(1.1) rotate(-2deg);
+          }
+          50% {
+            transform: scale(1.2) rotate(2deg);
+          }
+          75% {
+            transform: scale(1.1) rotate(-1deg);
+          }
+        }
+      `}</style>
+
+      {/* Player de Música - toca música divertida na celebração */}
+      {musicaAtiva && (
+        <div style={{ display: "none" }}>
+          <iframe
+            width="0"
+            height="0"
+            src="https://www.youtube.com/embed/y6120QOlsfU?autoplay=1&start=0"
+            title="Música de Celebração"
+            frameBorder="0"
+            allow="autoplay"
+          ></iframe>
         </div>
       )}
 
-      <div style={contentWrapper}>
-        {/* Etapa 0 - Intro silenciosa */}
-        {etapaAtual === 0 && (
-          <div style={introContainer}>
-            <div style={loadingHeart}>💖</div>
-            <p style={loadingText}>Preparando algo muito especial...</p>
+      <MusicPlayer
+        phaseName="pedido-final"
+        position="bottom-right"
+        showControls={true}
+      />
+
+      {/* Contador de Easter Eggs */}
+      <EasterEggCounter currentPhase="pedido-final" position="top-right" />
+
+      {/* Easter Eggs Escondidos */}
+      <EasterEggButton
+        position={{ top: "8%", left: "5%" }}
+        size={50}
+        onFind={findEasterEgg}
+      />
+
+      <EasterEggButton
+        position={{ bottom: "12%", right: "8%" }}
+        size={45}
+        onFind={findEasterEgg}
+      />
+
+      {/* Corações voando */}
+      {coracoes.map((coracao) => (
+        <div
+          key={coracao.id}
+          style={{
+            ...coracaoStyle,
+            left: `${coracao.x}px`,
+            top: `${coracao.y}px`,
+          }}
+        >
+          {coracao.emoji}
+        </div>
+      ))}
+
+      {/* Fogos de artifício */}
+      {fogosDeArtificio.map((fogo) => (
+        <div
+          key={fogo.id}
+          style={{
+            ...fogoStyle,
+            left: `${fogo.x}%`,
+            top: `${fogo.y}%`,
+            backgroundColor: fogo.cor,
+            animationDelay: `${fogo.delay}s`,
+          }}
+        />
+      ))}
+
+      {/* Gatinhos dançando */}
+      {etapaAtual === "celebracao" &&
+        gatinhosDancando.map((gatinho) => (
+          <div
+            key={gatinho.id}
+            style={{
+              ...gatinhoDancandoStyle,
+              left: `${gatinho.x}%`,
+              top: `${gatinho.y}%`,
+            }}
+            onClick={() => clickGatinho(gatinho)}
+          >
+            <div style={gatinhoEmoji}>{gatinho.emoji}</div>
+            <div style={gatinhoNome}>{gatinho.nome}</div>
+          </div>
+        ))}
+
+      <div style={contentContainer}>
+        {etapaAtual === "revelacao" && (
+          <div style={revelacaoContainer}>
+            <div style={anelContainer}>
+              <div
+                style={{
+                  ...anelStyle,
+                  opacity: mostrarAnel ? 1 : 0,
+                  transform: mostrarAnel ? "scale(1)" : "scale(0)",
+                }}
+              >
+                💍
+              </div>
+            </div>
+
+            <h1 style={tituloReveal}>✨ O Momento Mais Especial ✨</h1>
+
+            <div style={mensagemReveal}>
+              <p style={textoReveal}>
+                Millena, meu amor...
+                <br />
+                <br />
+                Você acabou de completar uma jornada mágica através de 8 mundos
+                incríveis!
+                <br />
+                Enfrentou dragões, resolveu enigmas, pescou memórias,
+                <br />
+                convenceu até o Barney Stinson...
+                <br />
+                <br />
+                Mas a verdadeira magia sempre foi você na minha vida! 💕
+              </p>
+            </div>
+
+            <div style={estatisticasFinais}>
+              <LoveStats showDetailed={true} theme="wedding" />
+            </div>
+
+            <div style={transicaoContainer}>
+              <p style={transicaoTexto}>
+                E agora chegou a hora da pergunta mais importante de todas...
+              </p>
+              <button
+                onClick={prosseguirPergunta}
+                style={prosseguirButton}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1) translateY(-5px)";
+                  e.target.style.boxShadow =
+                    "0 20px 40px rgba(255,105,180,0.6)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1) translateY(0px)";
+                  e.target.style.boxShadow =
+                    "0 10px 25px rgba(255,105,180,0.4)";
+                }}
+              >
+                💍 Revelar a Pergunta Final 💍
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Etapa 1 - Mensagem digitando */}
-        {etapaAtual >= 1 && (
-          <div style={messageContainer}>
-            <div style={avatarContainer}>
-              <div style={avatar}>👨‍💻</div>
-              <div style={heartPulse}>💕</div>
+        {etapaAtual === "pergunta" && (
+          <div style={perguntaContainer}>
+            <div style={anelCentral}>
+              <div style={anelBrilhante}>💍</div>
+              <div style={anelLuz}></div>
             </div>
-            <div style={messageBox}>
-              <p style={typingMessage}>
-                {mensagemRevelada}
-                <span style={cursor}>|</span>
+
+            <h1 style={perguntaFinal}>
+              Millena, meu amor da minha vida...
+              <br />
+              <span style={perguntaDestaque}>Você quer casar comigo? 💍💕</span>
+            </h1>
+
+            <div style={declaracaoContainer}>
+              <div style={declaracaoTexto}>
+                <p style={declaracaoP}>
+                  "Quero passar o resto da minha vida rindo das suas piadas,
+                  <br />
+                  ouvindo seus 'son' no final das frases,
+                  <br />
+                  aguentando seus picos na barriga,
+                  <br />
+                  jogando Fallout e Far Cry com você,
+                  <br />e amando cada detalhe que faz você ser... VOCÊ! 💕"
+                </p>
+              </div>
+            </div>
+
+            <div style={botoesContainer}>
+              <button
+                onClick={responderSim}
+                style={botaoSim}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.2) rotate(5deg)";
+                  e.target.style.boxShadow = "0 15px 35px rgba(40,167,69,0.8)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1) rotate(0deg)";
+                  e.target.style.boxShadow = "0 10px 25px rgba(40,167,69,0.6)";
+                }}
+              >
+                💖 SIM! EU ACEITO! 💖
+              </button>
+
+              <button
+                onClick={responderNao}
+                style={botaoNao}
+                onMouseEnter={() => {
+                  // Botão foge quando passa o mouse
+                  const newX = Math.random() * 70;
+                  const newY = Math.random() * 50;
+                  document.getElementById("botao-nao").style.position =
+                    "absolute";
+                  document.getElementById("botao-nao").style.left = `${newX}%`;
+                  document.getElementById("botao-nao").style.top = `${newY}%`;
+                }}
+                id="botao-nao"
+              >
+                😢 Não...
+              </button>
+            </div>
+          </div>
+        )}
+
+        {etapaAtual === "celebracao" && (
+          <div style={celebracaoContainer}>
+            <div style={celebracaoHeader}>
+              <h1 style={celebracaoTitulo}>🎉 ELA DISSE SIM!!!! 🎉</h1>
+              <div style={celebracaoSubtitulo}>💍 ESTAMOS NOIVOS! 💍</div>
+            </div>
+
+            {/* Gatinhos se abraçando - o pedido especial! */}
+            <div style={gatinhosAbracandoContainer}>
+              <div style={gatinhosAbracando}>
+                <div style={gatinhoEsquerdo}>
+                  <div style={gatinhoCarinha}>😻</div>
+                  <div style={gatinhoNomeEsquerdo}>Matheus</div>
+                </div>
+                <div style={gatinhoCentral}>
+                  <div style={coracaoGrande}>💕</div>
+                  <div style={textoCentral}>+</div>
+                </div>
+                <div style={gatinhoDireito}>
+                  <div style={gatinhoCarinha}>😸</div>
+                  <div style={gatinhoNomeDireito}>Millena</div>
+                </div>
+              </div>
+              <div style={abracoTexto}>
+                🐾 Gatinhos celebrando nosso amor! 🐾
+              </div>
+            </div>
+
+            <div style={mensagemFinalCasamento}>
+              <h3 style={mensagemFinalTitulo}>
+                💌 Nossa História Começa Agora 💌
+              </h3>
+              <div style={mensagemFinalTexto}>
+                <p style={mensagemFinalP}>
+                  "Millena, você completou todos os desafios, descobriu todos os
+                  segredos,
+                  <br />
+                  e agora embarcamos na maior aventura de todas:
+                  <br />
+                  <strong>NOSSA VIDA JUNTOS!</strong> 💕
+                  <br />
+                  <br />
+                  Que venham mais risadas, mais 'sons', mais picos,
+                  <br />
+                  mais jogos, mais amor... e para sempre, mais NÓS! 💖"
+                </p>
+              </div>
+            </div>
+
+            <div style={estatisticasNoivado}>
+              <div style={estatNoivado}>
+                <div style={estatLabel}>Status do Relacionamento:</div>
+                <div style={estatValue}>💍 NOIVOS! 💍</div>
+              </div>
+              <div style={estatNoivado}>
+                <div style={estatLabel}>Nível de Felicidade:</div>
+                <div style={estatValue}>∞ INFINITO! ∞</div>
+              </div>
+              <div style={estatNoivado}>
+                <div style={estatLabel}>Próxima Fase:</div>
+                <div style={estatValue}>💒 CASAMENTO! 💒</div>
+              </div>
+            </div>
+
+            <div style={agradecimentoFinal}>
+              <h4 style={agradecimentoTitulo}>🙏 Obrigado por Jogar 🙏</h4>
+              <p style={agradecimentoTexto}>
+                Este site foi feito com muito amor pelo Matheus,
+                <br />
+                especialmente para a Millena,
+                <br />
+                a pessoa mais especial do universo! 💕
+                <br />
+                <br />
+                <strong>Te amo para sempre, meu amor! 💖</strong>
+              </p>
+            </div>
+
+            <div style={easteEggFinal}>
+              <p style={easterEggTexto}>
+                🎮 Easter Eggs Encontrados: {getTotalEggsFound()} 🎮
+                <br />
+                🏆 Você é oficialmente uma Master Easter Egg Hunter! 🏆
               </p>
             </div>
           </div>
         )}
-
-        {/* Etapa 2 - Carrossel de memórias */}
-        {etapaAtual >= 2 && (
-          <div style={memoriesSection}>
-            <h2 style={memoriesTitle}>💫 Nossa História de Amor 💫</h2>
-            <div style={memoriesGrid}>
-              {memorias.map((memoria, index) => (
-                <div
-                  key={index}
-                  style={{
-                    ...memoryCard,
-                    animationDelay: `${index * 0.2}s`,
-                  }}
-                >
-                  <div style={memoryEmoji}>{memoria.emoji}</div>
-                  <p style={memoryText}>{memoria.texto}</p>
-                  <p style={memoryDate}>{memoria.data}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Etapa 3 - Countdown */}
-        {etapaAtual >= 3 && etapaAtual < 4 && (
-          <div style={countdownContainer}>
-            <h2 style={countdownTitle}>
-              A pergunta mais importante está chegando...
-            </h2>
-            <div style={countdownNumbers}>
-              <div style={countNumber}>3</div>
-              <div style={countNumber}>2</div>
-              <div style={countNumber}>1</div>
-            </div>
-          </div>
-        )}
-
-        {/* Etapa 4 - PERGUNTA FINAL */}
-        {etapaAtual >= 4 && !resposta && (
-          <div style={proposalContainer}>
-            <div style={ringContainer}>
-              <div style={ring}>💍</div>
-              <div style={ringGlow}></div>
-            </div>
-
-            <h1 style={proposalTitle}>
-              ✨ Millena, você quer casar comigo? ✨
-            </h1>
-
-            <div style={proposalSubtext}>
-              <p>Prometo te fazer rir todos os dias (mesmo com piadas ruins)</p>
-              <p>Ser seu player 2 para sempre (mesmo sem jogar Far Cry son)</p>
-              <p>E amar você em todas as aventuras da vida son</p>
-              <p>Aceitar todos os seus "picos" com amor 💕</p>
-            </div>
-
-            <div style={buttonsContainer}>
-              <button
-                onClick={responderSim}
-                style={yesButton}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "scale(1.2) rotate(5deg)";
-                  e.target.style.boxShadow =
-                    "0 20px 40px rgba(255, 105, 180, 0.8)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "scale(1) rotate(0deg)";
-                  e.target.style.boxShadow =
-                    "0 15px 30px rgba(255, 105, 180, 0.6)";
-                }}
-              >
-                💖 SIM! MIL VEZES SIM! 💖
-              </button>
-
-              <button
-                style={noButton}
-                onClick={() => alert("Essa opção não existe son! 😄💕")}
-              >
-                🤔 Hmm... (botão quebrado)
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Resposta SIM - GATINHOS SE ABRAÇANDO */}
-        {resposta === "sim" && (
-          <div style={celebrationContainer}>
-            <h1 style={celebrationTitle}>🎉💍 ELA DISSE SIM! 💍🎉</h1>
-
-            {/* GATINHOS SE ABRAÇANDO COMEMORANDO */}
-            <div style={catsHuggingContainer}>
-              <div style={catCouple}>
-                <div style={catGroom}>😸</div>
-                <div style={catBride}>😻</div>
-                <div style={heartBetween}>💕</div>
-              </div>
-              <div style={catsText}>Até os gatinhos estão comemorando!</div>
-            </div>
-
-            <div style={celebrationContent}>
-              <div style={coupleEmoji}>👨‍❤️‍👩</div>
-
-              <div style={finalMessage}>
-                <h2>Você é incrível son!</h2>
-                <p>Agora somos oficialmente noivos! 💕</p>
-                <p>Mal posso esperar para construir nosso futuro juntos,</p>
-                <p>cheio de aventuras, risadas e muito amor!</p>
-                <p>(E sem borboletas no casamento, prometo! 🦋😂)</p>
-              </div>
-
-              <div style={weddingPlans}>
-                <h3>🏰 Próximos Episódios:</h3>
-                <div style={plansList}>
-                  <div style={planItem}>📅 Marcar a data mágica</div>
-                  <div style={planItem}>👗 Escolher o vestido dos sonhos</div>
-                  <div style={planItem}>
-                    🎵 Playlist da festa (sem trilha de terror)
-                  </div>
-                  <div style={planItem}>🏡 Nossa casa dos gatinhos</div>
-                  <div style={planItem}>🎮 Lua de mel jogando games</div>
-                  <div style={planItem}>
-                    ♾️ E viveram felizes para sempre son!
-                  </div>
-                </div>
-              </div>
-
-              <div style={finalCatsParty}>
-                <div style={partyContainer}>
-                  <div style={partyCat1}>🎉🐱</div>
-                  <div style={partyCat2}>🎊😸</div>
-                  <div style={partyCat3}>🎈😻</div>
-                  <div style={partyCat4}>🎆🐱</div>
-                  <div style={partyCat5}>🎪😺</div>
-                </div>
-                <p style={partyText}>
-                  "A plateia felina aprova este casamento!"
-                </p>
-              </div>
-
-              {/* Música de fundo (simulada) */}
-              <div style={musicPlayer}>
-                <div style={musicNote1}>🎵</div>
-                <div style={musicText}>
-                  ♪ Tocando: "All You Need Is Love" (versão gatinhos) ♪
-                </div>
-                <div style={musicNote2}>🎶</div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
-      <style jsx global>{`
-        @keyframes twinkle {
-          0%,
-          100% {
-            opacity: 0;
-            transform: scale(0);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
+      {/* Mensagem de Easter Egg */}
+      <EasterEggMessage
+        message={showMessage}
+        onClose={() => setShowMessage(null)}
+      />
 
-        @keyframes heartbeat {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.2);
-          }
-        }
-
-        @keyframes heartfall {
-          0% {
-            transform: translateY(-100vh) rotate(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
-          }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(50px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes glow {
-          0%,
-          100% {
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-          }
-          50% {
-            box-shadow:
-              0 0 40px rgba(255, 215, 0, 1),
-              0 0 60px rgba(255, 215, 0, 0.8);
-          }
-        }
-
-        @keyframes bounce {
-          0%,
-          20%,
-          50%,
-          80%,
-          100% {
-            transform: translateY(0);
-          }
-          40% {
-            transform: translateY(-30px);
-          }
-          60% {
-            transform: translateY(-15px);
-          }
-        }
-
-        @keyframes blink {
-          0%,
-          50% {
-            opacity: 1;
-          }
-          51%,
-          100% {
-            opacity: 0;
-          }
-        }
-
-        @keyframes catsHug {
-          0%,
-          100% {
-            transform: scale(1) rotate(-2deg);
-          }
-          50% {
-            transform: scale(1.1) rotate(2deg);
-          }
-        }
-
-        @keyframes catParty {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(-10deg) scale(1);
-          }
-          25% {
-            transform: translateY(-20px) rotate(10deg) scale(1.2);
-          }
-          50% {
-            transform: translateY(-10px) rotate(-5deg) scale(1.1);
-          }
-          75% {
-            transform: translateY(-15px) rotate(15deg) scale(1.15);
-          }
-        }
-
-        @keyframes musicFloat {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-10px) rotate(10deg);
-          }
-        }
-      `}</style>
+      {/* Efeitos Especiais */}
+      <SpecialEffects effects={specialEffects} />
     </div>
   );
 }
 
+// Estilos
 const containerStyle = {
   minHeight: "100vh",
-  background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",
+  width: "100vw",
+  background:
+    "linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)",
+  backgroundSize: "400% 400%",
+  animation: "backgroundCelebration 10s ease infinite",
+  color: "#fff",
   position: "relative",
   overflow: "hidden",
-  fontFamily: '"Inter", "Segoe UI", sans-serif',
+  fontFamily: '"Dancing Script", cursive',
 };
 
-const starsBackground = {
+const coracaoStyle = {
   position: "absolute",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
+  fontSize: "2rem",
+  animation: "coracaoVoando 3s ease-out forwards",
   pointerEvents: "none",
+  zIndex: 15,
 };
 
-const starStyle = {
+const fogoStyle = {
   position: "absolute",
-  animation: "twinkle infinite ease-in-out",
-};
-
-const heartsContainer = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
+  width: "20px",
+  height: "20px",
+  borderRadius: "50%",
+  animation: "fogosExplodindo 2s ease-out forwards",
   pointerEvents: "none",
-  zIndex: 1000,
+  zIndex: 10,
 };
 
-const heartRain = {
+const gatinhoDancandoStyle = {
   position: "absolute",
-  animation: "heartfall 3s linear infinite",
+  textAlign: "center",
+  animation: "gatinhoDancando 1.5s ease-in-out infinite",
+  cursor: "pointer",
+  zIndex: 12,
 };
 
-const contentWrapper = {
+const gatinhoEmoji = {
+  fontSize: "3rem",
+  marginBottom: "5px",
+  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
+};
+
+const gatinhoNome = {
+  fontSize: "0.8rem",
+  backgroundColor: "rgba(255,255,255,0.9)",
+  color: "#333",
+  padding: "3px 8px",
+  borderRadius: "10px",
+  fontWeight: "bold",
+};
+
+const contentContainer = {
   position: "relative",
-  zIndex: 1,
+  zIndex: 5,
   padding: "20px",
   minHeight: "100vh",
   display: "flex",
-  flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
 };
 
-const introContainer = {
-  textAlign: "center",
-  color: "white",
-};
-
-const loadingHeart = {
-  fontSize: "4rem",
-  animation: "heartbeat 1.5s ease-in-out infinite",
-};
-
-const loadingText = {
-  fontSize: "1.2rem",
-  marginTop: "20px",
-  opacity: 0.8,
-};
-
-const messageContainer = {
-  display: "flex",
-  alignItems: "flex-start",
-  gap: "20px",
-  maxWidth: "700px",
-  margin: "20px 0",
-  animation: "slideUp 1s ease-out",
-};
-
-const avatarContainer = {
-  position: "relative",
-};
-
-const avatar = {
-  fontSize: "3rem",
-  backgroundColor: "rgba(255, 255, 255, 0.9)",
-  borderRadius: "50%",
-  padding: "10px",
-  border: "3px solid #ff69b4",
-};
-
-const heartPulse = {
-  position: "absolute",
-  top: "-10px",
-  right: "-10px",
-  fontSize: "1.5rem",
-  animation: "heartbeat 2s ease-in-out infinite",
-};
-
-const messageBox = {
+const revelacaoContainer = {
   backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "20px",
-  padding: "25px",
-  borderLeft: "5px solid #ff69b4",
-  flex: 1,
-};
-
-const typingMessage = {
-  fontSize: "1.1rem",
-  lineHeight: "1.6",
-  color: "#333",
-  margin: 0,
-};
-
-const cursor = {
-  animation: "blink 1s infinite",
-};
-
-const memoriesSection = {
-  margin: "40px 0",
-  textAlign: "center",
-  animation: "slideUp 1s ease-out 0.5s both",
-};
-
-const memoriesTitle = {
-  color: "white",
-  fontSize: "1.8rem",
-  marginBottom: "30px",
-};
-
-const memoriesGrid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-  gap: "20px",
+  borderRadius: "30px",
+  padding: "50px",
   maxWidth: "900px",
-  margin: "0 auto",
-};
-
-const memoryCard = {
-  backgroundColor: "rgba(255, 255, 255, 0.9)",
-  borderRadius: "15px",
-  padding: "20px",
+  width: "100%",
   textAlign: "center",
-  transform: "translateY(20px)",
-  animation: "slideUp 0.8s ease-out forwards",
-  border: "2px solid #ff69b4",
+  boxShadow: "0 30px 60px rgba(0, 0, 0, 0.3)",
+  border: "4px solid #ff69b4",
+  color: "#333",
 };
 
-const memoryEmoji = {
-  fontSize: "2.5rem",
-  marginBottom: "10px",
-};
-
-const memoryText = {
-  color: "#555",
-  fontSize: "0.9rem",
-  margin: "10px 0 5px 0",
-  fontWeight: "bold",
-};
-
-const memoryDate = {
-  color: "#999",
-  fontSize: "0.8rem",
-  fontStyle: "italic",
-  margin: 0,
-};
-
-const countdownContainer = {
-  textAlign: "center",
-  margin: "40px 0",
-  animation: "slideUp 1s ease-out",
-};
-
-const countdownTitle = {
-  color: "white",
-  fontSize: "1.5rem",
+const anelContainer = {
   marginBottom: "30px",
 };
 
-const countdownNumbers = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "30px",
+const anelStyle = {
+  fontSize: "6rem",
+  animation: "anelBrilhando 3s ease-in-out infinite",
+  transition: "all 2s cubic-bezier(0.4, 0, 0.2, 1)",
 };
 
-const countNumber = {
-  fontSize: "4rem",
-  color: "#ffd700",
-  fontWeight: "bold",
-  animation: "bounce 1s ease-in-out infinite",
+const tituloReveal = {
+  fontSize: "3rem",
+  color: "#ff69b4",
+  marginBottom: "30px",
+  animation: "tituloMagico 3s ease-in-out infinite",
 };
 
-const proposalContainer = {
-  textAlign: "center",
-  maxWidth: "600px",
-  animation: "slideUp 1.5s ease-out",
-};
-
-const ringContainer = {
-  position: "relative",
-  display: "inline-block",
+const mensagemReveal = {
   marginBottom: "30px",
 };
 
-const ring = {
-  fontSize: "5rem",
-  position: "relative",
-  zIndex: 2,
-  animation: "heartbeat 2s ease-in-out infinite",
-};
-
-const ringGlow = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "120px",
-  height: "120px",
-  borderRadius: "50%",
-  animation: "glow 2s ease-in-out infinite",
-};
-
-const proposalTitle = {
-  fontSize: "2.5rem",
-  color: "white",
-  marginBottom: "30px",
-  textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
-};
-
-const proposalSubtext = {
-  color: "rgba(255,255,255,0.9)",
-  fontSize: "1.1rem",
-  marginBottom: "40px",
+const textoReveal = {
+  fontSize: "1.3rem",
   lineHeight: "1.8",
+  color: "#555",
+  fontStyle: "italic",
 };
 
-const buttonsContainer = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "20px",
-  alignItems: "center",
+const estatisticasFinais = {
+  marginBottom: "30px",
 };
 
-const yesButton = {
+const transicaoContainer = {
+  marginTop: "30px",
+};
+
+const transicaoTexto = {
+  fontSize: "1.2rem",
+  color: "#777",
+  fontStyle: "italic",
+  marginBottom: "25px",
+};
+
+const prosseguirButton = {
   padding: "20px 40px",
-  fontSize: "1.5rem",
-  fontWeight: "bold",
+  fontSize: "1.3rem",
   background: "linear-gradient(45deg, #ff69b4, #ff1493)",
-  color: "white",
+  color: "#fff",
   border: "none",
   borderRadius: "50px",
   cursor: "pointer",
+  fontWeight: "bold",
   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  boxShadow: "0 15px 30px rgba(255, 105, 180, 0.6)",
-  textTransform: "uppercase",
-  letterSpacing: "1px",
+  boxShadow: "0 10px 25px rgba(255, 105, 180, 0.4)",
+  fontFamily: "inherit",
 };
 
-const noButton = {
-  padding: "10px 20px",
-  fontSize: "0.9rem",
-  backgroundColor: "rgba(255,255,255,0.3)",
-  color: "white",
-  border: "1px solid rgba(255,255,255,0.5)",
-  borderRadius: "20px",
-  cursor: "not-allowed",
-  opacity: 0.6,
-};
-
-const celebrationContainer = {
-  textAlign: "center",
+const perguntaContainer = {
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "30px",
+  padding: "50px",
   maxWidth: "800px",
-  animation: "slideUp 1s ease-out",
-};
-
-const celebrationTitle = {
-  fontSize: "3rem",
-  color: "#ffd700",
-  marginBottom: "30px",
-  textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
-};
-
-const catsHuggingContainer = {
-  margin: "30px 0",
+  width: "100%",
   textAlign: "center",
-  backgroundColor: "rgba(255, 255, 255, 0.2)",
-  borderRadius: "20px",
-  padding: "25px",
-  border: "3px solid #ffd700",
+  boxShadow: "0 30px 60px rgba(0, 0, 0, 0.3)",
+  border: "4px solid #ffd700",
+  color: "#333",
 };
 
-const catCouple = {
+const anelCentral = {
   position: "relative",
   display: "inline-block",
-  fontSize: "4rem",
-  animation: "catsHug 2s ease-in-out infinite",
-  marginBottom: "15px",
+  marginBottom: "40px",
 };
 
-const catGroom = {
-  display: "inline-block",
-  marginRight: "10px",
+const anelBrilhante = {
+  fontSize: "8rem",
+  animation: "anelBrilhando 2s ease-in-out infinite",
+  position: "relative",
+  zIndex: 2,
 };
 
-const catBride = {
-  display: "inline-block",
-  marginLeft: "10px",
-};
-
-const heartBetween = {
+const anelLuz = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  fontSize: "2rem",
-  animation: "heartbeat 1.5s ease-in-out infinite",
+  width: "150px",
+  height: "150px",
+  background:
+    "radial-gradient(circle, rgba(255,215,0,0.6) 0%, transparent 70%)",
+  borderRadius: "50%",
+  animation: "anelBrilhando 2s ease-in-out infinite",
 };
 
-const catsText = {
-  color: "#ffd700",
-  fontSize: "1.1rem",
+const perguntaFinal = {
+  fontSize: "2.5rem",
+  color: "#333",
+  marginBottom: "30px",
+  lineHeight: "1.4",
+};
+
+const perguntaDestaque = {
+  color: "#ff1493",
   fontWeight: "bold",
-  fontStyle: "italic",
-};
-
-const celebrationContent = {
-  backgroundColor: "rgba(255, 255, 255, 0.95)",
-  borderRadius: "25px",
-  padding: "40px",
-  border: "3px solid #ffd700",
+  fontSize: "3rem",
+  display: "block",
   marginTop: "20px",
 };
 
-const coupleEmoji = {
-  fontSize: "5rem",
-  marginBottom: "20px",
-  animation: "heartbeat 2s ease-in-out infinite",
+const declaracaoContainer = {
+  backgroundColor: "rgba(255, 105, 180, 0.1)",
+  borderRadius: "20px",
+  padding: "30px",
+  marginBottom: "40px",
+  border: "3px solid #ff69b4",
 };
 
-const finalMessage = {
-  marginBottom: "30px",
+const declaracaoTexto = {
+  fontSize: "1.2rem",
+  lineHeight: "1.8",
+  color: "#555",
+  fontStyle: "italic",
+};
+
+const declaracaoP = {
+  margin: 0,
+};
+
+const botoesContainer = {
+  display: "flex",
+  justifyContent: "center",
+  gap: "30px",
+  flexWrap: "wrap",
+  position: "relative",
+};
+
+const botaoSim = {
+  padding: "25px 50px",
+  fontSize: "1.5rem",
+  background: "linear-gradient(45deg, #28a745, #20c997)",
+  color: "#fff",
+  border: "none",
+  borderRadius: "50px",
+  cursor: "pointer",
+  fontWeight: "bold",
+  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  boxShadow: "0 10px 25px rgba(40, 167, 69, 0.6)",
+  animation: "botaoSim 2s ease-in-out infinite",
+  fontFamily: "inherit",
+  textTransform: "uppercase",
+  letterSpacing: "2px",
+};
+
+const botaoNao = {
+  padding: "15px 30px",
+  fontSize: "1.1rem",
+  backgroundColor: "#dc3545",
+  color: "#fff",
+  border: "none",
+  borderRadius: "25px",
+  cursor: "pointer",
+  fontWeight: "bold",
+  transition: "all 0.3s ease",
+  fontFamily: "inherit",
+  opacity: 0.7,
+};
+
+const celebracaoContainer = {
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "30px",
+  padding: "50px",
+  maxWidth: "1000px",
+  width: "100%",
+  textAlign: "center",
+  boxShadow: "0 30px 60px rgba(0, 0, 0, 0.3)",
+  border: "4px solid #28a745",
   color: "#333",
 };
 
-const weddingPlans = {
-  backgroundColor: "#f8f9fa",
-  borderRadius: "15px",
-  padding: "25px",
-  marginBottom: "30px",
+const celebracaoHeader = {
+  marginBottom: "40px",
 };
 
-const plansList = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "10px",
-  marginTop: "15px",
+const celebracaoTitulo = {
+  fontSize: "3.5rem",
+  color: "#28a745",
+  marginBottom: "20px",
+  animation: "celebracaoText 2s ease-in-out infinite",
 };
 
-const planItem = {
-  padding: "10px 15px",
-  backgroundColor: "rgba(255, 105, 180, 0.1)",
-  borderRadius: "20px",
-  color: "#ff1493",
-  fontWeight: "500",
+const celebracaoSubtitulo = {
+  fontSize: "2rem",
+  color: "#ffd700",
+  fontWeight: "bold",
+  animation: "tituloMagico 2s ease-in-out infinite",
 };
 
-const finalCatsParty = {
-  marginBottom: "30px",
+const gatinhosAbracandoContainer = {
+  backgroundColor: "rgba(255, 215, 0, 0.2)",
+  borderRadius: "25px",
+  padding: "30px",
+  marginBottom: "40px",
+  border: "3px solid #ffd700",
 };
 
-const partyContainer = {
+const gatinhosAbracando = {
   display: "flex",
   justifyContent: "center",
-  gap: "15px",
+  alignItems: "center",
+  gap: "20px",
+  marginBottom: "20px",
+};
+
+const gatinhoEsquerdo = {
+  textAlign: "center",
+  animation: "gatinahoAbraco 3s ease-in-out infinite",
+};
+
+const gatinhoDireito = {
+  textAlign: "center",
+  animation: "gatinahoAbraco2 3s ease-in-out infinite",
+};
+
+const gatinhoCentral = {
+  textAlign: "center",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
+const gatinhoCarinha = {
+  fontSize: "4rem",
+  marginBottom: "10px",
+  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
+};
+
+const gatinhoNomeEsquerdo = {
+  fontSize: "1.2rem",
+  fontWeight: "bold",
+  color: "#4169e1",
+};
+
+const gatinhoNomeDireito = {
+  fontSize: "1.2rem",
+  fontWeight: "bold",
+  color: "#ff69b4",
+};
+
+const coracaoGrande = {
+  fontSize: "3rem",
+  animation: "anelBrilhando 2s ease-in-out infinite",
+};
+
+const textoCentral = {
+  fontSize: "2rem",
+  fontWeight: "bold",
+  color: "#ff1493",
+};
+
+const abracoTexto = {
+  fontSize: "1.2rem",
+  color: "#28a745",
+  fontWeight: "bold",
+  fontStyle: "italic",
+};
+
+const mensagemFinalCasamento = {
+  backgroundColor: "rgba(255, 105, 180, 0.1)",
+  borderRadius: "20px",
+  padding: "30px",
+  marginBottom: "30px",
+  border: "3px solid #ff69b4",
+};
+
+const mensagemFinalTitulo = {
+  color: "#ff69b4",
+  marginBottom: "20px",
+};
+
+const mensagemFinalTexto = {
+  fontSize: "1.2rem",
+  lineHeight: "1.8",
+  color: "#555",
+  fontStyle: "italic",
+};
+
+const mensagemFinalP = {
+  margin: 0,
+};
+
+const estatisticasNoivado = {
+  display: "flex",
+  justifyContent: "space-around",
+  marginBottom: "30px",
+  flexWrap: "wrap",
+  gap: "20px",
+};
+
+const estatNoivado = {
+  backgroundColor: "rgba(40, 167, 69, 0.1)",
+  borderRadius: "15px",
+  padding: "20px",
+  border: "2px solid #28a745",
+  minWidth: "200px",
+};
+
+const estatLabel = {
+  fontSize: "1rem",
+  color: "#666",
+  marginBottom: "10px",
+};
+
+const estatValue = {
+  fontSize: "1.3rem",
+  fontWeight: "bold",
+  color: "#28a745",
+};
+
+const agradecimentoFinal = {
+  backgroundColor: "rgba(116, 185, 255, 0.1)",
+  borderRadius: "20px",
+  padding: "25px",
+  marginBottom: "20px",
+  border: "3px solid #74b9ff",
+};
+
+const agradecimentoTitulo = {
+  color: "#74b9ff",
   marginBottom: "15px",
 };
 
-const partyCat1 = {
-  fontSize: "2rem",
-  animation: "catParty 2s ease-in-out infinite",
-};
-
-const partyCat2 = {
-  fontSize: "2rem",
-  animation: "catParty 2s ease-in-out infinite 0.2s",
-};
-
-const partyCat3 = {
-  fontSize: "2rem",
-  animation: "catParty 2s ease-in-out infinite 0.4s",
-};
-
-const partyCat4 = {
-  fontSize: "2rem",
-  animation: "catParty 2s ease-in-out infinite 0.6s",
-};
-
-const partyCat5 = {
-  fontSize: "2rem",
-  animation: "catParty 2s ease-in-out infinite 0.8s",
-};
-
-const partyText = {
-  color: "#666",
+const agradecimentoTexto = {
+  fontSize: "1.1rem",
+  lineHeight: "1.6",
+  color: "#555",
   fontStyle: "italic",
-  fontSize: "1rem",
 };
 
-const musicPlayer = {
-  backgroundColor: "rgba(255, 105, 180, 0.2)",
+const easteEggFinal = {
+  backgroundColor: "rgba(255, 193, 7, 0.2)",
   borderRadius: "15px",
-  padding: "15px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "15px",
-  border: "2px solid #ff69b4",
+  padding: "20px",
+  border: "2px solid #ffc107",
 };
 
-const musicNote1 = {
-  fontSize: "1.5rem",
-  animation: "musicFloat 2s ease-in-out infinite",
-};
-
-const musicNote2 = {
-  fontSize: "1.5rem",
-  animation: "musicFloat 2s ease-in-out infinite 1s",
-};
-
-const musicText = {
-  color: "#ff1493",
+const easterEggTexto = {
+  fontSize: "1rem",
+  color: "#856404",
   fontWeight: "bold",
-  fontStyle: "italic",
+  margin: 0,
 };

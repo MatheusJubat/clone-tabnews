@@ -1,6 +1,8 @@
 // pages/aventura/fase6.js - Steven Universe Melhorado com Quiz Divertido
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import TransitionComponent from "../../components/TransitionComponent";
+import { useTransition, getTransitionMessage } from "../../hooks/useTransition";
 
 export default function Fase6StevenUniverseMelhorada() {
   const router = useRouter();
@@ -101,8 +103,9 @@ export default function Fase6StevenUniverseMelhorada() {
     }, 3000);
   };
 
-  const avancar = () => {
-    router.push("/aventura/fase7"); // Vai para o arcade 8-bit
+  const avancar = async () => {
+    const message = getTransitionMessage("fase6", "fase7");
+    await startTransition("fase6", "fase7", message, 1000);
   };
 
   const perguntaAtualObj = perguntasGemas[perguntaAtual] || perguntasGemas[0];

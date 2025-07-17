@@ -1,6 +1,8 @@
 // pages/aventura/fase4.js - Jedi Cats Galaxy Melhorada
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import TransitionComponent from "../../components/TransitionComponent";
+import { useTransition, getTransitionMessage } from "../../hooks/useTransition";
 
 export default function Fase4JediCatsMelhorada() {
   const router = useRouter();
@@ -131,8 +133,9 @@ export default function Fase4JediCatsMelhorada() {
     }, 3000);
   };
 
-  const avancar = () => {
-    router.push("/aventura/fase5"); // Vai para o cinema
+  const avancar = async () => {
+    const message = getTransitionMessage("fase4", "fase5");
+    await startTransition("fase4", "fase5", message, 1000);
   };
 
   const missaoAtualObj = missoes[missaoAtual] || missoes[0];
